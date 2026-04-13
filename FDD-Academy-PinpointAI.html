@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FDD Academy - PinpointAI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#211847;--dark:#0F0D2A;--royal:#3D50F4;--royal2:#2E3FD0;
+  --cyan:#35FFE9;--red:#C8144A;--green:#0A7A4A;--amber:#8A5500;--gold:#7A5F00;--purple:#5B2FA8;
+  --bg:#EEF0F8;--surface:#FFF;--card:#F5F6FC;--border:#E0E3F0;
+  --text:#1A1835;--text2:#3A3D5C;--muted:#7E8587;--faint:#CDD0E8;
+  --rb:rgba(61,80,244,.1);--rbb:rgba(61,80,244,.2);
+  --gb:rgba(10,122,74,.08);--gbb:rgba(10,122,74,.22);
+  --redb:rgba(200,20,74,.08);--redbb:rgba(200,20,74,.22);
+  --ab:rgba(200,130,0,.08);--abb:rgba(200,130,0,.25);
+  --goldb:rgba(180,140,0,.08);--goldbb:rgba(180,140,0,.25);
+  --pb:rgba(91,47,168,.08);--pbb:rgba(91,47,168,.22);
+  --font:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono','Courier New',monospace;
+  --r:8px;--rl:12px;--rxl:16px;
+  --sh:0 1px 3px rgba(33,24,71,.07);--shm:0 4px 16px rgba(33,24,71,.1);
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(33,24,71,.15);border-radius:2px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes dot{0%,80%,100%{opacity:.2;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
+.fu{animation:fadeUp .22s ease-out}
+
+#app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* TOPBAR */
+#tb{height:56px;display:flex;align-items:center;padding:0 18px;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;gap:0;z-index:200}
+.tb-logo{display:flex;align-items:center;gap:8px;padding-right:18px;border-right:1px solid rgba(255,255,255,.1);text-decoration:none;flex-shrink:0}
+.tb-logo-box{width:28px;height:28px;background:var(--royal);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.tb-logo-box svg{width:15px;height:15px}
+.tb-logo-name{font-size:13px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.tb-logo-name b{color:var(--cyan);font-weight:700}
+.tb-mid{flex:1;display:flex;align-items:center;padding:0 18px;gap:14px;min-width:0;overflow:hidden}
+.tb-course{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6);white-space:nowrap}
+.tb-sep{width:1px;height:16px;background:rgba(255,255,255,.1);flex-shrink:0}
+.tb-sec{font-size:12px;color:rgba(255,255,255,.7);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.tb-prog{display:flex;align-items:center;gap:10px}
+.tb-prog-txt{text-align:right}
+.tb-prog-val{font-size:11px;font-family:var(--mono);color:rgba(255,255,255,.6);font-weight:600}
+.tb-prog-sub{font-size:9px;color:rgba(255,255,255,.6);font-family:var(--mono);margin-top:1px}
+.tb-ring{position:relative;width:34px;height:34px;flex-shrink:0}
+.tb-ring svg{transform:rotate(-90deg)}
+.tb-ring-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-family:var(--mono);color:var(--cyan);font-weight:600}
+.tb-btn{background:none;border:none;color:rgba(255,255,255,0.75);cursor:pointer;padding:6px;border-radius:6px;display:flex;align-items:center;transition:all .15s}
+.tb-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+
+#main{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+#sb{width:272px;flex-shrink:0;background:var(--dark);border-right:1px solid rgba(255,255,255,.05);overflow-y:auto;display:flex;flex-direction:column;transition:width .2s}
+#sb.closed{width:0;overflow:hidden}
+.sb-top{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.06);background:linear-gradient(135deg,rgba(61,80,244,.18) 0%,rgba(53,255,233,.04) 100%)}
+.sb-top-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:12px}
+.sb-cards{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.sb-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);padding:10px 12px}
+.sb-card-n{font-size:22px;font-weight:700;font-family:var(--mono);color:#fff;line-height:1}
+.sb-card-n.c{color:var(--cyan)}
+.sb-card-l{font-size:10px;color:rgba(255,255,255,.6);margin-top:3px}
+.sb-mods{padding:6px 0 20px}
+.sb-grp{padding:12px 16px 4px;font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.mi{cursor:pointer;border-left:2px solid transparent;transition:all .15s}
+.mi:hover{background:rgba(255,255,255,.04)}
+.mi.on{background:rgba(61,80,244,.16);border-left-color:var(--royal)}
+.mi-hdr{display:flex;align-items:center;gap:9px;padding:8px 14px}
+.mi-ico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:rgba(255,255,255,.06)}
+.mi.on .mi-ico{background:rgba(61,80,244,.28)}
+.mi-info{flex:1;min-width:0}
+.mi-name{font-size:12px;font-weight:600;color:rgba(255,255,255,.82);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.mi.on .mi-name{color:#fff}
+.mi:hover .mi-name{color:rgba(255,255,255,.95)}
+.mi-meta{display:flex;align-items:center;gap:5px;margin-top:2px}
+.mi-id{font-size:9px;font-family:var(--mono);color:rgba(255,255,255,.88)}
+.mi.on .mi-id{color:rgba(61,80,244,.75)}
+.mi-t{font-size:9px;font-family:var(--mono);color:rgba(255,255,255,.5)}
+.mi-ck{width:15px;height:15px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:7px;flex-shrink:0}
+.mi-ck.ok{background:rgba(53,255,233,.14);border-color:var(--cyan);color:var(--cyan)}
+.si-list{padding:1px 0 6px}
+.si{display:flex;align-items:center;gap:7px;padding:5px 14px 5px 48px;cursor:pointer;transition:background .12s}
+.si:hover{background:rgba(255,255,255,.04)}
+.si.on{background:rgba(61,80,244,.1)}
+.si-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid rgba(255,255,255,.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:5px;transition:all .15s}
+.si-dot.ok{border-color:var(--cyan);background:rgba(53,255,233,.18);color:var(--cyan)}
+.si-dot.cur{border-color:var(--royal);background:rgba(61,80,244,.28)}
+.si-lbl{font-size:11px;color:rgba(255,255,255,.65);line-height:1.35;transition:color .12s}
+.si.on .si-lbl{color:rgba(255,255,255,.85)}
+.si:hover .si-lbl{color:rgba(255,255,255,.88)}
+.si.done .si-lbl{color:rgba(53,255,233,.8)}
+
+/* CONTENT */
+#ct{flex:1;overflow-y:auto;background:var(--bg)}
+#cti{max-width:720px;margin:0 auto;padding:36px 44px 90px}
+
+/* LESSON CARD */
+.lhdr{background:var(--surface);border:1px solid var(--border);border-radius:var(--rxl);padding:24px 28px;margin-bottom:26px;box-shadow:var(--sh)}
+.lcrumb{display:flex;align-items:center;gap:8px;margin-bottom:11px;flex-wrap:wrap}
+.lcrumb-mod{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono)}
+.lcrumb-ico{width:20px;height:20px;border-radius:5px;background:var(--rb);display:flex;align-items:center;justify-content:center;font-size:10px}
+.lcrumb-chev{color:var(--muted);font-size:11px}
+.lcrumb-num{font-size:11px;font-family:var(--mono);color:var(--muted)}
+.badge{font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:20px;letter-spacing:.4px;font-weight:600;border:1px solid}
+.badge-task{background:var(--goldb);color:var(--gold);border-color:var(--goldbb)}
+.badge-found{background:var(--pb);color:var(--purple);border-color:var(--pbb)}
+.ltitle{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.5px;line-height:1.25;margin-bottom:10px}
+.lmeta{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.lmi{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);font-family:var(--mono)}
+.lmi svg{width:12px;height:12px;opacity:.55}
+.lpbar{height:3px;background:var(--border);border-radius:2px;margin-top:12px;overflow:hidden}
+.lpfill{height:100%;background:linear-gradient(90deg,var(--royal),var(--cyan));border-radius:2px;transition:width .4s}
+
+/* BODY */
+.btext p{font-size:15px;line-height:1.82;color:var(--text2);margin-bottom:15px}
+
+.co{padding:14px 18px;border-radius:var(--rl);margin:18px 0;font-size:14px;line-height:1.7;border:1px solid}
+.co-blue{background:var(--rb);border-color:var(--rbb);color:#1A2880}
+.co-gold{background:var(--goldb);border-color:var(--goldbb);color:var(--gold);font-family:var(--mono);font-size:13px}
+.co-green{background:var(--gb);border-color:var(--gbb);color:var(--green)}
+.co-red{background:var(--redb);border-color:var(--redbb);color:var(--red)}
+.co-amber{background:var(--ab);border-color:var(--abb);color:var(--amber)}
+.co-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;opacity:.65;font-weight:700}
+
+.an{background:linear-gradient(135deg,rgba(61,80,244,.04),rgba(53,255,233,.03));border:1px solid rgba(61,80,244,.12);border-radius:var(--rl);padding:16px 20px;margin:18px 0}
+.an-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:var(--royal);margin-bottom:8px;font-weight:700}
+.an-txt{font-size:14px;line-height:1.75;color:var(--text2);font-style:italic}
+
+/* TABLES */
+.tw{margin:20px 0}
+.tw-ttl{font-size:10px;font-family:var(--mono);color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-weight:600}
+.tt{border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;background:var(--surface);box-shadow:var(--sh)}
+.tr{display:grid;grid-template-columns:1fr auto;gap:10px;padding:9px 15px;border-top:1px solid var(--border)}
+.tr:first-child{border-top:none}
+.tr.e{background:var(--surface)}.tr.o{background:var(--card)}
+.tr.hb{background:rgba(61,80,244,.05)}.tr.hg{background:rgba(10,122,74,.05)}
+.tr.hgo{background:rgba(180,140,0,.05)}.tr.ha{background:rgba(200,130,0,.05)}
+.tr.hr{background:rgba(200,20,74,.05)}.tr.hs{background:var(--navy)}
+.rl{font-size:13px;color:var(--text);font-weight:500}
+.rn{font-size:11px;color:var(--muted);margin-top:2px}
+.rl.hb{color:#2A3ED0}.rl.hg{color:var(--green)}.rl.hgo{color:var(--gold)}.rl.ha{color:var(--amber)}.rl.hr{color:var(--red)}
+.rl.hs{color:rgba(255,255,255,0.75);font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
+.rv{font-size:13px;font-family:var(--mono);color:var(--muted);white-space:nowrap;align-self:center;font-weight:600}
+.rv.hb{color:#2A3ED0}.rv.hg{color:var(--green)}.rv.hgo{color:var(--gold)}.rv.ha{color:var(--amber)}.rv.hr{color:var(--red)}
+
+/* BRIDGE */
+.bw{margin:20px 0}
+.bw-ttl{font-size:10px;font-family:var(--mono);color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-weight:600}
+.bs{background:var(--rb);border:1px solid var(--rbb);border-radius:var(--rl) var(--rl) 0 0;padding:13px 17px;display:flex;justify-content:space-between;align-items:center}
+.bsl{font-size:14px;color:#2A3ED0;font-weight:600}
+.bsv{font-family:var(--mono);font-size:15px;color:#2A3ED0;font-weight:700}
+.bi{border:1px solid var(--border);border-top:none;padding:11px 17px;background:var(--surface)}
+.bit{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.bil{font-size:13px;font-weight:500}
+.bil.up{color:var(--green)}.bil.dn{color:var(--red)}
+.bin{font-size:11px;color:var(--muted);margin-top:3px}
+.biv{font-family:var(--mono);font-size:14px;white-space:nowrap;font-weight:700}
+.biv.up{color:var(--green)}.biv.dn{color:var(--red)}
+.vb{display:inline-block;margin-top:5px;font-size:9px;font-family:var(--mono);padding:2px 7px;border-radius:4px;letter-spacing:.5px;font-weight:600;border:1px solid}
+.vb-ag{background:var(--gb);color:var(--green);border-color:var(--gbb)}
+.vb-qr{background:var(--ab);color:var(--amber);border-color:var(--abb)}
+.vb-rj{background:var(--redb);color:var(--red);border-color:var(--redbb)}
+.vb-ou{background:var(--redb);color:var(--red);border-color:var(--redbb)}
+.br{background:var(--dark);border:1px solid rgba(255,255,255,.08);border-top:2px solid var(--cyan);border-radius:0 0 var(--rl) var(--rl);padding:14px 17px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 20px rgba(33,24,71,.15)}
+.brl{font-size:14px;color:rgba(255,255,255,.7);font-weight:600}
+.brv{font-family:var(--mono);font-size:20px;color:var(--cyan);font-weight:700}
+
+/* NUMBER CARDS */
+.ncs{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:9px;margin:20px 0}
+.nc{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:13px 15px;box-shadow:var(--sh);transition:border-color .15s}
+.nc:hover{border-color:var(--rbb)}
+.nc-tag{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;font-weight:700}
+.t-rep{color:var(--royal)}.t-ca{color:var(--gold)}.t-as{color:var(--red)}.t-in{color:var(--muted)}.t-de{color:var(--red)}.t-fo{color:var(--purple)}
+.nc-v{font-size:18px;font-family:var(--mono);color:var(--text);margin-bottom:3px;font-weight:700;letter-spacing:-.5px}
+.nc-l{font-size:11px;color:var(--muted)}
+
+/* PROSE */
+.prose{background:var(--dark);border:1px solid rgba(255,255,255,.07);border-radius:var(--rl);padding:20px 24px;margin:20px 0;font-size:13px;line-height:1.9;color:rgba(255,255,255,.6);white-space:pre-wrap;font-family:var(--mono)}
+
+/* CHECKLIST */
+.cl{display:flex;flex-direction:column;gap:7px;margin:18px 0}
+.cli{display:flex;align-items:flex-start;gap:11px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all .15s}
+.cli:hover{border-color:var(--rbb)}
+.cli.ck{background:var(--gb);border-color:var(--gbb)}
+.cli-box{width:17px;height:17px;border-radius:4px;flex-shrink:0;margin-top:1px;border:1.5px solid var(--faint);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;transition:all .15s}
+.cli.ck .cli-box{background:var(--green);border-color:var(--green);color:#fff}
+.cli-t{font-size:13px;color:var(--text2);line-height:1.5}
+.cli.ck .cli-t{text-decoration:line-through;color:var(--muted)}
+
+/* FINN */
+.fw{margin-top:32px;border-radius:var(--rxl);overflow:hidden;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shm)}
+.fh{height:52px;display:flex;align-items:center;gap:12px;padding:0 18px;background:var(--navy)}
+.fav-wrap{position:relative}
+.fav{width:32px;height:32px;border-radius:8px;background:var(--royal);display:flex;align-items:center;justify-content:center;font-size:13px;font-family:var(--mono);color:#fff;font-weight:700;flex-shrink:0}
+.fon{position:absolute;bottom:-1px;right:-1px;width:9px;height:9px;border-radius:50%;background:var(--cyan);border:2px solid var(--navy)}
+.finfo{flex:1}
+.fname{font-size:13px;color:#fff;font-weight:700}
+.fsub{font-size:9px;color:rgba(255,255,255,.6);font-family:var(--mono);margin-top:1px}
+.fai{font-size:9px;font-family:var(--mono);background:rgba(53,255,233,.12);color:var(--cyan);border:1px solid rgba(53,255,233,.22);padding:3px 8px;border-radius:20px;letter-spacing:.5px;font-weight:600}
+.fmsgs{max-height:380px;overflow-y:auto;padding:16px 18px;display:none;background:var(--card)}
+.fmsgs.vis{display:block}
+.mr{display:flex;gap:9px;margin-bottom:13px}
+.mr.u{justify-content:flex-end}
+.mav{width:24px;height:24px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--mono);margin-top:1px;font-weight:700}
+.mav.f{background:var(--royal);color:#fff}
+.mav.y{background:var(--navy);color:rgba(255,255,255,.6)}
+.mb{max-width:80%;padding:10px 14px;font-size:14px;line-height:1.75;white-space:pre-wrap;word-break:break-word;border-radius:var(--r)}
+.mb.f{background:var(--surface);border:1px solid var(--border);color:var(--text2);border-radius:2px var(--r) var(--r) var(--r)}
+.mb.u{background:var(--navy);color:rgba(255,255,255,.82);border-radius:var(--r) 2px var(--r) var(--r)}
+.tdots{display:flex;gap:5px;padding:3px 0;align-items:center}
+.tdot{width:7px;height:7px;border-radius:50%;background:var(--royal);animation:dot 1.2s infinite}
+.fst{padding:13px 18px;background:var(--card);border-bottom:1px solid var(--border)}
+.fst-lbl{font-size:9px;font-family:var(--mono);color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:9px;font-weight:700}
+.fst-g{display:flex;flex-wrap:wrap;gap:6px}
+.fsbtn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.fsbtn:hover{background:var(--rb);border-color:var(--rbb);color:var(--royal)}
+.fin{display:flex;gap:8px;padding:11px 14px;border-top:1px solid var(--border)}
+.fta{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);padding:9px 13px;font-size:14px;font-family:var(--font);color:var(--text);resize:none;max-height:100px;line-height:1.5;transition:border-color .15s}
+.fta:focus{outline:none;border-color:var(--royal);background:var(--surface)}
+.fta::placeholder{color:var(--muted)}
+.fsnd{width:38px;height:38px;border-radius:var(--r);border:none;background:var(--royal);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;transition:all .15s}
+.fsnd:hover{background:var(--royal2);transform:scale(1.04)}
+.fsnd:disabled{background:var(--faint);cursor:default;transform:none}
+
+/* NAV */
+.lnav{margin-top:40px;padding-top:22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.nbk{display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:var(--r);border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:600;transition:all .15s}
+.nbk:hover:not(:disabled){background:var(--card);color:var(--text)}
+.nbk:disabled{color:var(--faint);border-color:var(--faint);cursor:default}
+.nnx{display:flex;align-items:center;gap:8px;padding:11px 22px;border-radius:var(--r);border:none;background:var(--royal);color:#fff;cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:700;letter-spacing:.3px;transition:all .15s;box-shadow:0 2px 12px rgba(61,80,244,.3)}
+.nnx:hover{background:var(--royal2);box-shadow:0 4px 20px rgba(61,80,244,.4);transform:translateY(-1px)}
+.nnx.done{background:var(--green);box-shadow:0 2px 12px rgba(10,122,74,.25)}
+.nnx.done:hover{background:#0a6a40}
+
+@media(max-width:700px){
+  #cti{padding:20px 16px 80px}
+  #sb{position:fixed;top:0;left:0;height:100vh;z-index:300}
+  #sb.closed{width:0}
+  .tb-sec{display:none}
+  .ncs{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="tb">
+    <a class="tb-logo" href="#">
+      <div class="tb-logo-box"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg></div>
+      <div class="tb-logo-name">Pinpoint<b>AI</b></div>
+    </a>
+    <div class="tb-mid">
+      <div class="tb-course">FDD Academy</div>
+      <div class="tb-sep"></div>
+      <div class="tb-sec" id="tb-sec">Loading...</div>
+    </div>
+    <div class="tb-right">
+      <div class="tb-prog">
+        <div class="tb-prog-txt">
+          <div class="tb-prog-val" id="pg-lbl">0 / 0</div>
+          <div class="tb-prog-sub" id="pg-sub">~355 min</div>
+        </div>
+        <div class="tb-ring">
+          <svg width="34" height="34" viewBox="0 0 34 34">
+            <circle cx="17" cy="17" r="13" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="2.5"/>
+            <circle id="rng" cx="17" cy="17" r="13" fill="none" stroke="#35FFE9" stroke-width="2.5" stroke-dasharray="81.68" stroke-dashoffset="81.68" stroke-linecap="round" style="transition:stroke-dashoffset .4s"/>
+          </svg>
+          <div class="tb-ring-n" id="rng-n">0%</div>
+        </div>
+      </div>
+      <button class="tb-btn" onclick="toggleSidebar()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="sb">
+      <div class="sb-top">
+        <div class="sb-top-lbl">Your progress</div>
+        <div class="sb-cards">
+          <div class="sb-card"><div class="sb-card-n c" id="sb-done">0</div><div class="sb-card-l">Completed</div></div>
+          <div class="sb-card"><div class="sb-card-n" id="sb-left">355</div><div class="sb-card-l">Min left</div></div>
+        </div>
+      </div>
+      <div class="sb-mods">
+        <div class="sb-grp">Modules</div>
+        <div id="sb-nav"></div>
+      </div>
+    </div>
+    <div id="ct"><div id="cti"></div></div>
+  </div>
+</div>
+<script>
+
+// ════════════════════════════════════════════════════════════════════
+// CURRICULUM DATA
+// ════════════════════════════════════════════════════════════════════
+const MODULES = [
+{
+  id:"M1", icon:"🧱", title:"Accounting Foundations", subtitle:"What numbers actually mean", time:25, accent:"#5A2D8A", tag:"foundation",
+  starters:["What is the difference between cash and profit?","What does 'accruals basis' mean in plain English?","Why would a profitable business run out of cash?","What is a journal entry and do I need to understand them?"],
+  sections:[
+    {id:"M1S1", title:"Cash vs profit - the most important concept in accounting",
+     content:"Most people assume that if a business makes a profit, it has cash in the bank. This is wrong, and understanding why is the single most important thing you can learn before doing financial due diligence.\n\nProfit is an accounting concept. It records value created, not cash received. A business can invoice a client for £100,000 in December, record it as revenue and profit in December, and not receive the cash until February. The profit is real but the cash is not there yet.\n\nThis is why profitable businesses fail. They run out of cash while waiting for customers to pay, or because they spent money on stock and equipment before the revenue came in.\n\nIn FDD, you need to understand both: how much profit the business makes (the P&L) and whether that profit converts into real cash (the cashflow statement).",
+     callout:{type:"blue",label:"Key principle",text:"Profit ≠ Cash. A business records profit when it earns it. It receives cash when the customer pays. These two events often happen in different months or even different years."}},
+    {id:"M1S2", title:"Cash vs accruals - how accounts are prepared",
+     content:"There are two ways to account for income and costs. Cash accounting records things when the money moves. Accruals accounting records things when the activity happens, regardless of when the cash moves.\n\nAll UK businesses of any size use accruals accounting. This means that when you look at a P&L, the numbers do not represent cash received and cash paid. They represent economic activity that occurred during the period.\n\nFor example: FieldForce bills a client £24,000 for an annual SaaS licence in January. Under cash accounting, they record £24,000 income in January. Under accruals accounting, they record £2,000 per month across the year, because the service is delivered monthly.\n\nThis is why balance sheets have 'deferred revenue' as a liability - cash has been received but the income has not yet been earned. And it is why there are 'accruals' as a liability - costs have been incurred but the invoice has not yet arrived.",
+     callout:{type:"gold",label:"Formula to remember",text:"Accruals basis: Revenue recognised when EARNED. Costs recognised when INCURRED. Not when cash moves."},
+     analogy:{label:"Real world analogy",text:"Think of a gym membership. You pay £600 upfront for the year. The gym receives the cash immediately but only earns £50 per month as you use it. The remaining unearned portion sits as deferred revenue on their balance sheet."}},
+    {id:"M1S3", title:"What is depreciation - and why does it matter?",
+     content:"Depreciation is how the cost of a long-lived asset is spread across the years it is used, rather than hitting the P&L all at once.\n\nIf FieldForce buys £60,000 of server equipment that will last 3 years, they do not record a £60,000 cost in year one. They record £20,000 per year for 3 years. That annual charge is depreciation.\n\nThis matters in FDD because EBITDA adds depreciation back. The 'D' in EBITDA stands for depreciation. We strip it out because it is a non-cash accounting charge - no cash leaves the business when depreciation is recorded.\n\nBut here is the catch: the underlying capex (capital expenditure) is very real cash. A business that under-invests in its assets to inflate EBITDA will eventually need to spend that money. You need to assess whether the reported capex level is sustainable.",
+     callout:{type:"amber",label:"Watch out",text:"EBITDA removes depreciation to give a cash proxy for profit. But if the business needs to spend £200k per year just to maintain its infrastructure, that spend reduces the real cash generation - even if it sits below the EBITDA line."}},
+    {id:"M1S4", title:"Assets, liabilities and equity - the accounting equation",
+     content:"Every balance sheet is built on one equation that always holds true: Assets = Liabilities + Equity.\n\nAssets are things the business owns or is owed: cash, equipment, debtor balances, intellectual property. Liabilities are things the business owes to others: loans, unpaid invoices, deferred revenue, tax bills. Equity is the residual - what belongs to the owners after all liabilities are settled.\n\nWhen a business makes a profit, retained earnings (part of equity) increases. When it takes on a loan, both assets (cash) and liabilities (loan) increase by the same amount - the equation stays balanced.\n\nIn FDD you use the balance sheet to find liabilities the seller may not have volunteered. Every liability is either a normal trading item (included in working capital) or a debt or debt-like item that should reduce the price.",
+     callout:{type:"green",label:"The equation",text:"Assets = Liabilities + Equity\n\nOR rearranged: Equity = Assets − Liabilities\n\nEquity is what's left for the owners. It grows with retained profits and shrinks with losses or dividends."}}
+  ]
+},
+{
+  id:"M2", icon:"📊", title:"The Three Financial Statements", subtitle:"P&L, balance sheet, and cashflow", time:35, accent:"#1A56A0", tag:"foundation",
+  starters:["Walk me through the FieldForce P&L line by line","What is the difference between PBT and EBITDA?","What does a cashflow statement actually show?","Why does the balance sheet need to balance?"],
+  sections:[
+    {id:"M2S1", title:"The P&L - revenue, costs, and what's left",
+     content:"The Profit and Loss statement (P&L), also called the Income Statement, shows every pound earned and every pound spent over a period. It runs top to bottom, from revenue down to profit.\n\nStart with Revenue: everything invoiced to customers during the period. Subtract Cost of Sales: the direct costs to deliver the product or service. What remains is Gross Profit.\n\nFrom Gross Profit, subtract all operating overheads: staff, rent, IT, marketing, director pay. What remains is EBITDA - the most important number in M&A.\n\nBelow EBITDA, subtract depreciation, interest on loans, and tax. The final line is Profit After Tax, which is what flows into retained earnings on the balance sheet.",
+     example:"fieldforce_pl",
+     callout:{type:"blue",label:"Why EBITDA?",text:"EBITDA removes financing costs (interest), tax, and non-cash charges (depreciation). This makes it easier to compare the operating profitability of businesses regardless of how they are financed or taxed."}},
+    {id:"M2S2", title:"Gross margin - your first diagnostic tool",
+     content:"Gross margin is Gross Profit divided by Revenue, expressed as a percentage. It tells you how much of each pound of revenue the business keeps after paying the direct costs of delivery.\n\nFieldForce has a gross margin of 76%. For a SaaS software business this is normal - software costs little to reproduce once built. For a labour-intensive services business, gross margins of 30-40% are typical. For a product business with raw materials, 40-60% might be normal.\n\nAlways compare gross margin year on year. A declining margin means costs are rising faster than prices, or the mix of revenue is shifting toward lower-margin work. Either can be a problem.\n\nAlso compare to industry benchmarks. A gross margin that is unusually high for a sector might mean costs are being misclassified below the gross profit line.",
+     numbers:[
+       {label:"Revenue 2023",value:"£2,840,000",tag:"reported"},
+       {label:"Cost of Sales",value:"£680,000",tag:"reported"},
+       {label:"Gross Profit",value:"£2,160,000",tag:"calc"},
+       {label:"Gross Margin 2023",value:"76%",tag:"calc"},
+       {label:"Gross Margin 2022",value:"74%",tag:"info"},
+       {label:"Gross Margin 2021",value:"74%",tag:"info"}
+     ]},
+    {id:"M2S3", title:"The balance sheet - a snapshot at one moment in time",
+     content:"The balance sheet shows the financial position of the business at a single point in time - usually the last day of the financial year. Unlike the P&L which covers a period, the balance sheet is a photograph.\n\nIt has three sections: Fixed Assets (things owned long-term, like equipment and intellectual property), Current Assets and Current Liabilities (the working capital section - short-term items like debtors, creditors, cash, and deferred revenue), and Long-Term Liabilities (loans, leases, and other obligations due beyond twelve months).\n\nThe bottom of the balance sheet shows Equity, which must equal Total Assets minus Total Liabilities. If it does not, there is an error somewhere.\n\nIn FDD, your two main uses of the balance sheet are: finding all debt and debt-like items, and calculating working capital.",
+     example:"fieldforce_bs"},
+    {id:"M2S4", title:"The cashflow statement - where the money actually went",
+     content:"The cashflow statement is the most honest of the three statements. It shows the actual movement of cash in and out of the business during the period. You cannot manipulate cash - it either moved or it did not.\n\nIt has three sections. Operating cashflow shows cash generated from the core business - starting from profit and adjusting for non-cash items and working capital movements. Investing cashflow shows cash spent on assets (capex) or received from asset sales. Financing cashflow shows cash from loans and repayments, and any dividends paid to owners.\n\nThe most important ratio from this statement is cash conversion: Operating Cashflow divided by EBITDA. A healthy business converts most of its EBITDA into cash. A business with poor cash conversion is either building up debtors, spending heavily on capex, or has earnings quality problems.",
+     callout:{type:"gold",label:"Key formula",text:"Cash Conversion = Operating Cashflow ÷ EBITDA\n\nTarget: above 80%. Below 60% warrants investigation.\nFieldForce 2023: ~£480k operating CF ÷ £636k EBITDA = 75% (acceptable)"},
+     callout2:{type:"amber",label:"Watch out",text:"If a business consistently shows strong EBITDA but weak operating cashflow, ask why. Common causes: debtors growing faster than revenue (customers paying slowly), large prepaid costs, or revenue being recognised before cash is received."}}
+  ]
+},
+{
+  id:"M3", icon:"🤝", title:"How M&A Deals Work", subtitle:"The process from first contact to completion", time:25, accent:"#1A6B2A", tag:null,
+  starters:["What is an LOI and what does it commit the buyer to?","What is the difference between locked box and completion accounts?","What happens between signing and completion?","Who are all the advisors in a deal and what do they each do?"],
+  sections:[
+    {id:"M3S1", title:"The deal process - from teaser to completion",
+     content:"A typical M&A sale process runs in stages. Understanding where FDD fits in that process helps you understand why your work matters and what it feeds into.\n\nStage 1 - Marketing: The seller's advisor (often an investment bank or boutique M&A firm) circulates a teaser document to potential buyers. Interested parties sign an NDA and receive an Information Memorandum (IM) - the detailed sales document.\n\nStage 2 - Indicative bids: Buyers submit non-binding offers based on the IM. The seller selects one or two preferred bidders.\n\nStage 3 - Exclusivity and due diligence: The preferred buyer enters a period of exclusive diligence, usually 4-8 weeks. The data room opens. FDD, legal DD, and commercial DD all run in parallel.\n\nStage 4 - Signing: The Sale and Purchase Agreement (SPA) is signed. Price is agreed. This is legally binding.\n\nStage 5 - Completion: Shares transfer, cash moves. The buyer owns the business.",
+     callout:{type:"blue",label:"Where FDD fits",text:"FDD runs during Stage 3. Your report is completed before Signing (Stage 4). Its findings directly influence the final price, deal structure, and SPA protections the buyer negotiates."}},
+    {id:"M3S2", title:"Price mechanics - locked box vs completion accounts",
+     content:"There are two ways to set the final price in an acquisition. Understanding both is essential because your FDD work feeds directly into whichever mechanism is chosen.\n\nLocked Box: The price is fixed at a historical balance sheet date (the 'locked box date'). From that date forward, no cash can leave the business (no dividends, no unusual payments to the seller). The buyer gets economic benefit from the locked box date but takes risk on working capital movements.\n\nCompletion Accounts: The price is adjusted after completion based on the actual balance sheet at completion. Net debt and working capital are measured at closing and compared to agreed targets. If debt is higher than expected, the price falls. If working capital is lower than the peg, the price falls.\n\nMost SME deals use completion accounts. This is where your working capital peg and debt schedule become commercial tools - they directly determine how much your client pays.",
+     callout:{type:"gold",label:"FieldForce uses completion accounts",text:"Agreed enterprise value: £3.77m\nLess: Net debt at completion (target: £219k)\nLess: Working capital shortfall vs peg (target: nil)\nEquals: Final equity consideration paid to seller"}},
+    {id:"M3S3", title:"The SPA - what it contains and what FDD feeds into",
+     content:"The Sale and Purchase Agreement is the legal contract for the sale. It is drafted by lawyers but informed by FDD. Understanding its key clauses helps you write a more commercially useful FDD report.\n\nPrice and price adjustment clauses: Sets the enterprise value, the debt and working capital definitions, and the completion accounts mechanism. Your FDD debt schedule and WC peg feed directly into these definitions.\n\nWarranties: Statements made by the seller about the business - that the accounts are accurate, that there are no undisclosed liabilities, that customers have not given notice. If a warranty is breached after completion, the buyer can claim damages. Your FDD findings help the buyer decide which warranties to push hard for.\n\nIndemnities: Specific protections for known risks. If your FDD identifies a specific issue - say the HMRC VAT deferral - the buyer may seek a specific indemnity rather than relying on a general warranty.\n\nW&I insurance: Warranty and Indemnity insurance is increasingly common, especially in PE-backed deals. The insurer steps into the seller's shoes for warranty claims. Your FDD report forms part of the underwriting process.",
+     callout:{type:"amber",label:"Why this matters for your report",text:"Every finding in your FDD report should be framed with a deal consequence: does it affect price, require a warranty, require an indemnity, or require a specific condition to completion? 'Interesting observation' is not enough - connect it to the deal mechanics."}}
+  ]
+},
+{
+  id:"M4", icon:"📐", title:"Valuation Basics", subtitle:"Why the business is priced the way it is", time:20, accent:"#8A6A10", tag:null,
+  starters:["Why do different businesses get different EBITDA multiples?","What is enterprise value versus equity value?","How do you know if a 5x multiple is cheap or expensive?","What is ARR and why does it matter for SaaS businesses?"],
+  sections:[
+    {id:"M4S1", title:"EBITDA multiples - how businesses are valued",
+     content:"In M&A, the most common way to value a business is to multiply its EBITDA by a sector-appropriate multiple. This is called an EV/EBITDA multiple, where EV stands for Enterprise Value.\n\nThe multiple reflects what buyers are willing to pay for each pound of EBITDA. A business with high-quality, recurring, growing earnings commands a higher multiple than one with lumpy, declining, or customer-concentrated revenue.\n\nTypical ranges as a rough guide: owner-managed professional services businesses trade at 3-6x EBITDA. Technology businesses with recurring revenue trade at 6-12x. High-growth SaaS businesses can trade at revenue multiples, sometimes 4-8x ARR regardless of profitability.\n\nFieldForce is being sold at 5.6x reported EBITDA, or 5.1x adjusted EBITDA. For a UK SaaS business with 24% revenue growth and 68% contracted recurring revenue, that is a reasonable but not stretched multiple.",
+     numbers:[
+       {label:"Reported EBITDA",value:"£636,000",tag:"reported"},
+       {label:"Adjusted EBITDA",value:"£740,000",tag:"calc"},
+       {label:"Asking price (EV)",value:"£4,200,000",tag:"asking"},
+       {label:"Multiple on reported",value:"6.6x",tag:"calc"},
+       {label:"Multiple on adjusted",value:"5.7x",tag:"calc"},
+       {label:"Typical SaaS range",value:"6–10x adj. EBITDA",tag:"info"}
+     ]},
+    {id:"M4S2", title:"Enterprise value vs equity value - the price your client pays",
+     content:"Enterprise Value (EV) is the theoretical value of the whole business - the operating business itself, ignoring how it is financed. It is the number used in valuation multiples.\n\nBut your client is not buying the operating business in isolation. They are buying the shares, which come with the business's debt attached. So the price they actually pay is the Equity Value, which equals Enterprise Value minus Net Debt plus Excess Cash, adjusted for working capital versus the agreed peg.\n\nThis distinction is critical. A seller quotes an EV because it sounds bigger. Your client pays an equity value that could be meaningfully lower once debt and working capital adjustments are applied.\n\nIn the FieldForce deal, the gap between the headline EV of £4.2m and the implied equity value of approximately £3.5m is £700k. That £700k difference is the entire value of your FDD work.",
+     callout:{type:"gold",label:"The equity bridge",text:"Enterprise Value:          £4,200,000\nLess: Net Debt:            (£219,000)\nLess: VAT deferral:         (£28,000)\nLess: WC shortfall:         (£18,000)\nLess: Multiple correction:  (£434,000)  ← adj. EBITDA vs reported\nImplied Equity Value:      ~£3,501,000"}},
+    {id:"M4S3", title:"What drives the multiple - quality signals",
+     content:"The EBITDA multiple is not arbitrary. Buyers and their advisors pay more for businesses with characteristics that make future earnings more predictable and more likely to grow.\n\nFactors that increase the multiple: high recurring revenue (especially contracted SaaS), strong growth trajectory, diverse customer base with no single customer above 15-20% of revenue, proprietary technology or IP, scalable cost structure, strong management team independent of the founder.\n\nFactors that reduce the multiple: customer concentration, key person dependency, declining margins, high churn, weak financial controls, no audited accounts, sector headwinds.\n\nIn FieldForce's case, the positive factors (SaaS model, 24% growth, expanding margins) support a 5-6x multiple. The negative factors (David holds all enterprise relationships, one customer at 11% of revenue, no CFO) provide downward pressure. The agreed 5.7x adjusted EBITDA reflects this balance.",
+     callout:{type:"red",label:"Key person discount",text:"FieldForce's biggest valuation risk: if David Kavanagh leaves at completion, enterprise clients may follow him. A buyer paying 5.7x adjusted EBITDA is implicitly assuming continuity. This must be addressed in deal structure - typically via an earn-out or lock-in period."}}
+  ]
+},
+{
+  id:"M5", icon:"🔍", title:"Quality of Earnings", subtitle:"Is the profit real, recurring, and sustainable?", time:40, accent:"#8A6A10", tag:null,
+  starters:["What makes a valid EBITDA addback versus one I should reject?","How do I test whether a cost is truly non-recurring?","What is LTM EBITDA and when should I use it?","How do I build an EBITDA bridge from scratch?"],
+  sections:[
+    {id:"M5S1", title:"What quality of earnings means",
+     content:"Quality of Earnings (QoE) is the central question in financial due diligence. It asks: how much of the reported EBITDA is genuine, recurring, and sustainable - and how much is inflated, one-off, or misleading?\n\nSellers present their best numbers. They use legitimate accounting choices but choices that favour them. Your job is to stress-test those choices with evidence and produce an adjusted EBITDA that your client can rely on for pricing.\n\nA high-quality earnings stream is one where most EBITDA is generated by contracted, recurring revenue, the cost base is complete and representative, there are no one-off income items inflating the number, and the trend is stable or growing.\n\nA low-quality earnings stream has lumpy project revenue, costs that have been cut to flatter the sale year, large unexplained adjustments without documentation, and a recent spike that is hard to explain.",
+     callout:{type:"blue",label:"The core question",text:"If this business traded for the next 12 months in exactly the same way as the last 12 months - same customers, same costs, same team - how much EBITDA would it generate? That is what the adjusted EBITDA should represent."}},
+    {id:"M5S2", title:"The EBITDA bridge - building it step by step",
+     content:"The EBITDA bridge starts with reported EBITDA and works through every adjustment to reach the normalised figure. Each adjustment moves the number up (addback) or down (deduction).\n\nAddbacks are costs that are included in reported EBITDA but that will not recur. The most common: owner salary above market rate, one-off legal or professional fees, one-off restructuring costs, and non-recurring exceptional items.\n\nDeductions are costs that are missing from reported EBITDA but that will recur. The most common: a role that was vacant in the sale year, costs cut to improve presentation, underinvestment in marketing or R&D.\n\nEvery adjustment needs three things: a clear description, a specific value, and documentary evidence. An addback without evidence is an assumption, not a finding.",
+     example:"ebitda_bridge"},
+    {id:"M5S3", title:"Testing each addback - the three questions",
+     content:"Before accepting any addback proposed by the seller, ask three questions.\n\nFirst: Is it genuinely non-recurring? A legal dispute that has been settled is non-recurring. A business that has a legal dispute every two years has a recurring legal cost. Check the prior years - if the same type of cost appears in 2021 and 2022, it is not one-off.\n\nSecond: Is it evidenced? The seller says the rebrand cost £28,000. Do you have the agency invoice? Does it match? Is it one invoice or several? Sellers sometimes package multiple costs together and present them as a single one-off.\n\nThird: Is the addback complete? If you add back the owner's salary above market rate, you must also subtract the market-rate replacement cost. If you add back redundancy costs, you should deduct the ongoing staff cost saving. Addbacks are often presented in isolation when they should be net of related impacts.",
+     callout:{type:"amber",label:"The rebrand test",text:"FieldForce's £28k rebrand addback: the seller says it is one-off. Ask: when did you last do a rebrand? If the answer is 2018 (5 years ago) and before that 2013 (5 years again), this is a recurring cost every 5 years. The correct treatment is to spread it - £28k over 5 years = £5,600 annual charge. Not a clean addback."}},
+    {id:"M5S4", title:"LTM and run-rate - what the business earns right now",
+     content:"Historical EBITDA tells you what the business earned in the past. LTM (Last Twelve Months) EBITDA tells you what it is earning right now. For a growing business, LTM will be higher than the last full financial year. For a declining business, it will be lower.\n\nTo calculate LTM: take the last full financial year, add the most recent period (e.g. Jan-Jun 2024), and subtract the same period from the prior year (Jan-Jun 2023). This gives a rolling twelve-month figure.\n\nRun-rate is a cruder version: take the most recent month's EBITDA and multiply by twelve. This is only useful if the business is highly predictable. For a lumpy business it can be misleading.\n\nAlways check whether LTM improvements are structural (the business is genuinely earning more) or tactical (costs have been cut ahead of sale, or a large one-off contract happened to land in the period).",
+     callout:{type:"red",label:"Pre-sale window dressing",text:"Common signs that a seller has improved EBITDA in the sale year: headcount reductions in the 12 months before going to market, reduced marketing spend, deferred IT investment, pulling forward revenue from future periods. Compare the sale year's cost structure to the prior two years - any unusual cost savings warrant investigation."}}
+  ]
+},
+{
+  id:"M6", icon:"📈", title:"Revenue & Cost Analysis", subtitle:"Understanding what drives the business", time:30, accent:"#1A56A0", tag:null,
+  starters:["How do I test whether revenue is truly recurring?","What is ARR, MRR, and churn - and why do they matter?","How do I assess whether the cost base is complete?","What is customer concentration risk and how do I measure it?"],
+  sections:[
+    {id:"M6S1", title:"Revenue quality - the spectrum from contracted to one-off",
+     content:"Revenue quality exists on a spectrum. At the best end: fully contracted, auto-renewing SaaS subscriptions with multi-year terms. At the worst end: single project fees from a customer who may never come back.\n\nThe higher the proportion of recurring contracted revenue, the more predictable the future earnings, the less sales effort required to maintain revenue, and the higher the multiple a buyer will pay.\n\nTo assess revenue quality, you need to categorise every revenue line: contracted recurring (SaaS or retainer), expected recurring (no contract but strong relationship), project-based (depends on winning new work), and genuinely one-off (will not recur).\n\nFor FieldForce, 68% of revenue is contracted SaaS - strong. But 17% is onboarding fees which only arise when new customers sign up. If new customer growth slows, this line drops - and it has a disproportionate effect on EBITDA because it carries high margins.",
+     example:"revenue_split"},
+    {id:"M6S2", title:"Customer concentration - the single biggest revenue risk",
+     content:"Customer concentration is the degree to which a small number of customers account for a disproportionate share of revenue. It is one of the most common and most serious risks in SME acquisitions.\n\nA business where the top customer represents 40% of revenue is exposed. If that customer leaves, churns, or renegotiates aggressively, the business loses 40% of its revenue overnight. The buyer has just overpaid.\n\nAs a rule of thumb: no single customer above 15-20% of revenue is comfortable. Top 5 customers above 60% of revenue warrants investigation. Any customer on a contract that expires within 12 months of completion needs specific attention.\n\nFor FieldForce: Meridian FM (11% of revenue) is the largest customer, manageable but worth monitoring. However, David Kavanagh manages that relationship personally - meaning the concentration risk and key person risk are linked.",
+     callout:{type:"red",label:"FieldForce concentration flags",text:"Meridian FM Group: 11% of 2023 revenue - David's direct relationship\nApex Facilities: 8% - renewal due March 2024, not yet signed\nOrion Building Svcs: churned Sept 2023 - £55k ARR gone from 2024\n\nThese three items together could reduce 2024 revenue by £200k+ vs 2023."}},
+    {id:"M6S3", title:"Analysing the cost base - is it complete?",
+     content:"The cost base in the P&L should represent what it costs to run the business at its current scale. In practice, sellers sometimes present a P&L with a cost base that is artificially low - either because of genuine one-off savings or deliberate preparation for sale.\n\nThe key questions: Is headcount at the right level? Are there vacancies that artificially suppress the staff cost line? Has marketing spend been cut? Has IT investment been deferred? Are all third-party contracts at market rates, or has the owner been using related parties at below-market cost?\n\nFor FieldForce: the BDM vacancy suppresses the 2023 staff cost by approximately £35,000. The replacement was hired in October 2023, so only 3 months of cost appears in the P&L. The normalised cost base needs to include a full year of this role.\n\nAlso check: does the cost base include a proper management charge? In owner-managed businesses, the owner often does multiple roles - CEO, sales director, account manager. The reported salary may not reflect what those roles would cost in aggregate on the open market.",
+     callout:{type:"gold",label:"The replacement CEO test",text:"David Kavanagh earns £180k. A market-rate CEO for a 45-person SaaS business is approximately £100k.\n\nAddback: £180k − £100k = £80k\n\nBut also consider: David is also effectively Head of Sales and the primary account manager for enterprise clients. What does that cost to replace properly?"}}
+  ]
+},
+{
+  id:"M7", icon:"⚖️", title:"Working Capital", subtitle:"The cash tied up in running the business", time:25, accent:"#1A6B2A", tag:null,
+  starters:["Why is negative working capital normal for SaaS businesses?","What is deferred revenue and why is it a liability?","How do I set the working capital peg?","What is days sales outstanding and how do I calculate it?"],
+  sections:[
+    {id:"M7S1", title:"Working capital - what it is and why it matters",
+     content:"Working capital is the money tied up in the day-to-day operation of the business. It represents the cash the business needs to function - the gap between money owed by customers and money owed to suppliers.\n\nFormula: Working Capital = Current Assets minus Current Liabilities.\n\nCurrent Assets are mainly: trade debtors (customers who owe money), stock or inventory, and prepayments. Current Liabilities are mainly: trade creditors (suppliers the business owes), accruals (costs incurred but not yet invoiced), and deferred revenue (cash received for services not yet delivered).\n\nWorking capital matters in deals because the buyer expects the business to come with a normal level of it. If working capital at completion is lower than the agreed target (the peg), the buyer pays less. This adjustment can be worth tens or hundreds of thousands of pounds.",
+     callout:{type:"gold",label:"Formula",text:"Working Capital = Trade Debtors + Prepayments + Stock\n                − Trade Creditors − Accruals − Deferred Revenue\n\nFieldForce Dec 2023: £298k + £34k − £92k − £68k − £196k = (£24k)"}},
+    {id:"M7S2", title:"Why FieldForce has negative working capital - and why that is fine",
+     content:"FieldForce's working capital is consistently negative, ranging from (£14k) to (£30k) across three years. This might look alarming but it is completely normal for a SaaS business.\n\nHere is why: FieldForce bills its annual SaaS licences upfront. A customer pays £24,000 in January for a full year's service. FieldForce receives the cash but has only earned one month of it. The remaining £22,000 sits as deferred revenue - a current liability.\n\nAs deferred revenue grows with the business, it creates a structural negative working capital position. This is actually a sign of a healthy SaaS model: customers are paying before the service is delivered, giving the business a cash advance.\n\nThe risk would be if deferred revenue suddenly collapsed - which would happen if customers stopped renewing. Monitor deferred revenue as a proxy for renewal health.",
+     example:"wc_trend"},
+    {id:"M7S3", title:"The working capital peg - how it is set and why it is negotiated",
+     content:"The peg is the target level of working capital the seller must deliver at completion. It should represent normal trading conditions, not the best or worst month of the year.\n\nThe correct methodology: calculate working capital at each month-end for the last 12 months and take the average. Adjust for any known abnormalities - a large prepayment, an unusual debtor spike.\n\nThe seller will try to set the peg low (using a month with low working capital) because a lower peg means less working capital is required at completion, making it easier to avoid a price deduction. The buyer wants the peg set at the average.\n\nFor FieldForce: the seller proposes (£10k) based on September 2023 (the lowest month). The 12-month average is (£20k). The difference is £10,000 - at first glance small, but in a £3.5m deal this is a meaningful negotiation point and the principle of using a cherry-picked month must be resisted.",
+     example:"wc_monthly"},
+    {id:"M7S4", title:"Debtor quality and days sales outstanding",
+     content:"Trade debtors are only valuable if customers actually pay. A business with £300k of debtors that are all 90+ days overdue has a very different quality of working capital to one where all debtors are current.\n\nDays Sales Outstanding (DSO) measures how long, on average, it takes customers to pay: DSO = (Trade Debtors ÷ Revenue) × 365.\n\nFieldForce DSO: (£298k ÷ £2,840k) × 365 = 38 days. For a business with 30-day payment terms, this is slightly stretched but acceptable. A DSO above 60 days would be a concern.\n\nAlways review the debtor ageing schedule - a report that breaks down debtors by how long they have been outstanding. Ask the seller to explain anything over 60 days. Any disputed invoices should be flagged and potentially excluded from the working capital calculation.",
+     example:"debtor_aging",
+     callout:{type:"gold",label:"DSO formula",text:"Days Sales Outstanding = (Trade Debtors ÷ Annual Revenue) × 365\n\nFieldForce: (£298,000 ÷ £2,840,000) × 365 = 38 days\nPayment terms: 30 days - slightly stretched but within normal range"}}
+  ]
+},
+{
+  id:"M8", icon:"🏦", title:"Debt, Tax & Liabilities", subtitle:"What the business owes and what reduces your price", time:30, accent:"#8A1A1A", tag:null,
+  starters:["What is the difference between financial debt and debt-like items?","What tax issues should I always check in FDD?","What is deferred tax and why does it appear on the balance sheet?","How do I build a complete debt schedule?"],
+  sections:[
+    {id:"M8S1", title:"Net debt - every pound reduces the price",
+     content:"Net debt is the total financial borrowings of the business minus any cash it holds. In an acquisition, net debt is deducted from the Enterprise Value to arrive at the equity price paid for the shares.\n\nThis means every pound of debt you identify as a buyer's advisor directly reduces the price your client pays - or protects them from overpaying if the seller's own debt schedule is incomplete.\n\nFinancial debt includes: bank term loans, revolving credit facilities, overdrafts, invoice finance facilities, hire purchase agreements, and finance leases. It also includes director loan accounts - money owed by the business to its owner, which must be repaid at completion.\n\nFor FieldForce: the seller's draft debt schedule shows the HSBC loan and the finance lease. It omits the £45,000 director loan account. This is a common omission in seller-prepared schedules, sometimes genuine oversight, sometimes not.",
+     numbers:[
+       {label:"HSBC term loan",value:"(£220,000)",tag:"debt"},
+       {label:"Finance lease",value:"(£38,000)",tag:"debt"},
+       {label:"Director loan (omitted by seller!)",value:"(£45,000)",tag:"debt"},
+       {label:"Cash at bank",value:"£84,000",tag:"info"},
+       {label:"Net Debt",value:"(£219,000)",tag:"calc"},
+       {label:"Equity Value impact",value:"(£219,000)",tag:"calc"}
+     ]},
+    {id:"M8S2", title:"Debt-like items - the hidden liabilities",
+     content:"Debt-like items are not formal financial debt but they represent real cash obligations the buyer will inherit. They should reduce the equity price pound for pound, just like financial debt.\n\nThe most common debt-like items: HMRC arrears (PAYE, VAT, corporation tax underpayments), pension deficits, deferred tax liabilities on accelerated capital allowances, COVID-era tax deferrals not yet repaid, unfunded holiday pay accruals, customer deposits that must be returned, and earn-out liabilities from prior acquisitions.\n\nFor FieldForce: a £28,000 VAT deferral from the HMRC COVID scheme is outstanding. It is disclosed in the balance sheet notes (Note 6) but not in the seller's debt schedule. A Time to Pay arrangement is in place but the liability is real and must be settled.\n\nAlways ask the seller's accountants directly: are there any HMRC arrangements, payment plans, or open tax enquiries? Do not rely solely on the balance sheet.",
+     callout:{type:"red",label:"HMRC check - always do this",text:"Request confirmation of the following for the last 3 years:\n• PAYE/NI - are payments current? Any HMRC notices?\n• VAT - are returns filed and payments current? Any disputes?\n• Corporation tax - are returns filed? Any open enquiries or investigations?\n• R&D credits - if claimed, are they properly documented?\n\nHMRC liabilities can be hidden in balance sheet accruals or simply not mentioned."}},
+    {id:"M8S3", title:"Tax in FDD - what you need to check",
+     content:"Tax is a specialist area and serious tax due diligence is done by tax advisors. But as the FDD lead, you need to know enough to flag issues and ask the right questions.\n\nCorporation tax: Is the reported tax charge consistent with the pre-tax profit? An unusually low effective tax rate might reflect R&D credits (legitimate), aggressive tax planning (risky), or errors in the accounts (worrying). Check deferred tax - a deferred tax liability means future tax bills will be higher than current ones.\n\nEmployee tax: PAYE and NI must be deducted correctly from all employees. Watch for contractors who should be employees (IR35 risk), director loan accounts that attract benefit-in-kind charges, and salary sacrifice arrangements.\n\nVAT: Is the business VAT registered? Are returns filed on time? Any disputes with HMRC? VAT errors in complex businesses can create significant retrospective liabilities.\n\nFor FieldForce: no major tax issues identified beyond the VAT deferral. The R&D claim implied by capitalised development costs should be verified - if R&D tax credits have been claimed and could be challenged, this is a contingent liability.",
+     callout:{type:"amber",label:"Deferred tax explained simply",text:"Deferred tax is the tax the business will owe in future years as a result of timing differences between accounting and tax treatment.\n\nExample: FieldForce capitalises development costs and depreciates over 3 years. For tax purposes, the deduction may be taken immediately. This creates a timing difference - the business gets the tax benefit early, creating a deferred tax liability (future tax to pay).\n\nDeferred tax liabilities can be significant in capital-intensive businesses."}},
+    {id:"M8S4", title:"Building the equity bridge - from EV to what your client pays",
+     content:"The equity bridge is the final output of your debt and working capital analysis. It takes the agreed Enterprise Value and steps through every deduction and adjustment to arrive at the actual equity consideration.\n\nThis is the number that matters most to your client. Everything you have done in FDD - the adjusted EBITDA, the working capital peg, the debt schedule - flows into this bridge.\n\nPresent it clearly and simply. Your client may not follow the accounting detail but they will understand: 'you agreed to pay £4.2m but based on our analysis you should pay approximately £3.5m, and here is why.'",
+     example:"equity_bridge"}
+  ]
+},
+{
+  id:"M9", icon:"🚨", title:"Red Flags & Fraud Indicators", subtitle:"What manipulation looks like in numbers", time:25, accent:"#8A1A1A", tag:null,
+  starters:["What are the most common ways sellers manipulate EBITDA?","How do I spot if revenue has been pulled forward?","What does round number bias mean in accounting?","What should I do if I think something is wrong but I can't prove it?"],
+  sections:[
+    {id:"M9S1", title:"Why financial manipulation happens - and what to look for",
+     content:"Most sellers are honest. But the pressure of a sale process creates incentives to present numbers favourably - and sometimes to go further. Understanding the common patterns helps you spot problems faster.\n\nManipulation does not always mean fraud. It often means: aggressive but technically legitimate accounting choices, costs reclassified to make margins look better, one-off income included without disclosure, expenses deferred into the period after completion.\n\nFraud - fabricating invoices, falsifying bank statements, creating fictitious customers - is rarer but it does happen in smaller businesses where there is limited oversight. The absence of an audit makes it harder to detect.\n\nThe most powerful tool you have is consistency. Compare this year to prior years. Compare reported numbers to supporting data. Ask yourself: does this make sense? If something looks unusually good, find out why.",
+     callout:{type:"red",label:"The three questions",text:"1. Is this consistent with prior years? (Revenue pattern, margin pattern, cost pattern)\n2. Does this make sense operationally? (Staff count vs staff cost, customer count vs revenue)\n3. Can I verify this independently? (Bank statement, invoice, contract, payroll record)"}},
+    {id:"M9S2", title:"Revenue manipulation - the most common patterns",
+     content:"Revenue is the most commonly manipulated line because it directly drives valuation. Common patterns:\n\nChannel stuffing: products shipped to distributors or related parties at year end to inflate revenue, with an implicit agreement to return or credit them later. Look for large debtors from related parties, unusual year-end revenue spikes, and high returns in the following period.\n\nBill and hold: invoicing customers for goods not yet delivered, or services not yet started. Check whether debtors are rising faster than revenue - if DSO is increasing significantly, revenue may be being recognised early.\n\nRound trips: cash sent to a related party and returned as 'revenue'. Look for unusual bank transactions with individuals or related companies, especially near year end.\n\nContract manipulation: spreading one-off project income across multiple periods to create an illusion of recurring revenue, or collapsing multi-year contract value into one year.",
+     callout:{type:"amber",label:"FieldForce revenue test",text:"August 2023 onboarding fee spike (£60k in one month vs typical £30-40k): explained by Castlebrook FM going live. Verify: obtain the signed contract, confirm go-live date, check Castlebrook is a real trading customer with a live account. Cross-reference against the management accounts invoice data."}},
+    {id:"M9S3", title:"Cost manipulation and earnings smoothing",
+     content:"Cost manipulation typically involves deferring costs into the period after completion (so they do not hit EBITDA in the sale year) or reclassifying costs as capex rather than operating expense.\n\nDeferred costs: a business delays renewing insurance, skips an IT upgrade, holds off on hiring. These costs will arise after completion and the buyer pays for them. Compare the 2023 cost base to 2021 and 2022 - any line that is unusually low relative to revenue growth deserves an explanation.\n\nCapex vs opex: capitalising costs (putting them on the balance sheet as an asset rather than expensing them immediately) reduces the P&L cost and inflates EBITDA. FieldForce capitalises development costs. This is legitimate but the level should be consistent year on year - a sharp increase in capitalised development in the sale year should be questioned.\n\nRound numbers: legitimate accounting rarely produces perfectly round numbers. If EBITDA is exactly £600,000 or if an addback is exactly £50,000, ask to see the underlying data.",
+     callout:{type:"red",label:"The capex test",text:"FieldForce intangible assets grew from £165k (2022) to £220k (2023) - an increase of £55k in capitalised development costs.\n\nAdd: FY2023 amortisation charge £42k\nImplied gross additions: £55k + £42k = £97k capitalised in 2023\n\nIs this consistent with 2022? Ask for the capitalisation policy and the specific projects capitalised. Compare to prior years."}},
+    {id:"M9S4", title:"What to do when something does not add up",
+     content:"You will encounter situations where a number looks wrong but you cannot immediately prove it. This is normal. The right approach is methodical, not accusatory.\n\nStep 1: Document the anomaly precisely. Write down exactly what the discrepancy is, what you expected versus what you found, and what the potential financial impact is.\n\nStep 2: Request additional information. Ask for the specific underlying document - the invoice, the bank statement, the contract. Frame it as a routine request, not an accusation.\n\nStep 3: Cross-reference. Can you verify the number from a different source? If a customer is claimed to have paid £100k, does the bank statement show a receipt? If a cost is claimed as one-off, does it appear in prior years?\n\nStep 4: Report what you know. Your FDD report should state findings factually: 'We were unable to obtain supporting documentation for the £45k legal addback. Pending receipt of the legal file, we have included this adjustment on a conditional basis.' Never cover up uncertainty with false confidence.",
+     callout:{type:"blue",label:"Your professional standard",text:"You do not need to prove fraud. You need to flag what you cannot verify and quantify the financial risk. A finding that says 'unverified - potential impact £45k' is more useful to your client than silence."}}
+  ]
+},
+{
+  id:"M10", icon:"📋", title:"Running the Process", subtitle:"IRLs, data rooms, and management Q&As", time:25, accent:"#5A2D8A", tag:null,
+  starters:["How do I build a good information request list?","What should I do in the first 24 hours of data room access?","How do I run a management Q&A session?","How do I track outstanding items without annoying the seller?"],
+  sections:[
+    {id:"M10S1", title:"The information request list - how to build one",
+     content:"An information request list (IRL) is the formal list of documents and data you need from the seller. It is sent at the start of diligence and added to as questions arise. A well-structured IRL makes you look professional, makes the seller's life easier, and ensures you do not miss anything.\n\nOrganise it by category: financial statements (statutory accounts, management accounts, bank statements), revenue analysis (customer schedules, contracts, pricing), cost analysis (payroll, major supplier contracts), balance sheet (loan agreements, lease schedules, debt schedules), and other (insurance, litigation, regulatory).\n\nBe specific. 'Financial information' is not a request. 'Monthly management accounts for the 36 months ended 31 December 2023' is a request. The more specific you are, the faster you get what you need.\n\nDo not request everything at once if you do not need it. An IRL with 200 items overwhelms the seller and creates friction. Start with the essentials, add follow-up requests as you work through the data.",
+     callout:{type:"green",label:"Core IRL items - always request",text:"1. Management accounts - monthly, last 3 years\n2. Statutory accounts - last 3 years\n3. Revenue schedule by customer - last 3 years\n4. Payroll schedule - current\n5. Loan agreements and statements - all facilities\n6. Bank statements - last 6 months\n7. Top 10 customer contracts\n8. Debtor ageing schedule - current\n9. Fixed asset register\n10. Any HMRC correspondence in last 2 years"}},
+    {id:"M10S2", title:"Navigating the data room - the first 48 hours",
+     content:"When data room access opens, resist the temptation to dive into the numbers immediately. Spend the first two hours getting oriented.\n\nFirst: inventory what is there. Go through every document and record what has been provided versus what was requested. Note every gap. Patterns of missing information are themselves informative - a seller who provides three years of management accounts but only one year of bank statements is telling you something.\n\nSecond: read the statutory accounts first. These are the audited (or at least formally filed) numbers. Compare the headline revenue and profit to the management accounts. They should broadly reconcile - material unexplained differences need investigation.\n\nThird: read the notes to the accounts before anything else. This is where significant accounting policies, related party transactions, contingent liabilities, and unusual items are disclosed. Most people skip the notes. Do not.\n\nFourth: build your three-year summary table. Revenue, gross profit, EBITDA by year. This orients you and gives you the trends before you go deeper.",
+     callout:{type:"amber",label:"The gap tracker",text:"Maintain a running log of every item requested versus received. Three columns: Requested, Received (date), Status.\n\nShare a summary weekly with your client. Outstanding items that linger more than a week should be escalated. A seller who repeatedly fails to provide requested information is a red flag about business quality, not just data room management."}},
+    {id:"M10S3", title:"The management Q&A - how to run it effectively",
+     content:"The management Q&A (sometimes called the management presentation or management interview) is a meeting where you and your client sit down with the seller's management team and ask questions directly.\n\nPrepare thoroughly. Every question should be grounded in something you have seen in the data. Generic questions waste time. Specific, evidenced questions get better answers and signal that you have done your homework.\n\nFocus on the things that matter most: How does the business win new customers? What is the renewal rate? What would happen to the business if the founder left? What is the outlook for the next 12 months? Are there any issues or disputes not reflected in the accounts?\n\nListen for inconsistencies. If management describe the business differently to what the numbers show, that is worth probing. If the founder is evasive on specific questions, note it.\n\nAlways ask: is there anything material about the business that we should know that has not been covered in the data room or today's discussion? This is a catch-all question that, if answered dishonestly, strengthens the buyer's warranty position.",
+     callout:{type:"blue",label:"Questions that always get useful answers",text:"1. 'Walk me through how you win a new customer - from first contact to signed contract.'\n2. 'What is your net revenue retention? Do customers spend more or less with you over time?'\n3. 'What would the business look like in 12 months if nothing changed - same team, same customers?'\n4. 'Is there anything about the business that you think is a risk that we haven't discussed?'"}},
+    {id:"M10S4", title:"Post-completion - what happens after signing",
+     content:"FDD does not end at signing. In a completion accounts deal, the price is finally determined after completion based on the actual balance sheet. This process - preparing and agreeing the completion accounts - can take months and is frequently disputed.\n\nAs the buyer's FDD advisor, you may be asked to review the completion accounts prepared by the seller's accountants. Your job is to verify that: net debt is calculated consistently with the SPA definition, working capital is calculated consistently with the agreed methodology, and there are no items included or excluded contrary to the agreed treatment.\n\nDisputes are common. Sellers often calculate working capital using a more generous definition than the one in the SPA. Your FDD work - which established the definitions and the peg - is the reference document.\n\nAlso understand earn-outs: a mechanism where part of the purchase price is paid based on future performance. If the business hits certain EBITDA or revenue targets in years 1-3 post-completion, the seller receives additional payment. Your adjusted EBITDA methodology is the starting point for these calculations.",
+     callout:{type:"green",label:"Earn-out structure for FieldForce",text:"Given David's key person risk, a buyer might structure:\n• £3.0m paid at completion\n• £500k earn-out payable if 2024 EBITDA exceeds £780k\n• David locked in for 24 months post-completion\n\nThis aligns David's interests with the buyer's and protects against the key person risk identified in FDD."}}
+  ]
+},
+{
+  id:"M11", icon:"💼", title:"Live FDD: FieldForce Deal", subtitle:"Run the full deal from data room to report", time:75, accent:"#1A56A0", tag:null,
+  starters:["I'm ready to start - where do I begin?","I've opened File 1. What am I looking for first?","Help me interpret the three-year trend in the management accounts","I found the director loan account - what do I do with it?"],
+  sections:[
+    {id:"M11S1", title:"Task 1 - Orient yourself and build the three-year summary", task:true,
+     content:"You now have access to the FieldForce data room (the 5 Excel files). Your first task before touching any numbers is to orient yourself.\n\nOpen File 1 (Management Accounts). Read the Cover sheet and the Notes tab before looking at the P&L. Note what period is covered, whether accounts are audited, and any disclosures in the notes.\n\nThen build a three-year summary table. For each of 2021, 2022, and 2023 calculate: Revenue, Gross Profit, Gross Margin %, Total Overheads, EBITDA, EBITDA Margin %, Revenue growth year-on-year, and EBITDA growth year-on-year.\n\nOnce you have built it, ask Finn: 'What do these trends tell me about FieldForce?' Then come back here and continue.",
+     example:"task1_data"},
+    {id:"M11S2", title:"Task 2 - Analyse revenue quality", task:true,
+     content:"Open File 2 (Revenue Schedule). Your job is to assess the quality and sustainability of FieldForce's revenue.\n\nWork through these questions: What percentage of 2023 revenue is contracted recurring SaaS? Which customers are at renewal risk in the next 12 months? What happened to Orion Building Services and what is the financial impact for 2024? What does the August 2023 onboarding spike represent and is it legitimate?\n\nThen calculate: top 1 customer as % of revenue, top 3 customers as % of revenue, and contracted ARR at December 2023 (the SaaS licences only, annualised).\n\nAsk Finn: 'Based on the revenue schedule, what revenue risks should I flag to my client?'",
+     example:"revenue_split"},
+    {id:"M11S3", title:"Task 3 - Build the EBITDA bridge", task:true,
+     content:"You now need to test the seller's proposed EBITDA addbacks and build your own adjusted EBITDA.\n\nThe seller has proposed three addbacks: owner salary above market rate (£80k), one-off IP litigation costs (£45k), and website rebrand costs (£28k). Review each one using the management accounts notes and payroll schedule.\n\nFor each addback decide: agree, partially agree, or reject. State the evidence you would need for any conditional acceptance.\n\nThen add your own buyer-side adjustment: the sales headcount vacancy (visible in the payroll schedule - BDM vacancy August to October 2023).\n\nCalculate your adjusted EBITDA and compare it to the seller's claimed figure.",
+     example:"ebitda_bridge"},
+    {id:"M11S4", title:"Task 4 - Working capital peg", task:true,
+     content:"Open File 5 (Working Capital and Debt). Your task is to recommend the working capital peg.\n\nThe seller is proposing a peg of (£10,000) based on the September 2023 month-end. Review all 12 months of working capital data and calculate the 12-month average.\n\nThen build your argument: why is the 12-month average the correct methodology? What are the weaknesses in the seller's position? What is the financial impact of the difference?\n\nAsk Finn: 'How do I present the working capital peg argument to the seller's advisor?'",
+     example:"wc_monthly"},
+    {id:"M11S5", title:"Task 5 - Debt schedule and hidden items", task:true,
+     content:"Still in File 5 (Debt Schedule tab) and File 3 (Balance Sheet Notes). Your task is to build a complete debt schedule.\n\nStart with the seller's own schedule. Then review the Balance Sheet Notes carefully - Notes 6, 7, 8, and 9 specifically. Identify every item that should be treated as debt or a debt-like item that the seller has not included.\n\nFor each item, note: the amount, whether it is in the seller's schedule, and why it should be included.\n\nCalculate total net debt including all debt-like items.",
+     example:"equity_bridge"},
+    {id:"M11S6", title:"Task 6 - Build the equity bridge", task:true,
+     content:"You now have all the components. Build the full equity bridge from the seller's asking price of £4.2m down to the implied equity value.\n\nComponents: Seller's Enterprise Value (£4.2m), adjustment for EBITDA multiple correction (use your adjusted EBITDA at 5x), less net financial debt, less debt-like items, less working capital shortfall vs peg.\n\nCalculate the implied equity value. Compare it to the seller's asking price. What is the gap? How would you communicate this to your client?\n\nAsk Finn: 'How do I present this number to my client without it feeling like I'm just trying to reduce the price?'",
+     example:"task4_bridge"},
+    {id:"M11S7", title:"Task 7 - Identify and grade your findings", task:true,
+     content:"Before writing the report, you need to compile and grade all findings from your work.\n\nGo through everything you have found. For each item, decide: is it Critical (could change price or structure or cause walkaway), Significant (material risk but not a dealbreaker), or Informational (worth noting but low financial impact).\n\nFor each finding, write one sentence describing it, one sentence on the financial impact, and one sentence on the recommended action or deal protection.\n\nAsk Finn to review your findings list with you before you move to the report.",
+     example:"findings_table"},
+    {id:"M11S8", title:"Task 8 - Write the executive summary", task:true,
+     content:"The executive summary is the most important page of your report. It is the only page most of your client's decision-makers will read in full.\n\nIt should contain: adjusted EBITDA and bridge summary, net debt and debt-like items, working capital peg recommendation, equity bridge and implied value vs asking price, and the top 3-5 risks in plain language.\n\nLength: one page, maximum. If it does not fit on one page, you have not been concise enough.\n\nReview the draft executive summary below. Ask Finn what you would change, what is missing, and how to communicate the key person risk in a way that is factual without being alarmist.",
+     example:"exec_summary"}
+  ]
+}
+];
+
+// ════════════════════════════════════════════════════════════════════
+// EXAMPLES DATA
+// ════════════════════════════════════════════════════════════════════
+const EX = {
+  fieldforce_pl:{type:"table",title:"FieldForce Ltd - P&L Year Ending Dec 2023",rows:[
+    {l:"Revenue",v:"£2,840,000",note:"Total sales to customers",hi:"blue"},
+    {l:"Cost of Sales",v:"(£680,000)",note:"Direct delivery costs - hosting, third-party tools, support staff"},
+    {l:"Gross Profit",v:"£2,160,000",note:"76% gross margin",hi:"green"},
+    {l:"Staff Costs (excl. director)",v:"(£980,000)",note:"45 staff excluding David Kavanagh"},
+    {l:"Rent & Rates",v:"(£84,000)",note:"Office lease"},
+    {l:"IT & Software",v:"(£96,000)",note:"Hosting, tools, licences"},
+    {l:"Sales & Marketing",v:"(£120,000)",note:"Includes £28k rebrand in April 2023 - see Note 3"},
+    {l:"Director Remuneration",v:"(£180,000)",note:"D. Kavanagh - base £150k + pension £18k + car £12k",hi:"amber"},
+    {l:"Other Overheads",v:"(£64,000)",note:"Insurance, travel, misc - includes £44.8k legal costs"},
+    {l:"EBITDA",v:"£636,000",note:"22% EBITDA margin",hi:"gold"},
+    {l:"Depreciation & Amortisation",v:"(£42,000)",note:"Mainly amortisation of capitalised dev costs"},
+    {l:"Interest",v:"(£18,000)",note:"Interest on HSBC term loan"},
+    {l:"Profit Before Tax",v:"£576,000",note:""}
+  ]},
+  fieldforce_bs:{type:"table",title:"FieldForce Ltd - Balance Sheet at 31 Dec 2023",rows:[
+    {l:"FIXED ASSETS",v:"",note:"",hi:"section"},
+    {l:"Tangible assets (net)",v:"£148,000",note:"IT equipment, office fit-out"},
+    {l:"Intangible assets - capitalised dev",v:"£220,000",note:"Software development costs (see Note 2)"},
+    {l:"CURRENT ASSETS",v:"",note:"",hi:"section"},
+    {l:"Trade debtors",v:"£298,000",note:"38 days DSO - see ageing schedule",hi:"blue"},
+    {l:"Cash at bank",v:"£84,000",note:"HSBC current account - unrestricted"},
+    {l:"CURRENT LIABILITIES",v:"",note:"",hi:"section"},
+    {l:"Trade creditors",v:"(£92,000)",note:"Normal trading payables"},
+    {l:"Deferred revenue",v:"(£196,000)",note:"Unearned SaaS subscription fees",hi:"amber"},
+    {l:"VAT payable (Note 6)",v:"(£28,000)",note:"Includes COVID deferral - debt-like item",hi:"red"},
+    {l:"LONG-TERM DEBT",v:"",note:"",hi:"section"},
+    {l:"HSBC term loan",v:"(£220,000)",note:"Change of control clause - Clause 14.3",hi:"red"},
+    {l:"Finance lease",v:"(£38,000)",note:"Server infrastructure, 18 months remaining"},
+    {l:"Director loan (Note 9)",v:"(£45,000)",note:"NOT in seller's debt schedule - repayable on demand",hi:"red"}
+  ]},
+  ebitda_bridge:{type:"bridge",start:{l:"Reported EBITDA 2023",v:636000},items:[
+    {l:"Add: Owner salary above market rate",v:80000,dir:"up",note:"£180k paid vs ~£100k market rate for CEO role. Supported by payroll records.",verdict:"agree"},
+    {l:"Add: One-off IP litigation costs",v:45000,dir:"up",note:"£44,800 legal fees - settlement confirmed Sept 2023. Legal file not yet provided.",verdict:"query"},
+    {l:"Add: Rebrand costs (50% accepted)",v:14000,dir:"up",note:"£28k total claimed. Rebrands recur every ~5 years - only 50% treated as one-off.",verdict:"query"},
+    {l:"Deduct: Sales headcount vacancy",v:-35000,dir:"dn",note:"BDM role vacant Aug-Oct 2023. Annual cost ~£52k. Buyer's normalisation adjustment.",verdict:"ours"}
+  ],result:{l:"Adjusted EBITDA",v:740000}},
+  revenue_split:{type:"table",title:"FieldForce - Revenue by Type 2023",rows:[
+    {l:"Annual SaaS Licences (contracted)",v:"£1,920,000",note:"68% of revenue - auto-renewing subscriptions",hi:"green"},
+    {l:"Onboarding & Implementation Fees",v:"£480,000",note:"17% - one-off on new client go-live. Depends on new sales velocity.",hi:"amber"},
+    {l:"Professional Services",v:"£320,000",note:"11% - ad hoc project work for existing clients"},
+    {l:"Hardware Sales",v:"£120,000",note:"4% - one-off device sales, not expected to grow"},
+    {l:"Total Revenue",v:"£2,840,000",note:"",hi:"blue"}
+  ]},
+  wc_trend:{type:"table",title:"FieldForce - Working Capital at Year End",rows:[
+    {l:"Trade Debtors",v:"",note:"2021: £186k  |  2022: £224k  |  2023: £298k",hi:"blue"},
+    {l:"Trade Creditors",v:"",note:"2021: (£64k)  |  2022: (£78k)  |  2023: (£92k)"},
+    {l:"Deferred Revenue",v:"",note:"2021: (£110k)  |  2022: (£148k)  |  2023: (£196k)",hi:"amber"},
+    {l:"Net Working Capital",v:"",note:"2021: (£14k)  |  2022: (£30k)  |  2023: (£24k)",hi:"gold"},
+    {l:"Recommended peg",v:"(£22k)",note:"12-month rolling average - see monthly tab",hi:"green"}
+  ]},
+  wc_monthly:{type:"table",title:"FieldForce - Monthly Working Capital 2023",rows:[
+    {l:"January",v:"(£18k)",note:""},{l:"February",v:"(£22k)",note:""},
+    {l:"March",v:"(£26k)",note:""},{l:"April",v:"(£24k)",note:""},
+    {l:"May",v:"(£20k)",note:""},{l:"June",v:"(£18k)",note:""},
+    {l:"July",v:"(£16k)",note:""},{l:"August",v:"(£14k)",note:""},
+    {l:"September",v:"(£10k)",note:"← Seller's proposed peg (lowest point in year)",hi:"red"},
+    {l:"October",v:"(£22k)",note:""},{l:"November",v:"(£28k)",note:""},{l:"December",v:"(£24k)",note:""},
+    {l:"12-Month Average",v:"(£20k)",note:"← FDD recommended peg",hi:"green"}
+  ]},
+  debtor_aging:{type:"table",title:"FieldForce - Debtor Ageing at 31 Dec 2023",rows:[
+    {l:"Current (not yet due)",v:"£184,000",note:"62% - invoices within normal payment terms",hi:"green"},
+    {l:"1–30 days overdue",v:"£68,000",note:"23% - mildly late, no action needed"},
+    {l:"31–60 days overdue",v:"£28,000",note:"9% - chase and confirm status",hi:"amber"},
+    {l:"61–90 days overdue",v:"£12,000",note:"4% - Parkside Contractors, query raised",hi:"amber"},
+    {l:"90+ days overdue",v:"£6,000",note:"2% - Vector Maintenance, invoice disputed",hi:"red"},
+    {l:"Total Debtors",v:"£298,000",note:"DSO: 38 days",hi:"blue"}
+  ]},
+  equity_bridge:{type:"bridge",start:{l:"Enterprise Value (5x adj. EBITDA of £740k)",v:3700000},items:[
+    {l:"Less: Net Debt (HSBC + lease + director loan)",v:-219000,dir:"dn",note:"Director loan NOT in seller's schedule - must be added",verdict:null},
+    {l:"Less: VAT deferral (debt-like item)",v:-28000,dir:"dn",note:"COVID HMRC deferral outstanding - NOT in seller's schedule",verdict:null},
+    {l:"Less: Working capital shortfall vs peg",v:-18000,dir:"dn",note:"If completion WC is (£42k) vs peg of (£22k) - illustrative",verdict:null}
+  ],result:{l:"Implied Equity Value",v:3435000}},
+  task1_data:{type:"table",title:"Task 1 - Three-Year Summary (calculate the blanks)",rows:[
+    {l:"Revenue",v:"",note:"2021: £1,840,000  |  2022: £2,310,000  |  2023: £2,840,000",hi:"blue"},
+    {l:"Revenue Growth",v:"",note:"Calculate: 2022 vs 2021, and 2023 vs 2022",hi:"amber"},
+    {l:"Gross Profit",v:"",note:"Calculate: Revenue minus Cost of Sales",hi:"amber"},
+    {l:"Gross Margin %",v:"",note:"Calculate: Gross Profit / Revenue",hi:"amber"},
+    {l:"EBITDA",v:"",note:"2021: £310k  |  2022: £480k  |  2023: £636k",hi:"blue"},
+    {l:"EBITDA Growth",v:"",note:"Calculate year-on-year",hi:"amber"},
+    {l:"EBITDA Margin %",v:"",note:"Calculate: EBITDA / Revenue",hi:"amber"}
+  ]},
+  task4_bridge:{type:"bridge",start:{l:"Enterprise Value (seller's asking price)",v:4200000},items:[
+    {l:"EBITDA multiple correction (5x adj. £740k vs asking)",v:-500000,dir:"dn",note:"Asking price implies 5.7x adjusted - renegotiate to 5x"},
+    {l:"Less: Net Debt",v:-219000,dir:"dn",note:"HSBC + lease + director loan, net of cash"},
+    {l:"Less: VAT deferral",v:-28000,dir:"dn",note:"Debt-like item"},
+    {l:"Less: Working capital shortfall",v:-18000,dir:"dn",note:"Illustrative - depends on completion date"}
+  ],result:{l:"Implied Equity Value (vs £4.2m asking)",v:3435000}},
+  findings_table:{type:"table",title:"FieldForce - FDD Findings by Severity",rows:[
+    {l:"🔴 CRITICAL",v:"Director loan account (£45k)",note:"Not in seller's debt schedule. Repayable at completion. Must be included in SPA debt definition.",hi:"red"},
+    {l:"🔴 CRITICAL",v:"Orion Building Services churn",note:"£55k ARR lost in Sept 2023. Not disclosed in IM. 2024 revenue £55k lower on like-for-like basis.",hi:"red"},
+    {l:"🟡 SIGNIFICANT",v:"Key person dependency",note:"David Kavanagh holds all enterprise client relationships. No documented handover. Recommend earn-out or lock-in.",hi:"amber"},
+    {l:"🟡 SIGNIFICANT",v:"Apex Facilities renewal (£228k ARR)",note:"Renewal due March 2024. Verbal commitment only - no signed contract. Risk to largest renewal.",hi:"amber"},
+    {l:"🟡 SIGNIFICANT",v:"IP litigation addback - conditional",note:"£45k accepted pending receipt of full legal file. If dispute ongoing, addback should be reversed.",hi:"amber"},
+    {l:"🟡 SIGNIFICANT",v:"VAT deferral (£28k)",note:"HMRC COVID deferral outstanding. TTP arrangement in place. Treat as debt-like item.",hi:"amber"},
+    {l:"🟢 INFO",v:"Sales headcount vacancy",note:"Normalised in EBITDA bridge (£35k deduction). Buyer should budget for full headcount in Year 1.",hi:"green"},
+    {l:"🟢 INFO",v:"HSBC change of control clause",note:"Bank consent required on completion. Informally discussed with HSBC - not yet confirmed in writing.",hi:"green"},
+    {l:"🟢 INFO",v:"Rebrand addback (partial)",note:"£28k claimed, £14k accepted. Recurring cost every ~5 years - buyer should budget accordingly.",hi:"green"}
+  ]},
+  exec_summary:{type:"prose",text:`FieldForce Ltd - Financial Due Diligence
+Executive Summary
+
+Engagement
+Buy-side FDD for the acquisition of FieldForce Ltd. Period covered: three financial years ended 31 December 2023.
+
+Business Overview
+FieldForce operates a B2B field service management SaaS platform serving UK facilities management clients. Revenue has grown from £1.84m (2021) to £2.84m (2023), representing approximately 24% compound annual growth. The business has 45 staff and is owner-managed by founder David Kavanagh, who is CEO and majority shareholder.
+
+Quality of Earnings
+Reported EBITDA for FY2023 is £636,000 (22% margin). After normalisation adjustments we arrive at adjusted EBITDA of £740,000. The net addback of £104k reflects: above-market director remuneration (£80k agreed), confirmed one-off legal costs (£45k - conditional on receipt of legal file), and partial rebrand addback (£14k), partially offset by a buyer-side deduction for a structural sales headcount vacancy (£35k).
+
+Revenue quality is acceptable. 68% of revenue is contracted recurring SaaS. We note that Orion Building Services (£55k ARR) did not renew its contract in September 2023. This was not disclosed in the Information Memorandum and represents a reduction in the run-rate revenue base entering 2024.
+
+Net Debt
+Net debt at 31 December 2023 is £219,000 (HSBC term loan £220k, finance lease £38k, director loan account £45k, less cash £84k). We note the director loan account of £45,000 was not included in the seller's draft debt schedule. This must be included in the SPA debt definition.
+
+Debt-Like Items
+One item identified: a £28,000 VAT deferral from the HMRC COVID Payment Deferral Scheme. A Time to Pay arrangement is in place (final payment March 2024). This should be treated as a debt-like item and deducted from the equity consideration.
+
+Working Capital
+Net working capital is (£24,000) at December 2023, consistent with the SaaS billing model. We recommend the peg be set at (£22,000), representing the 12-month rolling average. The seller's proposed peg of (£10,000) is based on the September month-end only and is not representative of normal trading conditions.
+
+Key Risks
+1. Key person dependency: David Kavanagh holds the majority of enterprise client relationships. No documented handover plan exists. Deal structure should address this through a lock-in period or earn-out tied to revenue retention.
+2. Apex Facilities renewal (£228k ARR): contract due March 2024, verbal commitment only. Buyer should seek a condition to completion or specific warranty on this renewal.
+3. IP litigation addback: £45k accepted conditionally pending receipt of full legal file from McCann FitzGerald LLP. If dispute is ongoing, the addback should be reversed.
+
+Equity Value
+At an enterprise value of £3.70m (5.0x adjusted EBITDA) and after deducting net debt (£219k), debt-like items (£28k), and a working capital shortfall of approximately £18k, the implied equity value is approximately £3,435,000. This compares to the seller's asking equity value of approximately £3,953,000 (£4.2m EV less stated net debt of £247k). The gap of approximately £518,000 reflects our EBITDA multiple correction, the director loan account omission, and the VAT deferral.`}
+};
+
+// ════════════════════════════════════════════════════════════════════
+// FINN AI SYSTEM PROMPT
+// ════════════════════════════════════════════════════════════════════
+const FINN_SYS = `You are Finn, a senior M&A financial due diligence advisor with 20 years of Big 4 experience, tutoring a complete beginner with zero accounting background.
+
+Teaching rules:
+- Plain English only. Define every technical term the first time you use it.
+- Short paragraphs - 3 sentences maximum before a line break.
+- Use real FieldForce numbers to ground every explanation.
+- Be warm, direct, patient, and encouraging. Never condescending.
+- Do not use em dashes. Write in flowing prose, not bullet lists.
+- Keep answers to 120-220 words unless the question genuinely requires more.
+- End with a natural follow-up suggestion occasionally, but not every time.
+- Never use the words: leverage, seamlessly, robust, streamline, unlock, game-changer.
+
+FieldForce context (always available):
+- B2B SaaS, 45 staff, founded 2018 by David Kavanagh (CEO, majority shareholder)
+- Revenue: £1.84m (2021), £2.31m (2022), £2.84m (2023) - ~24% CAGR
+- Gross margin: 74%, 74%, 76% - stable and expanding
+- Reported EBITDA: £310k (2021), £480k (2022), £636k (2023)
+- Adjusted EBITDA: £740k (2023) after normalisation
+- Asking price: £4.2m (5.7x adjusted EBITDA)
+- Revenue mix 2023: 68% contracted SaaS, 17% onboarding fees, 11% prof svcs, 4% hardware
+- Net debt: £219k (HSBC loan £220k + finance lease £38k + director loan £45k - cash £84k)
+- Director loan NOT in seller's debt schedule
+- VAT deferral debt-like item: £28k (also not in seller's schedule)
+- Working capital: negative, ranging (£14k) to (£30k), average (£20k), seller proposes (£10k) peg
+- Orion Building Services churned Sept 2023 - £55k ARR lost - not disclosed in IM
+- Apex Facilities renewal due March 2024 - verbal only, not signed
+- Key person risk: David holds all enterprise client relationships
+- HSBC change of control clause in loan agreement
+- IP litigation addback £45k - conditional on legal file
+- Implied equity value: ~£3.44m vs seller asking ~£3.95m equity equivalent`;
+
+// STATE
+let aM=0, aS=0;
+const done={}, chats={};
+let sbOpen=true;
+function cK(){return aM+'-'+aS}
+
+// HELPERS
+function fmtK(v){return v<0?'(£'+Math.abs(v).toLocaleString('en-GB')+')':'£'+v.toLocaleString('en-GB')}
+function hiC(h){const m={blue:'hb',green:'hg',gold:'hgo',amber:'ha',red:'hr',section:'hs'};return m[h]||''}
+
+function renderTable(ex){
+  return '<div class="tw"><div class="tw-ttl">'+ex.title+'</div><div class="tt">'+
+    ex.rows.map(function(r,i){
+      var hc=hiC(r.hi);
+      return '<div class="tr '+(i%2===0?'e':'o')+(hc?' '+hc:'')+'">'+
+        '<div><div class="rl'+(hc?' '+hc:'')+'">'+r.l+'</div>'+(r.note?'<div class="rn">'+r.note+'</div>':'')+'</div>'+
+        (r.v?'<div class="rv'+(hc?' '+hc:'')+'">'+r.v+'</div>':'')+'</div>'
+    }).join('')+'</div></div>'
+}
+
+var VLBL={agree:'&#10003; AGREE',query:'&#9888; CONDITIONAL',reject:'&#10007; REJECT',ours:'&darr; OUR DEDUCTION'};
+var VCLS={agree:'vb-ag',query:'vb-qr',reject:'vb-rj',ours:'vb-ou'};
+
+function renderBridge(ex){
+  return '<div class="bw"><div class="bw-ttl">Price Bridge</div>'+
+    '<div class="bs"><span class="bsl">'+ex.start.l+'</span><span class="bsv">'+fmtK(ex.start.v)+'</span></div>'+
+    ex.items.map(function(it){
+      return '<div class="bi"><div class="bit"><div>'+
+        '<div class="bil '+(it.dir==='up'?'up':'dn')+'">'+(it.dir==='up'?'&#9650;':'&#9660;')+' '+it.l+'</div>'+
+        '<div class="bin">'+it.note+'</div>'+
+        (it.verdict?'<span class="vb '+(VCLS[it.verdict]||'')+'">'+VLBL[it.verdict]+'</span>':'')+'</div>'+
+        '<div class="biv '+(it.dir==='up'?'up':'dn')+'">'+(it.dir==='up'?'+':'')+fmtK(Math.abs(it.v))+'</div></div></div>'
+    }).join('')+
+    '<div class="br"><span class="brl">'+ex.result.l+'</span><span class="brv">'+fmtK(ex.result.v)+'</span></div></div>'
+}
+
+function renderEx(id){
+  var ex=EX[id]; if(!ex) return '';
+  if(ex.type==='table') return renderTable(ex);
+  if(ex.type==='bridge') return renderBridge(ex);
+  if(ex.type==='prose') return '<div class="prose">'+ex.text+'</div>';
+  return '';
+}
+
+function renderCards(nums){
+  var tagMap={reported:'t-rep',calc:'t-ca',asking:'t-as',info:'t-in',debt:'t-de',formula:'t-fo'};
+  return '<div class="ncs">'+nums.map(function(n){
+    return '<div class="nc"><div class="nc-tag '+(tagMap[n.tag]||'')+'">'+n.tag+'</div><div class="nc-v">'+n.value+'</div><div class="nc-l">'+n.label+'</div></div>'
+  }).join('')+'</div>'
+}
+
+function renderCO(c){
+  if(!c) return '';
+  var icons={blue:'&#9432;',gold:'&#9998;',green:'&#10003;',red:'&#9888;',amber:'&#9888;'};
+  return '<div class="co co-'+c.type+'"><div class="co-lbl">'+(icons[c.type]||'')+' '+(c.label||'')+'</div>'+c.text.replace(/\n/g,'<br>')+'</div>'
+}
+
+function renderAN(a){
+  if(!a) return '';
+  return '<div class="an"><div class="an-lbl">&#128161; '+a.label+'</div><div class="an-txt">'+a.text+'</div></div>'
+}
+
+function renderCL(items){
+  return '<div class="cl">'+items.map(function(item){
+    return '<div class="cli" onclick="ckToggle(this)"><div class="cli-box"></div><div class="cli-t">'+item+'</div></div>'
+  }).join('')+'</div>'
+}
+
+function ckToggle(el){
+  el.classList.toggle('ck');
+  el.querySelector('.cli-box').textContent=el.classList.contains('ck')?'&#10003;':'';
+}
+
+// FINN
+async function finnSend(q){
+  var key=cK();
+  if(!chats[key]) chats[key]=[];
+  chats[key].push({role:'user',content:q});
+  var msgs=document.getElementById('fmsgs');
+  if(msgs){msgs.classList.add('vis');finnRender(key);}
+  var st=document.getElementById('fst');
+  if(st) st.style.display='none';
+  var ld=document.createElement('div');
+  ld.id='fld';ld.className='mr fu';
+  ld.innerHTML='<div class="mav f">F</div><div class="mb f"><div class="tdots"><div class="tdot" style="animation-delay:0s"></div><div class="tdot" style="animation-delay:.2s"></div><div class="tdot" style="animation-delay:.4s"></div></div></div>';
+  if(msgs){msgs.appendChild(ld);msgs.scrollTop=msgs.scrollHeight;}
+  var mod=MODULES[aM],sec=mod.sections[aS];
+  try{
+    var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
+        system:FINN_SYS+'\n\nCurrent module: '+mod.title+'. Current section: '+sec.title+'.',
+        messages:chats[key]})});
+    var data=await res.json();
+    var reply=(data.content&&data.content.find(function(b){return b.type==='text'}))||{text:'Something went wrong.'};
+    chats[key].push({role:'assistant',content:reply.text});
+  }catch(e){chats[key].push({role:'assistant',content:'Network error - please try again.'});}
+  var ldEl=document.getElementById('fld');if(ldEl)ldEl.remove();
+  finnRender(key);
+}
+
+function finnRender(key){
+  var div=document.getElementById('fmsgs');if(!div)return;
+  div.innerHTML=(chats[key]||[]).map(function(m){
+    return '<div class="mr '+(m.role==='user'?'u':'')+' fu">'+
+      (m.role==='assistant'?'<div class="mav f">F</div>':'')+
+      '<div class="mb '+(m.role==='assistant'?'f':'u')+'">'+m.content.replace(/\n/g,'<br>')+'</div>'+
+      (m.role==='user'?'<div class="mav y">M</div>':'')+
+    '</div>'
+  }).join('');
+  div.scrollTop=div.scrollHeight;
+}
+
+function finnKey(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finnSubmit();}
+  var ta=document.getElementById('fta');
+  if(ta){ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,100)+'px';}
+}
+
+function finnSubmit(){
+  var ta=document.getElementById('fta');
+  var q=ta?ta.value.trim():'';if(!q)return;
+  ta.value='';ta.style.height='auto';finnSend(q);
+}
+
+// NAV
+function totSec(){return MODULES.reduce(function(a,m){return a+m.sections.length},0)}
+function doneSec(){return Object.keys(done).filter(function(k){return done[k]}).length}
+
+function markDone(){
+  done[aM+'-'+aS]=true;
+  var mod=MODULES[aM];
+  if(aS<mod.sections.length-1) aS++;
+  else if(aM<MODULES.length-1){aM++;aS=0;}
+  render();document.getElementById('ct').scrollTop=0;
+}
+function goBack(){
+  if(aS>0) aS--;
+  else if(aM>0){aM--;aS=MODULES[aM].sections.length-1;}
+  render();document.getElementById('ct').scrollTop=0;
+}
+function goTo(mi,si){aM=mi;aS=si;render();document.getElementById('ct').scrollTop=0;if(window.innerWidth<700)toggleSidebar();}
+function toggleSidebar(){sbOpen=!sbOpen;document.getElementById('sb').classList.toggle('closed',!sbOpen);}
+
+// RENDER
+function render(){
+  var mod=MODULES[aM],sec=mod.sections[aS];
+  var key=aM+'-'+aS;
+  var isDone=!!done[key];
+  var isFirst=aM===0&&aS===0;
+  var isLast=aM===MODULES.length-1&&aS===mod.sections.length-1;
+  var ts=totSec(),ds=doneSec();
+  var pct=Math.round(ds/ts*100);
+  var rem=MODULES.slice(aM+1).reduce(function(a,m){return a+m.time},0)+Math.round(((mod.sections.length-aS)/mod.sections.length)*mod.time);
+
+  document.getElementById('tb-sec').textContent=mod.icon+' '+mod.title+' - '+sec.title;
+  document.getElementById('pg-lbl').textContent=ds+' / '+ts;
+  document.getElementById('pg-sub').textContent='~'+rem+' min';
+  document.getElementById('rng-n').textContent=pct+'%';
+  document.getElementById('rng').style.strokeDashoffset=81.68-(81.68*pct/100);
+  document.getElementById('sb-done').textContent=ds;
+  document.getElementById('sb-left').textContent=rem;
+
+  // Sidebar
+  document.getElementById('sb-nav').innerHTML=MODULES.map(function(m,mi){
+    var mA=mi===aM;
+    var mD=m.sections.every(function(_,si){return done[mi+'-'+si]});
+    var foundBadge=m.tag==='foundation'?'<span style="font-size:9px;font-family:var(--mono);color:rgba(91,47,168,.8);background:rgba(91,47,168,.12);padding:1px 5px;border-radius:10px;font-weight:600">FOUND</span>':'';
+    var secs=mA?'<div class="si-list">'+m.sections.map(function(s,si){
+      var sA=si===aS,sD=done[mi+'-'+si];
+      return '<div class="si'+(sA?' on':'')+(sD?' done':'')+'" onclick="event.stopPropagation();goTo('+mi+','+si+')">'+
+        '<div class="si-dot'+(sD?' ok':sA?' cur':'')+'">'+((sD)?'&#10003;':'')+'</div>'+
+        '<span class="si-lbl">'+s.title+'</span></div>'
+    }).join('')+'</div>':'';
+    return '<div class="mi'+(mA?' on':'')+'" onclick="goTo('+mi+',0)">'+
+      '<div class="mi-hdr">'+
+        '<div class="mi-ico">'+m.icon+'</div>'+
+        '<div class="mi-info">'+
+          '<div class="mi-name">'+m.title+'</div>'+
+          '<div class="mi-meta"><span class="mi-id">'+m.id+'</span><span class="mi-t">~'+m.time+'m</span>'+foundBadge+'</div>'+
+        '</div>'+
+        '<div class="mi-ck'+(mD?' ok':'')+'">'+((mD)?'&#10003;':'')+'</div>'+
+      '</div>'+secs+'</div>'
+  }).join('');
+
+  var secPct=Math.round((aS+1)/mod.sections.length*100);
+  var hasHist=chats[key]&&chats[key].length>0;
+  var taskBadge=sec.task?'<span class="badge badge-task">TASK</span>':'';
+  var foundBadge=mod.tag==='foundation'?'<span class="badge badge-found">FOUNDATION</span>':'';
+
+  document.getElementById('cti').innerHTML=
+    '<div class="lhdr">'+
+      '<div class="lcrumb">'+
+        '<div class="lcrumb-mod">'+
+          '<div class="lcrumb-ico">'+mod.icon+'</div>'+
+          '<span style="color:var(--royal);font-weight:600;font-family:var(--mono);font-size:11px">'+mod.id+'</span>'+
+          '<span style="color:var(--muted);font-family:var(--mono);font-size:11px">'+mod.title+'</span>'+
+        '</div>'+
+        '<span class="lcrumb-chev">&#8250;</span>'+
+        '<span class="lcrumb-num">Section '+(aS+1)+' of '+mod.sections.length+'</span>'+
+        taskBadge+foundBadge+
+      '</div>'+
+      '<div class="ltitle">'+sec.title+'</div>'+
+      '<div class="lmeta">'+
+        '<div class="lmi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~'+mod.time+' min</div>'+
+        '<div class="lmi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg>'+mod.sections.length+' sections</div>'+
+        (isDone?'<div class="lmi" style="color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Completed</div>':'')+
+      '</div>'+
+      '<div class="lpbar"><div class="lpfill" style="width:'+secPct+'%"></div></div>'+
+    '</div>'+
+
+    '<div class="btext">'+sec.content.split('\n\n').map(function(p){return '<p>'+p+'</p>'}).join('')+'</div>'+
+    (sec.callout?renderCO(sec.callout):'')+
+    (sec.callout2?renderCO(sec.callout2):'')+
+    (sec.analogy?renderAN(sec.analogy):'')+
+    (sec.numbers?renderCards(sec.numbers):'')+
+    (sec.example?renderEx(sec.example):'')+
+    (sec.checklist?renderCL(sec.checklist):'')+
+
+    '<div class="fw">'+
+      '<div class="fh">'+
+        '<div class="fav-wrap"><div class="fav">F</div><div class="fon"></div></div>'+
+        '<div class="finfo"><div class="fname">Finn</div><div class="fsub">FDD Tutor - FieldForce Deal</div></div>'+
+        '<div class="fai">AI TUTOR</div>'+
+      '</div>'+
+      '<div id="fmsgs" class="fmsgs'+(hasHist?' vis':'')+'"></div>'+
+      (!hasHist?'<div id="fst" class="fst"><div class="fst-lbl">Suggested questions</div><div class="fst-g">'+
+        mod.starters.map(function(q){return '<button class="fsbtn" onclick="finnSend(this.textContent)">'+q+'</button>'}).join('')+
+      '</div></div>':'')+
+      '<div class="fin">'+
+        '<textarea id="fta" class="fta" placeholder="Ask Finn anything..." rows="1" onkeydown="finnKey(event)"></textarea>'+
+        '<button class="fsnd" onclick="finnSubmit()"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>'+
+      '</div>'+
+    '</div>'+
+
+    '<div class="lnav">'+
+      '<button class="nbk" onclick="goBack()"'+(isFirst?' disabled':'')+'>'+
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg> Back'+
+      '</button>'+
+      '<button class="nnx'+(isDone?' done':'')+'" onclick="markDone()">'+
+        (isDone?'Done - Next':'Mark done')+
+        ' <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>'+
+      '</button>'+
+    '</div>';
+
+  if(hasHist){finnRender(key);document.getElementById('fmsgs').classList.add('vis');}
+}
+
+render();
+
+</script>
+</body>
+</html>
