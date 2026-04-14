@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICP & Buyer Personas — PinpointAI Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#211847;--dark:#0F0D2A;--royal:#3D50F4;--royal2:#2E3FD0;
+  --cyan:#35FFE9;--red:#FA295F;--white:#FFFFFF;--midgray:#7E8587;
+  --bg:#EEF0F8;--surface:#FFF;--card:#F5F6FC;--border:#E0E3F0;
+  --text:#1A1835;--text2:#3A3D5C;--muted:#7E8587;--faint:#CDD0E8;
+  --green:#0A7A4A;--green-bg:rgba(10,122,74,.08);--green-bdr:rgba(10,122,74,.22);
+  --amber:#8A5500;--amber-bg:rgba(200,130,0,.08);--amber-bdr:rgba(200,130,0,.25);
+  --font:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono','Courier New',monospace;
+  --r:8px;--rl:12px;--rxl:16px;
+  --sh:0 1px 3px rgba(33,24,71,.07);--shm:0 4px 16px rgba(33,24,71,.1);
+  --sidebar-w:272px;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(33,24,71,.15);border-radius:2px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes dot{0%,80%,100%{opacity:.2;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
+.fu{animation:fadeUp .22s ease-out}
+
+#app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* TOPBAR */
+#tb{height:56px;display:flex;align-items:center;padding:0 18px;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;gap:0;z-index:200}
+.tb-logo{display:flex;align-items:center;gap:8px;padding-right:18px;border-right:1px solid rgba(255,255,255,.1);text-decoration:none;flex-shrink:0}
+.tb-logo-box{width:28px;height:28px;background:var(--royal);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.tb-logo-box svg{width:15px;height:15px}
+.tb-logo-name{font-size:13px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.tb-logo-name b{color:var(--cyan);font-weight:700}
+.tb-mid{flex:1;display:flex;align-items:center;padding:0 18px;gap:14px;min-width:0;overflow:hidden}
+.tb-course{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);white-space:nowrap}
+.tb-sep{width:1px;height:16px;background:rgba(255,255,255,.1);flex-shrink:0}
+.tb-sec{font-size:12px;color:rgba(255,255,255,.7);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.tb-back{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:rgba(255,255,255,.4);text-decoration:none;letter-spacing:.5px;transition:color .15s;padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.08)}
+.tb-back:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.2)}
+.tb-prog-val{font-size:11px;font-family:var(--mono);color:rgba(255,255,255,.5);font-weight:600}
+.tb-ring{position:relative;width:32px;height:32px;flex-shrink:0}
+.tb-ring svg{transform:rotate(-90deg)}
+.tb-ring-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-family:var(--mono);color:var(--cyan);font-weight:600}
+.tb-menu-btn{background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;padding:6px;border-radius:6px;display:flex;align-items:center;transition:all .15s}
+.tb-menu-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+
+#main{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+#sb{width:var(--sidebar-w);flex-shrink:0;background:var(--dark);border-right:1px solid rgba(255,255,255,.05);overflow-y:auto;display:flex;flex-direction:column;transition:width .2s}
+#sb.closed{width:0;overflow:hidden}
+.sb-top{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.06);background:linear-gradient(135deg,rgba(61,80,244,.18) 0%,rgba(53,255,233,.04) 100%)}
+.sb-top-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:12px}
+.sb-cards{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.sb-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);padding:10px 12px}
+.sb-card-n{font-size:22px;font-weight:700;font-family:var(--mono);color:#fff;line-height:1}
+.sb-card-n.c{color:var(--cyan)}
+.sb-card-l{font-size:10px;color:rgba(255,255,255,.4);margin-top:3px}
+.sb-mods{padding:6px 0 20px}
+.sb-grp{padding:12px 16px 4px;font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.mi{cursor:pointer;border-left:2px solid transparent;transition:all .15s}
+.mi:hover{background:rgba(255,255,255,.04)}
+.mi.on{background:rgba(61,80,244,.16);border-left-color:var(--royal)}
+.mi-hdr{display:flex;align-items:center;gap:9px;padding:8px 14px}
+.mi-ico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:rgba(255,255,255,.06)}
+.mi.on .mi-ico{background:rgba(61,80,244,.28)}
+.mi-info{flex:1;min-width:0}
+.mi-name{font-size:12px;font-weight:600;color:rgba(255,255,255,.65);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.mi.on .mi-name{color:#fff}
+.mi-meta{display:flex;align-items:center;gap:5px;margin-top:2px}
+.mi-id{font-size:9px;font-family:var(--mono);color:rgba(255,255,255,.3)}
+.mi.on .mi-id{color:rgba(61,80,244,.75)}
+.mi-t{font-size:9px;font-family:var(--mono);color:rgba(255,255,255,.25)}
+.mi-ck{width:15px;height:15px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:7px;flex-shrink:0}
+.mi-ck.ok{background:rgba(53,255,233,.14);border-color:var(--cyan);color:var(--cyan)}
+.si-list{padding:1px 0 6px}
+.si{display:flex;align-items:center;gap:7px;padding:5px 14px 5px 48px;cursor:pointer;transition:background .12s}
+.si:hover{background:rgba(255,255,255,.04)}
+.si.on{background:rgba(61,80,244,.1)}
+.si-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:5px;transition:all .15s}
+.si-dot.ok{border-color:var(--cyan);background:rgba(53,255,233,.18);color:var(--cyan)}
+.si-dot.cur{border-color:var(--royal);background:rgba(61,80,244,.28)}
+.si-lbl{font-size:11px;color:rgba(255,255,255,.45);line-height:1.35}
+.si.on .si-lbl{color:rgba(255,255,255,.85)}
+.si.done .si-lbl{color:rgba(53,255,233,.55)}
+
+/* CONTENT */
+#ct{flex:1;overflow-y:auto;background:var(--bg)}
+#cti{max-width:720px;margin:0 auto;padding:36px 44px 90px}
+
+/* LESSON HEADER */
+.lhdr{background:var(--surface);border:1px solid var(--border);border-radius:var(--rxl);padding:24px 28px;margin-bottom:26px;box-shadow:var(--sh)}
+.lcrumb{display:flex;align-items:center;gap:8px;margin-bottom:11px;flex-wrap:wrap}
+.lcrumb-ico{width:20px;height:20px;border-radius:5px;background:rgba(61,80,244,.1);display:flex;align-items:center;justify-content:center;font-size:10px}
+.lcrumb-chev{color:var(--muted);font-size:11px}
+.badge{font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:20px;letter-spacing:.4px;font-weight:600;border:1px solid}
+.badge-key{background:rgba(250,41,95,.08);color:#C8144A;border-color:rgba(200,20,74,.22)}
+.ltitle{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.5px;line-height:1.25;margin-bottom:10px}
+.lmeta{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.lmi{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);font-family:var(--mono)}
+.lmi svg{width:12px;height:12px;opacity:.55}
+.lpbar{height:3px;background:var(--border);border-radius:2px;margin-top:12px;overflow:hidden}
+.lpfill{height:100%;background:linear-gradient(90deg,var(--royal),var(--cyan));border-radius:2px;transition:width .4s}
+
+/* BODY */
+.btext p{font-size:15px;line-height:1.82;color:var(--text2);margin-bottom:15px}
+
+/* CALLOUTS */
+.co{padding:14px 18px;border-radius:var(--rl);margin:18px 0;font-size:14px;line-height:1.7;border:1px solid}
+.co-blue{background:rgba(61,80,244,.06);border-color:rgba(61,80,244,.2);color:#1A2880}
+.co-green{background:var(--green-bg);border-color:var(--green-bdr);color:var(--green)}
+.co-amber{background:var(--amber-bg);border-color:var(--amber-bdr);color:var(--amber)}
+.co-red{background:rgba(200,20,74,.07);border-color:rgba(200,20,74,.22);color:#8A1A1A}
+.co-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;opacity:.65;font-weight:700}
+
+/* PERSONA CARDS */
+.persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.persona-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;box-shadow:var(--sh);transition:all .15s;cursor:pointer}
+.persona-card:hover{border-color:rgba(61,80,244,.3);box-shadow:0 4px 20px rgba(61,80,244,.1);transform:translateY(-1px)}
+.persona-card.primary{border-color:rgba(61,80,244,.25);background:rgba(61,80,244,.03)}
+.persona-card.secondary{border-color:rgba(53,255,233,.15);background:rgba(53,255,233,.02)}
+.persona-card.tertiary{border-color:rgba(255,255,255,.15);background:var(--card)}
+.pc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.pc-title{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+.pc-badge{font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:20px;letter-spacing:.5px;font-weight:600;border:1px solid}
+.pcb-primary{background:rgba(61,80,244,.1);color:var(--royal);border-color:rgba(61,80,244,.25)}
+.pcb-secondary{background:rgba(53,255,233,.1);color:#0A7A6A;border-color:rgba(53,255,233,.3)}
+.pcb-tertiary{background:var(--card);color:var(--muted);border-color:var(--border)}
+.pc-role{font-size:11px;font-family:var(--mono);color:var(--muted);margin-bottom:10px;letter-spacing:.3px}
+.pc-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+.pc-tags{display:flex;flex-wrap:wrap;gap:5px}
+.pc-tag{font-size:10px;font-family:var(--mono);background:var(--card);border:1px solid var(--border);color:var(--muted);padding:2px 8px;border-radius:10px}
+
+/* SENIORITY TABLE */
+.sen-table{margin:20px 0;border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh)}
+.sen-hdr{display:grid;grid-template-columns:2fr 2fr 3fr 2fr;gap:0;background:var(--navy);padding:10px 16px}
+.sen-hdr-cell{font-size:10px;font-family:var(--mono);color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.sen-row{display:grid;grid-template-columns:2fr 2fr 3fr 2fr;gap:0;padding:12px 16px;border-top:1px solid var(--border);transition:background .12s}
+.sen-row:hover{background:rgba(61,80,244,.03)}
+.sen-row.tier1{background:rgba(61,80,244,.04)}
+.sen-row.tier2{background:rgba(53,255,233,.03)}
+.sen-cell{font-size:12px;color:var(--text2);padding-right:12px;line-height:1.4}
+.sen-cell strong{color:var(--text);font-weight:600;display:block;margin-bottom:2px}
+.sen-cell.alt{font-size:11px;color:var(--muted);font-family:var(--mono)}
+.tier-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:10px;font-weight:600;letter-spacing:.5px}
+.tb1{background:rgba(61,80,244,.1);color:var(--royal);border:1px solid rgba(61,80,244,.2)}
+.tb2{background:rgba(53,255,233,.08);color:#0A7A6A;border:1px solid rgba(53,255,233,.2)}
+.tb3{background:var(--card);color:var(--muted);border:1px solid var(--border)}
+
+/* FIRM TYPE CARDS */
+.firm-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:20px 0}
+.firm-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;box-shadow:var(--sh)}
+.firm-card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.firm-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.firm-card-title{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+.firm-card-sub{font-size:11px;font-family:var(--mono);color:var(--muted);margin-top:2px}
+.firm-desc{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:14px}
+.firm-examples{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.firm-ex{font-size:11px;font-family:var(--mono);background:var(--card);border:1px solid var(--border);color:var(--text2);padding:3px 10px;border-radius:6px;font-weight:500}
+.firm-why{background:rgba(61,80,244,.05);border:1px solid rgba(61,80,244,.15);border-radius:var(--r);padding:10px 14px;font-size:12px;color:#1A2880;line-height:1.55}
+.firm-why-lbl{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:rgba(61,80,244,.6);margin-bottom:4px;font-weight:700}
+
+/* APPROACH CARDS */
+.approach-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:20px 0}
+.ap-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px;box-shadow:var(--sh)}
+.ap-level{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-weight:700}
+.ap-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.2px}
+.ap-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+.ap-do{font-size:11px;color:var(--green);font-family:var(--mono);margin-bottom:3px}
+.ap-dont{font-size:11px;color:#8A1A1A;font-family:var(--mono);margin-bottom:3px}
+
+/* PROSE */
+.prose{background:var(--dark);border:1px solid rgba(255,255,255,.07);border-radius:var(--rl);padding:20px 24px;margin:20px 0;font-size:13px;line-height:1.9;color:rgba(255,255,255,.65);white-space:pre-wrap;font-family:var(--mono)}
+
+/* FINN */
+.fw{margin-top:32px;border-radius:var(--rxl);overflow:hidden;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shm)}
+.fh{height:52px;display:flex;align-items:center;gap:12px;padding:0 18px;background:var(--navy)}
+.fav-wrap{position:relative}
+.fav{width:32px;height:32px;border-radius:8px;background:var(--royal);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
+.fon{position:absolute;bottom:-1px;right:-1px;width:9px;height:9px;border-radius:50%;background:var(--cyan);border:2px solid var(--navy)}
+.finfo{flex:1}
+.fname{font-size:13px;color:#fff;font-weight:700}
+.fsub{font-size:9px;color:rgba(255,255,255,.4);font-family:var(--mono);margin-top:1px}
+.fai{font-size:9px;font-family:var(--mono);background:rgba(53,255,233,.12);color:var(--cyan);border:1px solid rgba(53,255,233,.22);padding:3px 8px;border-radius:20px;letter-spacing:.5px;font-weight:600}
+.fmsgs{max-height:380px;overflow-y:auto;padding:16px 18px;display:none;background:var(--card)}
+.fmsgs.vis{display:block}
+.mr{display:flex;gap:9px;margin-bottom:13px}
+.mr.u{justify-content:flex-end}
+.mav{width:24px;height:24px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--mono);margin-top:1px;font-weight:700}
+.mav.f{background:var(--royal);color:#fff}
+.mav.y{background:var(--navy);color:rgba(255,255,255,.6)}
+.mb{max-width:80%;padding:10px 14px;font-size:14px;line-height:1.75;white-space:pre-wrap;word-break:break-word;border-radius:var(--r)}
+.mb.f{background:var(--surface);border:1px solid var(--border);color:var(--text2);border-radius:2px var(--r) var(--r) var(--r)}
+.mb.u{background:var(--navy);color:rgba(255,255,255,.82);border-radius:var(--r) 2px var(--r) var(--r)}
+.tdots{display:flex;gap:5px;padding:3px 0;align-items:center}
+.tdot{width:7px;height:7px;border-radius:50%;background:var(--royal);animation:dot 1.2s infinite}
+.fst{padding:13px 18px;background:var(--card);border-bottom:1px solid var(--border)}
+.fst-lbl{font-size:9px;font-family:var(--mono);color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:9px;font-weight:700}
+.fst-g{display:flex;flex-wrap:wrap;gap:6px}
+.fsbtn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.fsbtn:hover{background:rgba(61,80,244,.06);border-color:rgba(61,80,244,.3);color:var(--royal)}
+.fin{display:flex;gap:8px;padding:11px 14px;border-top:1px solid var(--border)}
+.fta{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);padding:9px 13px;font-size:14px;font-family:var(--font);color:var(--text);resize:none;max-height:100px;line-height:1.5;transition:border-color .15s}
+.fta:focus{outline:none;border-color:var(--royal);background:var(--surface)}
+.fta::placeholder{color:var(--muted)}
+.fsnd{width:38px;height:38px;border-radius:var(--r);border:none;background:var(--royal);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;transition:all .15s}
+.fsnd:hover{background:var(--royal2);transform:scale(1.04)}
+.fsnd:disabled{background:var(--faint);cursor:default;transform:none}
+
+/* NAV */
+.lnav{margin-top:40px;padding-top:22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.nbk{display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:var(--r);border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:600;transition:all .15s}
+.nbk:hover:not(:disabled){background:var(--card);color:var(--text)}
+.nbk:disabled{color:var(--faint);border-color:var(--faint);cursor:default}
+.nnx{display:flex;align-items:center;gap:8px;padding:11px 22px;border-radius:var(--r);border:none;background:var(--royal);color:#fff;cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:700;letter-spacing:.3px;transition:all .15s;box-shadow:0 2px 12px rgba(61,80,244,.3)}
+.nnx:hover{background:var(--royal2);box-shadow:0 4px 20px rgba(61,80,244,.4);transform:translateY(-1px)}
+.nnx.done{background:var(--green);box-shadow:0 2px 12px rgba(10,122,74,.25)}
+
+@media(max-width:700px){
+  #cti{padding:20px 16px 80px}
+  #sb{position:fixed;top:0;left:0;height:100vh;z-index:300}
+  #sb.closed{width:0}
+  .tb-sec{display:none}
+  .persona-grid{grid-template-columns:1fr}
+  .approach-grid{grid-template-columns:1fr}
+  .sen-hdr,.sen-row{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="tb">
+    <a class="tb-logo" href="index.html">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANAAAAA0CAYAAAD7cbbgAAABCGlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8wQAELAYMDLl5JUVB7k4KEZFRCuwPGBiBEAwSk4sLGHADoKpv1yBqL+viUYcLcKakFicD6Q9ArFIEtBxopAiQLZIOYWuA2EkQtg2IXV5SUAJkB4DYRSFBzkB2CpCtkY7ETkJiJxcUgdT3ANk2uTmlyQh3M/Ck5oUGA2kOIJZhKGYIYnBncAL5H6IkfxEDg8VXBgbmCQixpJkMDNtbGRgkbiHEVBYwMPC3MDBsO48QQ4RJQWJRIliIBYiZ0tIYGD4tZ2DgjWRgEL7AwMAVDQsIHG5TALvNnSEfCNMZchhSgSKeDHkMyQx6QJYRgwGDIYMZAKbWPz9HbOBQAAAEIElEQVR4nO2dSXIkIQxFweH7X5ledJcbE0yaQMB/K4crExBoQhBVMaWUQkGMMYYQQu2z/HMAXudr9wAAOBmWAbUik3dSxu6xgDtQiUCnKCRST6BN5OyByudKeu/dosQppXSLLIAP9kBMYDwgBIEBQYEACOGb81LPeE7ZDwEd8vV+0amyDKgFjOc9XjSanGoKxzEEGA94kafK2BI+Muay4lzp/xzsHscuWCkcdcJmy+IWSPrM05P871qbn/+9mtKskF/j6EDjelreRjUCaU5CSwlXoGU8oE7LkWhHpbw9Sbu9d2fbLZ8zPQc6WQk5SnCyvBZYZRye0kYzA7pFmSgL5WVRPRD/sXscFDjrh5sIE7x+1tGiNhcnGo4EMwPyFGat+SjMLsXRmudRO617k9wN+GlU5e9dJm291KOsuO30RtSKy0jWGOPw8i2n4qh5s6MnG3VsnHGV73AMppzPmTZm9Ewqd+19tYPUmUF4iUqtcYwWoTX20llQZWyNhzNXrSoYZ2zScXHXmuN8OdFTg18GVAvH1AhSLmBtQVuLvJKX8nTpPFONTtKXBC1HRHn+x4B65zXWh2NWbbfwKo/2XEgjY9nWyrXipn6rHePXbKc3e+w8Wkrb0BoL+IvlfGjo9PRVnpsXdnYiNTy5Rhuc9kafzxaOVkehXhFBYgB55VQi0zdnw3Y63PRA2m+ZJmsY4qg9rqy996ROQKNS54WfPVBLCOvc9wTD1UhxNeXUaitmrOq79r6WPBQHMkrbZ3X+VwqnEY1OMAgKlvL0PP3JXnkXnIqxtM/uTQROBzctfOssi9MWNb3a7Yis+rcsKe8Ad+Eq7CiHemL3GV2OZB1WnH+Z3ETwMvkcrPYypxiktJqn2edO45ltp1rG1ljsTwlS2o4FtSqQ17EC3yCFC3SHcYuxeckUWikzN5VcKVc1Aml55FyQW5QuhHZBYJWMebV0RllG1T7KuY6X4gKH3ti5h8eIQAO8eOkalLGNlGen8XD7TBmW/fRgf6kItVLlWRE18Bphrc+xrNrmItGznjwtfRdHIIohnWhENymgdn+r1nNm3KNINNsG9TO1FM6jN7K8NiIdx65+qZlDzChTppVyreirNzet/6t+ufzspvZ0Sjnz+ZjdsNfe5fbPaS9/rtZWy/hGxZLRXIwUdBRFZuSWFq8oesz+ga1ywKMFqb23G0nlbOSFNbz0rGJ7xuMZm+aYVH6doeZVb1j8HiNZPMp6a+pFRXNMKhEI6MOd+xnv6jEqnArOgRxiVYqlPAPmgAEdjtZBIuCh+gt1QIcyQvT2Logme0EEOoDW+QQiz15SSqlrQNRDJSBH637bLUhS1BUOZhiB4PnWg/nVwdrBxBfOa07k1TLziXJjD+SQ05RIixPlhgEBIAAGBIAAGBAAAmBAAAj4A4f3AEkkhpInAAAAAElFTkSuQmCC" style="height:22px;width:auto" alt="PinpointAI">
+    </a>
+    <div class="tb-mid">
+      <div class="tb-course">ICP Academy</div>
+      <div class="tb-sep"></div>
+      <div class="tb-sec" id="tb-sec">Loading...</div>
+    </div>
+    <div class="tb-right">
+      <a class="tb-back" href="index.html">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Dashboard
+      </a>
+      <div class="tb-prog-val" id="pg-lbl">0 / 0</div>
+      <div class="tb-ring">
+        <svg width="32" height="32" viewBox="0 0 32 32">
+          <circle cx="16" cy="16" r="12" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="2.5"/>
+          <circle id="rng" cx="16" cy="16" r="12" fill="none" stroke="#35FFE9" stroke-width="2.5" stroke-dasharray="75.4" stroke-dashoffset="75.4" stroke-linecap="round" style="transition:stroke-dashoffset .4s"/>
+        </svg>
+        <div class="tb-ring-n" id="rng-n">0%</div>
+      </div>
+      <button class="tb-menu-btn" onclick="toggleSidebar()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="sb">
+      <div class="sb-top">
+        <div class="sb-top-lbl">Your progress</div>
+        <div class="sb-cards">
+          <div class="sb-card"><div class="sb-card-n c" id="sb-done">0</div><div class="sb-card-l">Completed</div></div>
+          <div class="sb-card"><div class="sb-card-n" id="sb-left">90</div><div class="sb-card-l">Min left</div></div>
+        </div>
+      </div>
+      <div class="sb-mods">
+        <div class="sb-grp">Sections</div>
+        <div id="sb-nav"></div>
+      </div>
+    </div>
+    <div id="ct"><div id="cti"></div></div>
+  </div>
+</div>
+
+<script>
+const MODULES = [
+  {
+    id:"M1", icon:"🏢", title:"Who We Sell To", subtitle:"The three firm types", time:15,
+    starters:["What types of firms buy PinpointAI?","What's the difference between a Big 4 TS team and a boutique FDD firm?","Why won't PinpointAI work for a general accounting firm?","Which firm type should we focus on first?"],
+    sections:[
+      {
+        id:"M1S1", title:"The FDD and QoE market",
+        content:"PinpointAI serves one specific market: firms that provide financial due diligence and Quality of Earnings analysis as a service. This is not a general accounting tool, not a bookkeeping platform, and not a reporting tool.\n\nIf a firm does not run FDD or QoE engagements, PinpointAI has nothing to offer them. This focus is a strength, not a limitation. It means every conversation you have is with someone who immediately understands the problem you are solving.\n\nThe market is made up of three distinct firm types. Each has different buying dynamics, different levels of urgency, and different decision-making structures. Understanding which type you are talking to should shape everything from your opening line to your pricing conversation.",
+        type:"text"
+      },
+      {
+        id:"M1S2", title:"The three firm types",
+        content:"Here are the three firm types in detail. Learn them so well that you can identify which one you are talking to within the first two minutes of any call.",
+        type:"firms"
+      },
+      {
+        id:"M1S3", title:"Qualifying the opportunity",
+        content:"Before going deep on any firm, you need to qualify that they actually run FDD or QoE work. Many firms look like targets but are not.\n\nThe fastest qualification question: 'Do your teams run Quality of Earnings analysis on buy-side or sell-side transactions?' If the answer is no or blank, move on.\n\nA mid-market accounting firm that does audit and tax but no transaction services is not a prospect. A boutique that focuses on restructuring rather than acquisitions is not a prospect. A law firm that advises on M&A deals but does not produce financial analysis is not a prospect.\n\nDo not waste time on non-prospects. The ICP is tight for a reason.",
+        type:"text",
+        callout:{type:"blue",label:"Quick qualifier",text:"'Does your team run Quality of Earnings or financial due diligence on M&A transactions?' If yes, you have a prospect. If no or unclear, ask one follow-up and move on."}
+      }
+    ]
+  },
+  {
+    id:"M2", icon:"🎯", title:"Seniority Map", subtitle:"Who's who in a deal team", time:25,
+    starters:["What is the difference between a partner and a director in a Big 4 firm?","Who actually makes the decision to buy PinpointAI?","How do titles differ between Big 4 and boutique firms?","Who feels the most pain that PinpointAI solves?"],
+    sections:[
+      {
+        id:"M2S1", title:"Why titles matter in M&A firms",
+        content:"M&A and professional services firms have very specific title hierarchies. The same word can mean different things at different firms. A 'Director' at KPMG is not the same as a 'Director' at a 10-person boutique.\n\nUnderstanding the hierarchy tells you three things: who has budget authority, who feels the day-to-day pain, and who will champion PinpointAI internally.\n\nThese are often three different people. Getting all three aligned is what turns an interested conversation into a closed deal.",
+        type:"text",
+        callout:{type:"amber",label:"Key insight",text:"The person who feels the pain (Manager/Senior Manager) is rarely the person who signs the budget (Partner/MD). Your job is to arm the pain-feeler with enough to convince the budget-holder."}
+      },
+      {
+        id:"M2S2", title:"The full seniority hierarchy",
+        content:"This table covers all the titles you will encounter across Big 4, mid-tier, and boutique firms. Use it as a reference every time you are preparing for a call.",
+        type:"seniority"
+      },
+      {
+        id:"M2S3", title:"How to approach each level",
+        content:"Each seniority level requires a completely different conversation. What a Partner cares about will lose a Manager's attention in 30 seconds. What resonates with an Analyst will not move a Director.",
+        type:"approach"
+      }
+    ]
+  },
+  {
+    id:"M3", icon:"👤", title:"Buyer Personas", subtitle:"The four people you will meet", time:20,
+    starters:["Who is my most important persona to win over?","How do I talk to a Partner about PinpointAI?","What does a Manager care about most?","How do I handle a sceptical Director?"],
+    sections:[
+      {
+        id:"M3S1", title:"The four personas you will encounter",
+        content:"Across all three firm types, you will encounter four distinct personas. They map broadly to seniority levels but the key difference is their relationship to FDD work, budget, and change.\n\nUnderstanding each persona means you walk into every conversation knowing what they care about, what they fear, and what will make them say yes.",
+        type:"personas"
+      },
+      {
+        id:"M3S2", title:"Pain points by persona",
+        content:"The most effective sales conversations are built around the specific pain each persona experiences. Generic product pitches fail because they do not speak to the right problem for the right person.\n\nHere is a breakdown of the core pain each persona feels and how PinpointAI addresses it directly.",
+        type:"text",
+        callout:{type:"blue",label:"The Goldmine persona",text:"The Manager or Senior Manager running engagements is your goldmine. They feel the pain every day, they know exactly what is inefficient, and they have credibility with partners. Win this person first."},
+        callout2:{type:"green",label:"The Champion persona",text:"Analysts and Associates are your strongest internal champions. They use the tool every day, they will advocate loudly if it saves them time, and they influence upward more than most firms admit."}
+      },
+      {
+        id:"M3S3", title:"Objection handling by persona",
+        content:"Every persona has a default objection. Knowing these in advance means you are never caught off guard.",
+        type:"objections"
+      }
+    ]
+  },
+  {
+    id:"M4", icon:"🗺️", title:"Navigating a Firm", subtitle:"From first contact to closed deal", time:20,
+    starters:["What's the best way to get into a firm cold?","How do I get from a Manager to a Partner conversation?","What does a typical sales cycle look like for PinpointAI?","How do I handle it when a firm says they already have a process?"],
+    sections:[
+      {
+        id:"M4S1", title:"Entry points into a firm",
+        content:"There is no single right entry point into a target firm. The right approach depends on the firm type, who you know, and what intelligence you have about their current processes.\n\nThat said, there is a clear order of preference. Warm introductions close faster than cold outreach. LinkedIn outreach to Managers beats LinkedIn outreach to Partners. Referrals from existing clients are worth ten cold emails.\n\nFor each firm type, the optimal entry point is different. Boutiques are small enough that you can often go directly to a founder or MD. Mid-tier firms have clearer structures and the Manager or Director level is usually the right starting point. Big 4 firms require patience and internal champions.",
+        type:"text",
+        callout:{type:"green",label:"Best entry point",text:"A Senior Manager or Manager who has just finished a painful engagement is your single best entry point into any firm. They are motivated, they have evidence, and they will take the internal steps to drive evaluation if you solve their problem."}
+      },
+      {
+        id:"M4S2", title:"The typical buying journey",
+        content:"Understanding how buying decisions actually get made inside these firms helps you manage your pipeline accurately and avoid being surprised late in the process.",
+        type:"journey"
+      },
+      {
+        id:"M4S3", title:"Common blockers and how to handle them",
+        content:"These are the most common blockers you will encounter, specific to FDD and QoE firms. Know them so you can address them before they kill a deal.",
+        type:"text",
+        callout:{type:"red",label:"Blocker 1: 'We already have a process'",text:"Almost every firm says this. The correct response is not to argue. Ask: 'How long does it typically take your team to build out the EBITDA bridge and normalised P&L from a new data room?' The answer almost always reveals the pain."},
+        callout2:{type:"amber",label:"Blocker 2: 'Our analysts handle this in Excel'",text:"Acknowledge it. Then ask: 'If you could get the same output in a fraction of the time, what would your team do with those hours?' This reframes the conversation from replacement to augmentation."}
+      }
+    ]
+  }
+];
+
+const FIRMS = [
+  {
+    icon:"🔬",
+    title:"Specialist FDD / QoE Boutiques",
+    sub:"100% of their work is the problem PinpointAI solves",
+    bg:"rgba(61,80,244,.04)",
+    border:"rgba(61,80,244,.2)",
+    desc:"These firms exist solely to provide financial due diligence and Quality of Earnings analysis. Every engagement is a direct use case for PinpointAI. The team is small, the partners are hands-on, and the pain is immediate.",
+    examples:["Alantra","8advisory","Kroll","Clearwater","FTI Consulting","AlixPartners"],
+    why:"Highest urgency, most direct pain, shortest sales cycle. Decision makers are close to the work. Start here."
+  },
+  {
+    icon:"🏛️",
+    title:"Advisory Firms with Transaction Services",
+    sub:"M&A advisory firms where FDD is a core service line",
+    bg:"rgba(53,255,233,.03)",
+    border:"rgba(53,255,233,.2)",
+    desc:"Mid-market M&A advisory and accounting firms that run a dedicated Transaction Services or Deals practice. FDD is a significant revenue line. Larger than boutiques, more process-driven, but still close to the work.",
+    examples:["Grant Thornton","RSM","Forvis Mazars","BDO","DSW","Alvarez & Marsal","Houlihan Lokey"],
+    why:"Strong fit, good deal volume. Slightly longer sales cycle due to size. Target the TS practice specifically, not the firm broadly."
+  },
+  {
+    icon:"🏢",
+    title:"Big 4 & Large Accounting Firms",
+    sub:"Transaction Services teams within large firms",
+    bg:"rgba(255,255,255,.02)",
+    border:"rgba(255,255,255,.1)",
+    desc:"The Big 4 (Deloitte, KPMG, EY, PwC) and large mid-tier firms (BDO, Grant Thornton at scale) have substantial Transaction Services practices. High deal volume, complex buying processes, multiple stakeholders.",
+    examples:["Deloitte TS","KPMG Deals","EY-Parthenon","PwC Deals","Cooper Parry","UNW"],
+    why:"High volume, high value, but longest sales cycle. Need an internal champion at Manager/Senior Manager level to navigate internal procurement."
+  }
+];
+
+const SENIORITY = [
+  {level:"Partner / Managing Partner", alt:"Senior Partner, Founding Partner", tier:1, tierLabel:"BUDGET", bigfour:"Partner", boutique:"Founder / MD / Managing Partner", focus:"Firm reputation, client relationships, profitability, risk management", buy:"Signs off on firm-wide tool decisions. Rarely evaluates tools directly."},
+  {level:"Managing Director", alt:"Senior MD, Executive Director", tier:1, tierLabel:"BUDGET", bigfour:"Director (Big 4 equiv.)", boutique:"MD / Senior Director", focus:"Revenue targets, team utilisation, winning mandates, margin", buy:"Co-signs budget decisions. Influential in boutiques. May evaluate directly."},
+  {level:"Director", alt:"Associate Director, VP", tier:2, tierLabel:"INFLUENCER", bigfour:"Director / Senior Manager", boutique:"Director / VP", focus:"Engagement quality, client delivery, team efficiency, winning work", buy:"Strong influencer. Often the economic buyer in boutiques. Key target."},
+  {level:"Senior Manager", alt:"SM, Associate Director", tier:2, tierLabel:"CHAMPION", bigfour:"Senior Manager", boutique:"Senior Manager / Principal", focus:"Running engagements efficiently, managing analysts, hitting deadlines", buy:"Feels the most pain. Will champion internally if convinced. Primary target."},
+  {level:"Manager", alt:"AM, Engagement Manager", tier:2, tierLabel:"CHAMPION", bigfour:"Manager", boutique:"Manager", focus:"Day-to-day engagement execution, quality control, analyst output", buy:"Highest day-to-day pain. Best entry point for product conversations."},
+  {level:"Senior Associate / AM", alt:"Senior Analyst, Assistant Manager", tier:3, tierLabel:"USER", bigfour:"Senior Associate / AM", boutique:"Senior Analyst", focus:"Doing the FDD work, building models, meeting deadlines", buy:"Daily user. Strong advocate if the tool works. Influences upward."},
+  {level:"Associate / Analyst", alt:"Analyst, Graduate", tier:3, tierLabel:"USER", bigfour:"Associate / Analyst", boutique:"Analyst / Junior Analyst", focus:"Building the numbers, data processing, formatting reports", buy:"Direct tool user. Loudest voice on usability. Early adopter profile."}
+];
+
+const PERSONAS = [
+  {
+    title:"The Partner / MD",
+    role:"Budget holder, relationship owner",
+    badge:"Budget Holder",
+    badgeClass:"pcb-primary",
+    cardClass:"primary",
+    desc:"Focused on client relationships, firm reputation, and profitability. Rarely evaluates tools themselves but signs off on anything above a certain spend. Motivated by risk reduction and competitive positioning.",
+    tags:["P&L owner","Risk averse","Relationship focused","Rarely in data rooms"],
+    approach:"Lead with business outcomes. Talk about winning more mandates, reducing delivery risk, and what competitor firms are doing. Never start with features."
+  },
+  {
+    title:"The Director / VP",
+    role:"Revenue target owner, engagement lead",
+    badge:"Decision Influencer",
+    badgeClass:"pcb-primary",
+    cardClass:"primary",
+    desc:"Owns revenue targets and manages multiple engagements simultaneously. Cares deeply about team efficiency and client delivery quality. Often the economic buyer in smaller firms.",
+    tags:["Revenue target","Multi-engagement","Efficiency focused","Economic buyer in boutiques"],
+    approach:"Frame around capacity and margin. 'What could your team take on if each engagement took 20% less time?' is a strong opening."
+  },
+  {
+    title:"The Manager / Senior Manager",
+    role:"Engagement runner, daily pain-feeler",
+    badge:"Primary Target",
+    badgeClass:"pcb-secondary",
+    cardClass:"secondary",
+    desc:"Runs the actual FDD engagements. Spends hours in Excel building EBITDA bridges and normalising P&Ls. Knows exactly what is painful and inefficient. Has enough seniority to push a tool internally.",
+    tags:["Runs engagements","Feels the pain","Has internal credibility","Will champion if convinced"],
+    approach:"Talk about specific workflow pain. 'How long does it take you to build the first cut of the bridge from a new data room?' Let them describe the problem. Then show the solution."
+  },
+  {
+    title:"The Analyst / Associate",
+    role:"Daily user, internal champion",
+    badge:"Champion",
+    badgeClass:"pcb-secondary",
+    cardClass:"secondary",
+    desc:"Does the actual number-crunching. Spends the most time in data rooms and Excel. Immediately understands the value proposition. Will advocate loudly to managers if the tool makes their life easier.",
+    tags:["Builds the models","Highest usability pain","Vocal advocate","Influences upward"],
+    approach:"Show them the product. Let them see it work on a real dataset. Their enthusiasm will do the selling for you internally."
+  }
+];
+
+const OBJECTIONS = [
+  {persona:"Partner / MD", objection:"'We're not looking at new tools right now'", response:"'Understood. Who on your team is responsible for delivery efficiency on your FDD engagements? I'd love to show them something specific to your workflow.'"},
+  {persona:"Director", objection:"'What's the ROI on this?'", response:"'The average engagement saves 8-12 hours of manager and senior manager time on the bridge and normalisation work. At your billing rates, that's meaningful margin per deal. How many FDD mandates do you run per year?'"},
+  {persona:"Manager / Senior Manager", objection:"'We have our own Excel templates that work'", response:"'That's exactly the profile of firms we work with. Can I ask — when you get a new data room, how long before you have a working first cut of the adjusted EBITDA?' The answer reveals the gap."},
+  {persona:"Analyst / Associate", objection:"'My manager won't approve new tools'", response:"'Fair enough. If you tried it on your next engagement and it saved you significant time, would that give you something concrete to bring to your manager?'"}
+];
+
+const JOURNEY = [
+  {step:"1", title:"First contact", who:"Manager or Senior Manager", desc:"Initial conversation about workflow pain. No budget discussion yet."},
+  {step:"2", title:"Demo / trial", who:"Manager team + Director", desc:"Show the product on a relevant dataset. Get a trial commitment."},
+  {step:"3", title:"Internal evaluation", who:"Manager champions internally", desc:"Trial on a live or recent engagement. Manager gathers feedback."},
+  {step:"4", title:"Business case", who:"Director builds case for Partner", desc:"Director summarises outcome and presents to Partner/MD."},
+  {step:"5", title:"Commercial discussion", who:"Director / Partner", desc:"Pricing, contract, procurement if required."},
+  {step:"6", title:"Closed", who:"Partner signs off", desc:"Rollout plan agreed. CS engagement begins."}
+];
+
+const FINN_SYS = `You are Finn, a senior commercial advisor at PinpointAI with deep knowledge of the M&A advisory and FDD market. You are tutoring a new PinpointAI sales team member.
+
+Your job is to help them understand:
+- The three firm types PinpointAI targets (specialist FDD boutiques, advisory firms with TS practices, Big 4/large accounting firms)
+- The seniority hierarchy across these firms and what each level cares about
+- How to approach Partners, MDs, Directors, Managers, Senior Managers, and Analysts
+- How deals are structured in these firms and who makes buying decisions
+- How to qualify prospects and run discovery conversations
+
+Key context about PinpointAI:
+- B2B SaaS platform for AI-powered financial due diligence and Quality of Earnings analysis
+- Only relevant for firms that actually run FDD/QoE work - no use case outside that
+- Primary pain solved: the manual, time-consuming process of building EBITDA bridges, normalising P&Ls, and analysing data room documents
+- Primary buyers: Managers and Senior Managers who run engagements, with Directors and Partners as budget holders
+- Known clients include UNW, Cooper Parry, Incra Group, Pando Consulting, MNP (Canada), Kroll
+- Pipeline includes BDO, Grant Thornton, DSW, RSM, Forvis Mazars, Marcum
+
+Teaching rules:
+- Plain English only. Be direct and practical.
+- Short paragraphs - 3 sentences max before a line break.
+- Be warm, direct, and commercial. This is a sales training context.
+- Do not use em dashes. Write in flowing prose, not bullet lists.
+- Keep answers to 120-220 words unless the question genuinely requires more.
+- Never use: leverage, seamlessly, robust, streamline, unlock, game-changer.`;
+
+let aM=0,aS=0;
+const done={},chats={};
+let sbOpen=true;
+function cK(){return aM+'-'+aS}
+
+function renderCO(c){
+  if(!c) return '';
+  var icons={blue:'&#9432;',gold:'&#9998;',green:'&#10003;',red:'&#9888;',amber:'&#9888;'};
+  return '<div class="co co-'+c.type+'"><div class="co-lbl">'+(icons[c.type]||'')+' '+(c.label||'')+'</div>'+c.text.replace(/\n/g,'<br>')+'</div>'
+}
+
+function renderFirms(){
+  return FIRMS.map(function(f){
+    return '<div class="firm-card" style="background:'+f.bg+';border-color:'+f.border+'">'+
+      '<div class="firm-card-top">'+
+        '<div class="firm-icon" style="background:'+f.bg+';border:1px solid '+f.border+'">'+f.icon+'</div>'+
+        '<div><div class="firm-card-title">'+f.title+'</div><div class="firm-card-sub">'+f.sub+'</div></div>'+
+      '</div>'+
+      '<div class="firm-desc">'+f.desc+'</div>'+
+      '<div class="firm-examples">'+f.examples.map(function(e){return '<div class="firm-ex">'+e+'</div>'}).join('')+'</div>'+
+      '<div class="firm-why"><div class="firm-why-lbl">Why they matter</div>'+f.why+'</div>'+
+    '</div>'
+  }).join('')
+}
+
+function renderSeniority(){
+  return '<div class="sen-table">'+
+    '<div class="sen-hdr">'+
+      '<div class="sen-hdr-cell">Title</div>'+
+      '<div class="sen-hdr-cell">Alt Titles</div>'+
+      '<div class="sen-hdr-cell">What They Care About</div>'+
+      '<div class="sen-hdr-cell">Buying Role</div>'+
+    '</div>'+
+    SENIORITY.map(function(s){
+      var tc = s.tier===1?'tier1':s.tier===2?'tier2':'';
+      var tbc = s.tier===1?'tb1':s.tier===2?'tb2':'tb3';
+      return '<div class="sen-row '+tc+'">'+
+        '<div class="sen-cell"><strong>'+s.level+'</strong><span class="tier-badge '+tbc+'">'+s.tierLabel+'</span></div>'+
+        '<div class="sen-cell alt">'+s.alt+'</div>'+
+        '<div class="sen-cell">'+s.focus+'</div>'+
+        '<div class="sen-cell">'+s.buy+'</div>'+
+      '</div>'
+    }).join('')+
+  '</div>'
+}
+
+function renderPersonas(){
+  return '<div class="persona-grid">'+
+    PERSONAS.map(function(p){
+      return '<div class="persona-card '+p.cardClass+'">'+
+        '<div class="pc-top">'+
+          '<div class="pc-title">'+p.title+'</div>'+
+          '<div class="pc-badge '+p.badgeClass+'">'+p.badge+'</div>'+
+        '</div>'+
+        '<div class="pc-role">'+p.role+'</div>'+
+        '<div class="pc-desc">'+p.desc+'</div>'+
+        '<div class="pc-tags">'+p.tags.map(function(t){return '<div class="pc-tag">'+t+'</div>'}).join('')+'</div>'+
+        '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--royal)"><strong>Approach:</strong> '+p.approach+'</div>'+
+      '</div>'
+    }).join('')+
+  '</div>'
+}
+
+function renderApproach(){
+  var levels = [
+    {level:"PARTNER / MD",color:"var(--royal)",title:"Business outcomes only",desc:"They care about firm reputation, client relationships, and P&L. Never pitch features. Lead with competitive positioning and risk reduction.",dos:["Talk about mandate volume and win rates","Reference what peer firms are doing","Keep it under 10 minutes"],donts:["Never demo the product","Never talk about Excel speed","Never ask about their process"]},
+    {level:"DIRECTOR / VP",color:"#0A7A4A",title:"Capacity and margin",desc:"They want to know how this affects their team's ability to take on more work and deliver better margins. Connect product to commercial outcome.",dos:["Frame around hours saved per engagement","Ask about peak period capacity constraints","Connect to their revenue targets"],donts:["Don't skip to pricing","Don't oversell the AI angle","Don't ignore their seniority"]},
+    {level:"MANAGER / SM",color:"var(--amber)",title:"Workflow and time",desc:"This is your primary conversation. Be specific. Talk about EBITDA bridges, data room analysis, normalisation. Show you understand their exact workflow.",dos:["Ask how long specific tasks take","Demo on a real-looking dataset","Get them to describe their pain in their own words"],donts:["Don't generalise","Don't skip the demo","Don't rush to commercial"]}
+  ];
+  return '<div class="approach-grid">'+levels.map(function(l){
+    return '<div class="ap-card">'+
+      '<div class="ap-level" style="color:'+l.color+'">'+l.level+'</div>'+
+      '<div class="ap-title">'+l.title+'</div>'+
+      '<div class="ap-desc">'+l.desc+'</div>'+
+      l.dos.map(function(d){return '<div class="ap-do">&#10003; '+d+'</div>'}).join('')+
+      l.donts.map(function(d){return '<div class="ap-dont">&#10007; '+d+'</div>'}).join('')+
+    '</div>'
+  }).join('')+'</div>'
+}
+
+function renderObjections(){
+  return '<div style="display:flex;flex-direction:column;gap:12px;margin:20px 0">'+
+    OBJECTIONS.map(function(o){
+      return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;box-shadow:var(--sh)">'+
+        '<div style="font-size:10px;font-family:var(--mono);color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;font-weight:600">'+o.persona+'</div>'+
+        '<div style="font-size:14px;color:var(--text);font-weight:600;margin-bottom:8px">"'+o.objection+'"</div>'+
+        '<div style="font-size:13px;color:var(--green);line-height:1.6"><strong>Response:</strong> '+o.response+'</div>'+
+      '</div>'
+    }).join('')+'</div>'
+}
+
+function renderJourney(){
+  return '<div style="display:flex;flex-direction:column;gap:0;margin:20px 0">'+
+    JOURNEY.map(function(j,i){
+      return '<div style="display:flex;gap:16px;padding:14px 0;'+(i<JOURNEY.length-1?'border-bottom:1px solid var(--border)':'')+'">'+
+        '<div style="width:28px;height:28px;border-radius:50%;background:var(--royal);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;margin-top:2px">'+j.step+'</div>'+
+        '<div>'+
+          '<div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px">'+j.title+'</div>'+
+          '<div style="font-size:11px;font-family:var(--mono);color:var(--royal);margin-bottom:4px">'+j.who+'</div>'+
+          '<div style="font-size:13px;color:var(--text2)">'+j.desc+'</div>'+
+        '</div>'+
+      '</div>'
+    }).join('')+'</div>'
+}
+
+function renderContent(sec){
+  var html = '<div class="btext">'+sec.content.split('\\n\\n').map(function(p){return '<p>'+p+'</p>'}).join('')+'</div>';
+  if(sec.type==='firms') html += '<div class="firm-grid">'+renderFirms()+'</div>';
+  if(sec.type==='seniority') html += renderSeniority();
+  if(sec.type==='personas') html += renderPersonas();
+  if(sec.type==='approach') html += renderApproach();
+  if(sec.type==='objections') html += renderObjections();
+  if(sec.type==='journey') html += renderJourney();
+  if(sec.callout) html += renderCO(sec.callout);
+  if(sec.callout2) html += renderCO(sec.callout2);
+  return html;
+}
+
+async function finnSend(q){
+  var key=cK();
+  if(!chats[key]) chats[key]=[];
+  chats[key].push({role:'user',content:q});
+  var msgs=document.getElementById('fmsgs');
+  if(msgs){msgs.classList.add('vis');finnRender(key);}
+  var st=document.getElementById('fst');if(st)st.style.display='none';
+  var ld=document.createElement('div');ld.id='fld';ld.className='mr fu';
+  ld.innerHTML='<div class="mav f">F</div><div class="mb f"><div class="tdots"><div class="tdot" style="animation-delay:0s"></div><div class="tdot" style="animation-delay:.2s"></div><div class="tdot" style="animation-delay:.4s"></div></div></div>';
+  if(msgs){msgs.appendChild(ld);msgs.scrollTop=msgs.scrollHeight;}
+  var mod=MODULES[aM],sec=mod.sections[aS];
+  try{
+    var res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,
+        system:FINN_SYS+'\\n\\nCurrent module: '+mod.title+'. Current section: '+sec.title+'.',
+        messages:chats[key]})});
+    var data=await res.json();
+    var reply=(data.content&&data.content.find(function(b){return b.type==='text'}))||{text:'Something went wrong.'};
+    chats[key].push({role:'assistant',content:reply.text});
+  }catch(e){chats[key].push({role:'assistant',content:'Network error - please try again.'});}
+  var ld2=document.getElementById('fld');if(ld2)ld2.remove();
+  finnRender(key);
+}
+
+function finnRender(key){
+  var div=document.getElementById('fmsgs');if(!div)return;
+  div.innerHTML=(chats[key]||[]).map(function(m){
+    return '<div class="mr '+(m.role==='user'?'u':'')+' fu">'+
+      (m.role==='assistant'?'<div class="mav f">F</div>':'')+
+      '<div class="mb '+(m.role==='assistant'?'f':'u')+'">'+m.content.replace(/\n/g,'<br>')+'</div>'+
+      (m.role==='user'?'<div class="mav y">M</div>':'')+
+    '</div>'
+  }).join('');
+  div.scrollTop=div.scrollHeight;
+}
+function finnKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finnSubmit();}var ta=document.getElementById('fta');if(ta){ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,100)+'px';}}
+function finnSubmit(){var ta=document.getElementById('fta');var q=ta?ta.value.trim():'';if(!q)return;ta.value='';ta.style.height='auto';finnSend(q);}
+
+function totSec(){return MODULES.reduce(function(a,m){return a+m.sections.length},0)}
+function doneSec(){return Object.keys(done).filter(function(k){return done[k]}).length}
+
+function markDone(){
+  done[aM+'-'+aS]=true;
+  var mod=MODULES[aM];
+  if(aS<mod.sections.length-1) aS++;
+  else if(aM<MODULES.length-1){aM++;aS=0;}
+  render();document.getElementById('ct').scrollTop=0;
+}
+function goBack(){if(aS>0)aS--;else if(aM>0){aM--;aS=MODULES[aM].sections.length-1;}render();document.getElementById('ct').scrollTop=0;}
+function goTo(mi,si){aM=mi;aS=si;render();document.getElementById('ct').scrollTop=0;if(window.innerWidth<700)toggleSidebar();}
+function toggleSidebar(){sbOpen=!sbOpen;document.getElementById('sb').classList.toggle('closed',!sbOpen);}
+
+function render(){
+  var mod=MODULES[aM],sec=mod.sections[aS];
+  var key=aM+'-'+aS;
+  var isDone=!!done[key];
+  var isFirst=aM===0&&aS===0;
+  var isLast=aM===MODULES.length-1&&aS===mod.sections.length-1;
+  var ts=totSec(),ds=doneSec();
+  var pct=Math.round(ds/ts*100);
+  var rem=MODULES.slice(aM+1).reduce(function(a,m){return a+m.time},0)+Math.round(((mod.sections.length-aS)/mod.sections.length)*mod.time);
+
+  document.getElementById('tb-sec').textContent=mod.icon+' '+mod.title+' - '+sec.title;
+  document.getElementById('pg-lbl').textContent=ds+' / '+ts;
+  document.getElementById('rng-n').textContent=pct+'%';
+  document.getElementById('rng').style.strokeDashoffset=75.4-(75.4*pct/100);
+  document.getElementById('sb-done').textContent=ds;
+  document.getElementById('sb-left').textContent=rem;
+
+  document.getElementById('sb-nav').innerHTML=MODULES.map(function(m,mi){
+    var mA=mi===aM,mD=m.sections.every(function(_,si){return done[mi+'-'+si]});
+    var secs=mA?'<div class="si-list">'+m.sections.map(function(s,si){
+      var sA=si===aS,sD=done[mi+'-'+si];
+      return '<div class="si'+(sA?' on':'')+(sD?' done':'')+'" onclick="event.stopPropagation();goTo('+mi+','+si+')">'+
+        '<div class="si-dot'+(sD?' ok':sA?' cur':'')+'">'+((sD)?'&#10003;':'')+'</div>'+
+        '<span class="si-lbl">'+s.title+'</span></div>'
+    }).join('')+'</div>':'';
+    return '<div class="mi'+(mA?' on':'')+'" onclick="goTo('+mi+',0)">'+
+      '<div class="mi-hdr">'+
+        '<div class="mi-ico">'+m.icon+'</div>'+
+        '<div class="mi-info"><div class="mi-name">'+m.title+'</div><div class="mi-meta"><span class="mi-id">'+m.id+'</span><span class="mi-t">~'+m.time+'m</span></div></div>'+
+        '<div class="mi-ck'+(mD?' ok':'')+'">'+((mD)?'&#10003;':'')+'</div>'+
+      '</div>'+secs+'</div>'
+  }).join('');
+
+  var secPct=Math.round((aS+1)/mod.sections.length*100);
+  var hasHist=chats[key]&&chats[key].length>0;
+
+  document.getElementById('cti').innerHTML=
+    '<div class="lhdr">'+
+      '<div class="lcrumb">'+
+        '<div class="lcrumb-ico">'+mod.icon+'</div>'+
+        '<span style="color:var(--royal);font-weight:600;font-family:var(--mono);font-size:11px">'+mod.id+' - '+mod.title+'</span>'+
+        '<span style="color:var(--muted)">&#8250;</span>'+
+        '<span style="font-size:11px;font-family:var(--mono);color:var(--muted)">Section '+(aS+1)+' of '+mod.sections.length+'</span>'+
+      '</div>'+
+      '<div class="ltitle">'+sec.title+'</div>'+
+      '<div class="lmeta">'+
+        '<div class="lmi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~'+mod.time+' min</div>'+
+        (isDone?'<div class="lmi" style="color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Completed</div>':'')+
+      '</div>'+
+      '<div class="lpbar"><div class="lpfill" style="width:'+secPct+'%"></div></div>'+
+    '</div>'+
+    renderContent(sec)+
+    '<div class="fw">'+
+      '<div class="fh">'+
+        '<div class="fav-wrap"><div class="fav">&#127891;</div><div class="fon"></div></div>'+
+        '<div class="finfo"><div class="fname">Ask Finn</div><div class="fsub">ICP Trainer - PinpointAI</div></div>'+
+        '<div class="fai">AI TRAINER</div>'+
+      '</div>'+
+      '<div id="fmsgs" class="fmsgs'+(hasHist?' vis':'')+'"></div>'+
+      (!hasHist?'<div id="fst" class="fst"><div class="fst-lbl">Questions for this section</div><div class="fst-g">'+
+        mod.starters.map(function(q){return '<button class="fsbtn" onclick="finnSend(this.textContent)">'+q+'</button>'}).join('')+
+      '</div></div>':'')+
+      '<div class="fin">'+
+        '<textarea id="fta" class="fta" placeholder="Ask Finn anything..." rows="1" onkeydown="finnKey(event)"></textarea>'+
+        '<button class="fsnd" onclick="finnSubmit()"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>'+
+      '</div>'+
+    '</div>'+
+    '<div class="lnav">'+
+      '<button class="nbk" onclick="goBack()"'+(isFirst?' disabled':'')+'>'+
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg> Back'+
+      '</button>'+
+      '<button class="nnx'+(isDone?' done':'')+'" onclick="markDone()">'+
+        (isDone?'Done - Next':'Mark done')+
+        ' <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>'+
+      '</button>'+
+    '</div>';
+
+  if(hasHist){finnRender(key);document.getElementById('fmsgs').classList.add('vis');}
+}
+
+render();
+</script>
+</body>
+</html>
