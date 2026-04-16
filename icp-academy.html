@@ -229,6 +229,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
   .approach-grid{grid-template-columns:1fr}
   .sen-hdr,.sen-row{grid-template-columns:1fr 1fr}
 }
+
+/* LISTEN BUTTON */
+.listen-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:600;letter-spacing:.5px;transition:all .15s}
+.listen-btn:hover{border-color:var(--royal);color:var(--royal);background:rgba(61,80,244,.05)}
+.listen-btn.playing{border-color:var(--cyan);color:#0A7A6A;background:rgba(53,255,233,.08)}
+.listen-btn.playing:hover{border-color:var(--red);color:var(--red);background:rgba(200,20,74,.06)}
+.listen-btn svg{width:13px;height:13px;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -660,15 +667,15 @@ function finnSubmit(){var ta=document.getElementById('fta');var q=ta?ta.value.tr
 function totSec(){return MODULES.reduce(function(a,m){return a+m.sections.length},0)}
 function doneSec(){return Object.keys(done).filter(function(k){return done[k]}).length}
 
-function markDone(){
+function markDone(){ stopSpeech();
   done[aM+'-'+aS]=true;
   var mod=MODULES[aM];
   if(aS<mod.sections.length-1) aS++;
   else if(aM<MODULES.length-1){aM++;aS=0;}
   render();document.getElementById('ct').scrollTop=0;
 }
-function goBack(){if(aS>0)aS--;else if(aM>0){aM--;aS=MODULES[aM].sections.length-1;}render();document.getElementById('ct').scrollTop=0;}
-function goTo(mi,si){aM=mi;aS=si;render();document.getElementById('ct').scrollTop=0;if(window.innerWidth<700)toggleSidebar();}
+function goBack(){ stopSpeech();if(aS>0)aS--;else if(aM>0){aM--;aS=MODULES[aM].sections.length-1;}render();document.getElementById('ct').scrollTop=0;}
+function goTo(mi,si){ stopSpeech();aM=mi;aS=si;render();document.getElementById('ct').scrollTop=0;if(window.innerWidth<700)toggleSidebar();}
 function toggleSidebar(){sbOpen=!sbOpen;document.getElementById('sb').classList.toggle('closed',!sbOpen);}
 
 function render(){
@@ -720,7 +727,8 @@ function render(){
         '<div class="lmi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~'+mod.time+' min</div>'+
         (isDone?'<div class="lmi" style="color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Completed</div>':'')+
       '</div>'+
-      '<div class="lpbar"><div class="lpfill" style="width:'+secPct+'%"></div></div>'+
+      '<div style="margin-top:12px"><button id="listen-btn" class="listen-btn" onclick="toggleListen()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Listen</button></div>'+
+    '<div class="lpbar"><div class="lpfill" style="width:'+secPct+'%"></div></div>'+
     '</div>'+
     renderContent(sec)+
     '<div class="fw">'+
@@ -752,6 +760,88 @@ function render(){
 }
 
 render();
+
+// WEB SPEECH API - no external API needed
+var synth = window.speechSynthesis;
+var currentUtterance = null;
+var isPlaying = false;
+
+function getReadableText() {
+  // Collect all readable text from the current section
+  var parts = [];
+  var mod = MODULES[aM], sec = mod.sections[aS];
+  
+  // Title
+  parts.push(sec.title + '.');
+  
+  // Body content paragraphs
+  var content = document.getElementById('cti');
+  if (content) {
+    var paras = content.querySelectorAll('.btext p');
+    paras.forEach(function(p) { if(p.textContent.trim()) parts.push(p.textContent.trim()); });
+    
+    // Callouts
+    var callouts = content.querySelectorAll('.co');
+    callouts.forEach(function(c) { if(c.textContent.trim()) parts.push(c.textContent.trim()); });
+    
+    // Analogy
+    var an = content.querySelector('.an-txt');
+    if(an) parts.push('Analogy: ' + an.textContent.trim());
+  }
+  
+  return parts.join(' ');
+}
+
+function toggleListen() {
+  var btn = document.getElementById('listen-btn');
+  if (!btn) return;
+  
+  if (isPlaying) {
+    synth.cancel();
+    isPlaying = false;
+    updateListenBtn(false);
+    return;
+  }
+  
+  var text = getReadableText();
+  if (!text) return;
+  
+  currentUtterance = new SpeechSynthesisUtterance(text);
+  currentUtterance.rate = 0.95;
+  currentUtterance.pitch = 1;
+  currentUtterance.volume = 1;
+  
+  // Try to get a good voice
+  var voices = synth.getVoices();
+  var preferred = voices.find(function(v) { 
+    return v.lang === 'en-GB' || v.lang === 'en-US'; 
+  });
+  if (preferred) currentUtterance.voice = preferred;
+  
+  currentUtterance.onstart = function() { isPlaying = true; updateListenBtn(true); };
+  currentUtterance.onend = function() { isPlaying = false; updateListenBtn(false); };
+  currentUtterance.onerror = function() { isPlaying = false; updateListenBtn(false); };
+  
+  synth.speak(currentUtterance);
+}
+
+function updateListenBtn(playing) {
+  var btn = document.getElementById('listen-btn');
+  if (!btn) return;
+  if (playing) {
+    btn.classList.add('playing');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Stop';
+  } else {
+    btn.classList.remove('playing');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Listen';
+  }
+}
+
+function stopSpeech() {
+  if (synth) synth.cancel();
+  isPlaying = false;
+}
+
 </script>
 </body>
 </html>
