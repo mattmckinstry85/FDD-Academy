@@ -51,8 +51,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .tb-ring-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-family:var(--mono);color:var(--cyan);font-weight:600}
 .tb-btn{background:none;border:none;color:rgba(255,255,255,0.75);cursor:pointer;padding:6px;border-radius:6px;display:flex;align-items:center;transition:all .15s}
 .tb-btn:hover{background:rgba(255,255,255,.08);color:#fff}
-.tb-back{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:rgba(255,255,255,.4);text-decoration:none;letter-spacing:.5px;transition:color .15s;padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.08)}
-.tb-back:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.2)}
+.tb-back{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:var(--dark);text-decoration:none;letter-spacing:.5px;transition:all .15s;padding:6px 14px;border-radius:6px;border:none;background:#35FFE9;font-weight:700}
+.tb-back:hover{background:#20EDD6;transform:translateY(-1px)}
 
 #main{display:flex;flex:1;overflow:hidden}
 
@@ -249,7 +249,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 /* LISTEN BUTTON */
 .listen-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:600;letter-spacing:.5px;transition:all .15s}
 .listen-btn:hover{border-color:var(--royal);color:var(--royal);background:rgba(61,80,244,.05)}
-.listen-btn.playing{border-color:var(--cyan);color:#0A7A6A;background:rgba(53,255,233,.08)}
+.listen-btn.playing{border-color:var(--royal);color:var(--royal);background:rgba(61,80,244,.08)}
+.stop-btn{border-color:rgba(200,20,74,.3)!important;color:#C8144A!important;background:rgba(200,20,74,.06)!important}
 .listen-btn.playing:hover{border-color:var(--red);color:var(--red);background:rgba(200,20,74,.06)}
 .listen-btn svg{width:13px;height:13px;flex-shrink:0}
 </style>
@@ -833,19 +834,19 @@ function finnSubmit(){
 function totSec(){return MODULES.reduce(function(a,m){return a+m.sections.length},0)}
 function doneSec(){return Object.keys(done).filter(function(k){return done[k]}).length}
 
-function markDone(){ stopSpeech();
+function markDone(){ if(typeof stopSpeech==="function") stopSpeech(); stopSpeech();
   done[aM+'-'+aS]=true;
   var mod=MODULES[aM];
   if(aS<mod.sections.length-1) aS++;
   else if(aM<MODULES.length-1){aM++;aS=0;}
   render();document.getElementById('ct').scrollTop=0;
 }
-function goBack(){ stopSpeech();
+function goBack(){ if(typeof stopSpeech==="function") stopSpeech();
   if(aS>0) aS--;
   else if(aM>0){aM--;aS=MODULES[aM].sections.length-1;}
   render();document.getElementById('ct').scrollTop=0;
 }
-function goTo(mi,si){ stopSpeech();aM=mi;aS=si;render();document.getElementById('ct').scrollTop=0;if(window.innerWidth<700)toggleSidebar();}
+function goTo(mi,si){ if(typeof stopSpeech==="function") stopSpeech();aM=mi;aS=si;render();document.getElementById('ct').scrollTop=0;if(window.innerWidth<700)toggleSidebar();}
 function toggleSidebar(){sbOpen=!sbOpen;document.getElementById('sb').classList.toggle('closed',!sbOpen);}
 
 // RENDER
@@ -951,6 +952,61 @@ function render(){
     '</div>';
 
   if(hasHist){finnRender(key);document.getElementById('fmsgs').classList.add('vis');}
+}
+
+
+// ── WEB SPEECH API ──────────────────────────────────────────────────
+var synth = window.speechSynthesis;
+var isPlaying = false;
+
+function getReadableText() {
+  var parts = [];
+  var mod = MODULES[aM], sec = mod.sections[aS];
+  parts.push(sec.title + '.');
+  var cti = document.getElementById('cti');
+  if (cti) {
+    cti.querySelectorAll('.btext p').forEach(function(p) { if(p.textContent.trim()) parts.push(p.textContent.trim()); });
+    cti.querySelectorAll('.co').forEach(function(c) { if(c.textContent.trim()) parts.push(c.textContent.trim()); });
+    var an = cti.querySelector('.an-txt');
+    if(an) parts.push('Analogy: ' + an.textContent.trim());
+  }
+  return parts.join(' ');
+}
+
+function toggleListen() {
+  if (isPlaying) { stopSpeech(); return; }
+  var text = getReadableText();
+  if (!text) return;
+  var u = new SpeechSynthesisUtterance(text);
+  u.rate = 0.92; u.pitch = 1; u.volume = 1;
+  var voices = synth.getVoices();
+  var v = voices.find(function(x) { return x.lang.startsWith('en'); });
+  if (v) u.voice = v;
+  u.onstart = function() { isPlaying = true; updateListenBtn(true); };
+  u.onend = function() { isPlaying = false; updateListenBtn(false); };
+  u.onerror = function() { isPlaying = false; updateListenBtn(false); };
+  synth.speak(u);
+}
+
+function updateListenBtn(playing) {
+  var btn = document.getElementById('listen-btn');
+  var sbtn = document.getElementById('stop-btn');
+  if (!btn) return;
+  if (playing) {
+    btn.classList.add('playing');
+    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Playing...';
+    if(sbtn) sbtn.style.display='flex';
+  } else {
+    btn.classList.remove('playing');
+    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Listen';
+    if(sbtn) sbtn.style.display='none';
+  }
+}
+
+function stopSpeech() {
+  if (synth) synth.cancel();
+  isPlaying = false;
+  updateListenBtn(false);
 }
 
 render();
