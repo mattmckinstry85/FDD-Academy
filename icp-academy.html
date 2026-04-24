@@ -304,7 +304,15 @@ const MODULES = [
         type:"firms"
       },
       {
-        id:"M1S3", title:"Qualifying the opportunity",
+        id:"M1S3", title:"UK vs US and Canada — key differences",
+        content:"Most of the firm types and role structures described in this module apply consistently across the UK, US, and Canada. But there are a few genuine differences worth knowing so you are not caught off guard in a conversation.",
+        type:"text",
+        callout:{type:"blue",label:"Titles: the main difference",text:"In the UK, the senior level below Partner in most firms is Director. In the US and Canada, the equivalent is often Managing Director or Vice President. So a UK Director and a US VP or MD are often the same seniority level doing the same job.\n\nIn the US, you will also see the title Principal more frequently — this sits between Senior Manager and Partner/MD and is common at both Big 4 and boutiques."},
+        callout2:{type:"green",label:"QoE vs FDD — a terminology difference",text:"In the UK the standard term is Financial Due Diligence (FDD). In the US and Canada, Quality of Earnings (QoE) is the dominant term for the same work. Some US firms barely use the term FDD at all.\n\nWhen speaking to a US or Canadian firm, lead with QoE. When speaking to a UK firm, FDD is the natural language. Both describe the same analytical process."},
+        callout3:{type:"amber",label:"Firm structure: US boutiques are larger",text:"In the US, what would be called a boutique in the UK often has 50-200+ staff across multiple offices. Firms like Kroll, FTI, Alvarez and Marsal, and Houlihan Lokey operate at a scale that would make them mid-tier in the UK context. Buying decisions in these firms are more structured and slower than a typical UK boutique.\n\nIn Canada, the Big 4 dominate the FDD market more heavily than in the UK, where mid-tier and boutique firms have taken a larger share. MNP is a notable Canadian exception — a large national firm with a strong transaction services practice."}
+      },
+      {
+        id:"M1S4", title:"Qualifying the opportunity",
         content:"Before going deep on any firm, you need to qualify that they actually run FDD or QoE work. Many firms look like targets but are not.\n\nThe fastest qualification question: 'Do your teams run Quality of Earnings analysis on buy-side or sell-side transactions?' If the answer is no or blank, move on.\n\nA mid-market accounting firm that does audit and tax but no transaction services is not a prospect. A boutique that focuses on restructuring rather than acquisitions is not a prospect. A law firm that advises on M&A deals but does not produce financial analysis is not a prospect.\n\nDo not waste time on non-prospects. The ICP is tight for a reason.",
         type:"text",
         callout:{type:"blue",label:"Quick qualifier",text:"'Does your team run Quality of Earnings or financial due diligence on M&A transactions?' If yes, you have a prospect. If no or unclear, ask one follow-up and move on."}
@@ -767,6 +775,8 @@ function renderContent(sec){
   if(sec.type==='objections') html += renderObjections();
   if(sec.type==='journey') html += renderJourney();
   if(sec.callout) html += renderCO(sec.callout);
+  if(sec.callout2) html += renderCO(sec.callout2);
+  if(sec.callout3) html += renderCO(sec.callout3);
   if(sec.callout2) html += renderCO(sec.callout2);
   return html;
 }
