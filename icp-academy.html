@@ -290,7 +290,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 <script>
 const MODULES = [
   {
-    id:"M1", icon:"🏢", title:"Who We Sell To", subtitle:"The three firm types", time:15,
+    id:"M1", icon:"🏢", title:"The M&A Ecosystem", subtitle:"Every firm type you will encounter", time:20,
     starters:["What types of firms buy PinpointAI?","What's the difference between a Big 4 TS team and a boutique FDD firm?","Why won't PinpointAI work for a general accounting firm?","Which firm type should we focus on first?"],
     sections:[
       {
@@ -299,8 +299,8 @@ const MODULES = [
         type:"text"
       },
       {
-        id:"M1S2", title:"The three firm types",
-        content:"Here are the three firm types in detail. Learn them so well that you can identify which one you are talking to within the first two minutes of any call.",
+        id:"M1S2", title:"Every firm type you will encounter",
+        content:"This covers every type of firm in and around the M&A ecosystem — from the firms that run FDD directly, to the firms that commission it, to the ones that are simply useful context. Read it once so you understand the landscape before you start having conversations.",
         type:"firms"
       },
       {
@@ -322,8 +322,8 @@ const MODULES = [
         callout:{type:"amber",label:"Key insight",text:"The person who feels the pain (Manager/Senior Manager) is rarely the person who signs the budget (Partner/MD). Your job is to arm the pain-feeler with enough to convince the budget-holder."}
       },
       {
-        id:"M2S2", title:"The full seniority hierarchy",
-        content:"This table covers all the titles you will encounter across Big 4, mid-tier, and boutique firms. Use it as a reference every time you are preparing for a call.",
+        id:"M2S2", title:"The full org structure — every role explained",
+        content:"Seven levels, explained properly. Big 4 and boutique equivalents shown for each. Read this once and you will never be confused by a title again.",
         type:"seniority"
       },
       {
@@ -386,43 +386,161 @@ const FIRMS = [
   {
     icon:"🔬",
     title:"Specialist FDD / QoE Boutiques",
-    sub:"100% of their work is the problem PinpointAI solves",
+    sub:"100% of their work is financial due diligence and Quality of Earnings",
     bg:"rgba(61,80,244,.04)",
     border:"rgba(61,80,244,.2)",
-    desc:"These firms exist solely to provide financial due diligence and Quality of Earnings analysis. Every engagement is a direct use case for PinpointAI. The team is small, the partners are hands-on, and the pain is immediate.",
-    examples:["Alantra","8advisory","Kroll","Clearwater","FTI Consulting","AlixPartners"],
-    why:"Highest urgency, most direct pain, shortest sales cycle. Decision makers are close to the work. Start here."
+    what:"Firms that exist solely to provide FDD and QoE analysis. They have no audit practice, no tax team, no corporate finance arm. Every engagement they run is a buy-side or sell-side financial due diligence or quality of earnings report.",
+    structure:"Typically 5-50 people. Flat structure — Partners work directly with Managers and Analysts on engagements. Very lean, very fast.",
+    fddfit:"Every single person in the firm is relevant. The work is 100% FDD and QoE.",
+    examples:["8advisory","Kroll","Clearwater","FTI Consulting","Alvarez & Marsal","Accuratus","Forvis Transaction Advisory"]
+  },
+  {
+    icon:"🏦",
+    title:"Big 4 Accounting Firms",
+    sub:"Deloitte, KPMG, EY, PwC — Transaction Services divisions",
+    bg:"rgba(53,255,233,.02)",
+    border:"rgba(53,255,233,.15)",
+    what:"The four largest accounting firms in the world. Each has a dedicated Transactions or Deals division that runs FDD, QoE, and broader transaction advisory work. This sits separately from audit, tax, and consulting.",
+    structure:"Highly structured. Partner, Director, Senior Manager, Manager, Senior Associate, Analyst. Teams of 3-8 per engagement. The Transactions practice is a standalone business unit within the broader firm.",
+    fddfit:"The Transactions / Deals / Transaction Services team only. Audit and tax teams are irrelevant. Find the TS practice specifically.",
+    examples:["Deloitte Transaction Services","KPMG Deals","EY-Parthenon","PwC Deals & Capital Markets"]
   },
   {
     icon:"🏛️",
-    title:"Advisory Firms with Transaction Services",
-    sub:"M&A advisory firms where FDD is a core service line",
-    bg:"rgba(53,255,233,.03)",
-    border:"rgba(53,255,233,.2)",
-    desc:"Mid-market M&A advisory and accounting firms that run a dedicated Transaction Services or Deals practice. FDD is a significant revenue line. Larger than boutiques, more process-driven, but still close to the work.",
-    examples:["Grant Thornton","RSM","Forvis Mazars","BDO","DSW","Alvarez & Marsal","Houlihan Lokey"],
-    why:"Strong fit, good deal volume. Slightly longer sales cycle due to size. Target the TS practice specifically, not the firm broadly."
+    title:"Mid-Tier Accounting & Advisory Firms",
+    sub:"Grant Thornton, BDO, RSM, Forvis Mazars and similar",
+    bg:"rgba(255,180,0,.03)",
+    border:"rgba(200,130,0,.15)",
+    what:"The layer below Big 4. Large, well-resourced firms with dedicated transaction services practices. Very active in the mid-market, which is the most active deal segment. Often the go-to for deals under £500m enterprise value.",
+    structure:"Same hierarchy as Big 4 but smaller teams. Partners are more hands-on. Deal flow is high volume mid-market rather than mega-deals.",
+    fddfit:"Transaction Services, Corporate Finance, or Deals practices. These firms also sometimes have standalone QoE teams.",
+    examples:["Grant Thornton","BDO","RSM","Forvis Mazars","Mazars","Moore Kingston Smith","Crowe"]
   },
   {
-    icon:"🏢",
-    title:"Big 4 & Large Accounting Firms",
-    sub:"Transaction Services teams within large firms",
-    bg:"rgba(255,255,255,.02)",
-    border:"rgba(255,255,255,.1)",
-    desc:"The Big 4 (Deloitte, KPMG, EY, PwC) and large mid-tier firms (BDO, Grant Thornton at scale) have substantial Transaction Services practices. High deal volume, complex buying processes, multiple stakeholders.",
-    examples:["Deloitte TS","KPMG Deals","EY-Parthenon","PwC Deals","Cooper Parry","UNW"],
-    why:"High volume, high value, but longest sales cycle. Need an internal champion at Manager/Senior Manager level to navigate internal procurement."
+    icon:"📊",
+    title:"Specialist Accounting Firms (Regional)",
+    sub:"Cooper Parry, UNW, DSW, Clearwater and similar",
+    bg:"rgba(91,47,168,.03)",
+    border:"rgba(91,47,168,.15)",
+    what:"Ambitious regional and specialist firms with strong transaction advisory practices. Often punching above their weight in deal quality. Very entrepreneurial cultures, faster buying decisions, and strong loyalty to tools that work.",
+    structure:"Smaller than mid-tier nationals but similar structure. Partners often know each deal personally. Strong culture, often used as a training ground before Big 4.",
+    fddfit:"Transaction advisory or corporate finance teams. These firms are often where the most interesting work happens at partner level.",
+    examples:["Cooper Parry","UNW","DSW Capital","Clearwater Corporate Finance","Dow Schofield Watts","MHA"]
+  },
+  {
+    icon:"💼",
+    title:"Private Equity Firms",
+    sub:"PE funds — buyers of businesses, commissioners of FDD",
+    bg:"rgba(200,20,74,.03)",
+    border:"rgba(200,20,74,.15)",
+    what:"Private equity firms buy businesses, grow them, and sell them. They are the primary commissioners of buy-side FDD — when a PE fund acquires a company, they appoint an accounting firm to run the FDD. PE firms do not run FDD themselves.",
+    structure:"Investment professionals: Partner/Managing Director, Director/Principal, Associate/Analyst. Deal teams are small — 2-4 people per transaction. Supported by a network of external advisors.",
+    fddfit:"PE firms do not use PinpointAI directly. However, understanding PE is critical because they are the end client — the accounting firm doing FDD is always working for a PE fund or a corporate acquirer. Understanding what PE wants from an FDD report makes you more credible in any conversation.",
+    examples:["Bridgepoint","Inflexion","LDC","BGF","Equistone","Livingbridge","Perwyn"]
+  },
+  {
+    icon:"🤝",
+    title:"Corporate Finance Advisors",
+    sub:"M&A advisors who run sale processes and buy-side advisory",
+    bg:"rgba(61,80,244,.03)",
+    border:"rgba(61,80,244,.12)",
+    what:"Corporate finance firms advise businesses on mergers, acquisitions, and fundraising. They run sell-side processes (finding buyers for a business) and buy-side mandates (finding acquisition targets). They do not run FDD — they appoint accounting firms to do it.",
+    structure:"Managing Director / Partner, Director, Associate Director, Analyst. Deal-led culture. Relationship-heavy, high pressure.",
+    fddfit:"Corporate finance advisors do not use PinpointAI. But they refer FDD work to accounting firms and boutiques. Understanding their world is useful context for conversations with the accounting firms they feed work to.",
+    examples:["Rothschild","Lazard","Lincoln International","DC Advisory","Clearwater","Houlihan Lokey","Oakley Advisory"]
+  },
+,
+  {
+    icon:"🔍",
+    title:"Transaction Services Teams (within any firm)",
+    sub:"The specific team inside a larger firm that runs FDD",
+    bg:"rgba(10,122,74,.03)",
+    border:"rgba(10,122,74,.15)",
+    what:"Transaction Services (TS) is the name used by most large accounting firms for the team that runs FDD, QoE, and related work. When you see 'Transaction Services' on someone's LinkedIn, that is your person — regardless of which firm they are at.",
+    structure:"Mirrors the standard accounting firm hierarchy. Often sits alongside Corporate Finance (M&A advisory) and Restructuring as the three pillars of a Deals or Transactions practice.",
+    fddfit:"This is exactly who PinpointAI is built for. If someone's profile says Transaction Services, Financial Due Diligence, or Quality of Earnings — they are a direct user.",
+    examples:["[Any firm] Transaction Services","[Any firm] Deals","[Any firm] Transaction Advisory Services","[Any firm] TAS"]
   }
 ];
 
 const SENIORITY = [
-  {level:"Partner / Managing Partner", alt:"Senior Partner, Founding Partner", tier:1, tierLabel:"BUDGET", bigfour:"Partner", boutique:"Founder / MD / Managing Partner", focus:"Firm reputation, client relationships, profitability, risk management", buy:"Signs off on firm-wide tool decisions. Rarely evaluates tools directly."},
-  {level:"Managing Director", alt:"Senior MD, Executive Director", tier:1, tierLabel:"BUDGET", bigfour:"Director (Big 4 equiv.)", boutique:"MD / Senior Director", focus:"Revenue targets, team utilisation, winning mandates, margin", buy:"Co-signs budget decisions. Influential in boutiques. May evaluate directly."},
-  {level:"Director", alt:"Associate Director, VP", tier:2, tierLabel:"INFLUENCER", bigfour:"Director / Senior Manager", boutique:"Director / VP", focus:"Engagement quality, client delivery, team efficiency, winning work", buy:"Strong influencer. Often the economic buyer in boutiques. Key target."},
-  {level:"Senior Manager", alt:"SM, Associate Director", tier:2, tierLabel:"CHAMPION", bigfour:"Senior Manager", boutique:"Senior Manager / Principal", focus:"Running engagements efficiently, managing analysts, hitting deadlines", buy:"Feels the most pain. Will champion internally if convinced. Primary target."},
-  {level:"Manager", alt:"AM, Engagement Manager", tier:2, tierLabel:"CHAMPION", bigfour:"Manager", boutique:"Manager", focus:"Day-to-day engagement execution, quality control, analyst output", buy:"Highest day-to-day pain. Best entry point for product conversations."},
-  {level:"Senior Associate / AM", alt:"Senior Analyst, Assistant Manager", tier:3, tierLabel:"USER", bigfour:"Senior Associate / AM", boutique:"Senior Analyst", focus:"Doing the FDD work, building models, meeting deadlines", buy:"Daily user. Strong advocate if the tool works. Influences upward."},
-  {level:"Associate / Analyst", alt:"Analyst, Graduate", tier:3, tierLabel:"USER", bigfour:"Associate / Analyst", boutique:"Analyst / Junior Analyst", focus:"Building the numbers, data processing, formatting reports", buy:"Direct tool user. Loudest voice on usability. Early adopter profile."}
+  {
+    level:"Partner / Managing Partner",
+    alt:"Equity Partner, Senior Partner, Founding Partner",
+    tier:1, tierLabel:"PARTNER",
+    bigfour:"Partner",
+    boutique:"Founding Partner / Managing Partner",
+    focus:"Owns client relationships, signs off on engagement letters, responsible for overall quality of the work product. In larger firms, partners specialise by sector or deal type.",
+    daytoday:"Reviewing draft reports, attending management presentations, managing client expectations, pitching for new mandates, mentoring senior managers and directors.",
+    howthere:"Typically 12-20 years in transaction services. Promoted from Director after demonstrating ability to win and retain clients independently. In boutiques, often a founder.",
+    whatitmeans:"The most senior person on any engagement. Their name goes on the report. They take ultimate accountability for the work."
+  },
+  {
+    level:"Managing Director",
+    alt:"Senior MD, Executive Director",
+    tier:1, tierLabel:"MD",
+    bigfour:"Not common — Director is senior below Partner",
+    boutique:"MD / Senior Director / Principal",
+    focus:"Senior leadership role, most common in boutiques and US-style firms. Sits between Partner and Director. Owns revenue targets and key client relationships.",
+    daytoday:"Running pitches, reviewing reports, managing a portfolio of engagements, line managing Directors and Senior Managers.",
+    howthere:"Promoted from Director or hired laterally from a Big 4 or competitor. In boutiques this is often the most senior operational role.",
+    whatitmeans:"In boutiques this person often runs the firm day to day. In larger firms it is a senior but non-equity leadership role."
+  },
+  {
+    level:"Director",
+    alt:"Associate Director, VP (US firms)",
+    tier:2, tierLabel:"DIRECTOR",
+    bigfour:"Director",
+    boutique:"Director / VP",
+    focus:"Leads engagements end to end. Owns the relationship with the client day to day. Responsible for the quality and structure of the FDD report.",
+    daytoday:"Reviewing manager work, drafting executive summaries, running management Q&A sessions, managing timelines, presenting findings to clients.",
+    howthere:"Promoted from Senior Manager, typically 8-12 years in TS. Must demonstrate ability to run a full engagement independently and manage client relationships.",
+    whatitmeans:"The person who runs the deal. If a Partner is on the engagement they are the main day-to-day contact. In smaller firms, Directors often act as Partners."
+  },
+  {
+    level:"Senior Manager",
+    alt:"SM, Associate Director (some firms)",
+    tier:2, tierLabel:"SENIOR MANAGER",
+    bigfour:"Senior Manager",
+    boutique:"Senior Manager / Principal",
+    focus:"Manages the engagement team. Responsible for the analytical work, managing managers and analysts, and producing the bulk of the written report.",
+    daytoday:"Reviewing manager output, building complex analysis, drafting report sections, managing the information request list, running follow-up questions with the seller.",
+    howthere:"Promoted from Manager after 2-3 years. Must demonstrate strong technical skills and ability to manage junior staff.",
+    whatitmeans:"The workhorse of the engagement. Most of the analytical heavy lifting happens at this level. A good Senior Manager can run an engagement with minimal Director input."
+  },
+  {
+    level:"Manager",
+    alt:"Engagement Manager, AM (Assistant Manager at some firms)",
+    tier:2, tierLabel:"MANAGER",
+    bigfour:"Manager",
+    boutique:"Manager",
+    focus:"Runs the day-to-day work on the engagement. Manages the analysts, reviews their output, builds the core financial analysis, and drafts report sections.",
+    daytoday:"Building EBITDA bridges, reviewing management accounts, analysing the data room, managing analyst tasks, attending calls with the seller.",
+    howthere:"Promoted from Senior Associate/AM after 2-3 years. First truly managerial role.",
+    whatitmeans:"The person closest to the numbers on any deal. Managers spend the most time in the data room. This is where most of the actual FDD work is produced."
+  },
+  {
+    level:"Senior Associate / Assistant Manager",
+    alt:"AM, Senior Analyst, Senior Consultant",
+    tier:3, tierLabel:"SENIOR ASSOCIATE",
+    bigfour:"Senior Associate / AM",
+    boutique:"Senior Analyst / Senior Consultant",
+    focus:"Experienced analyst. Can run sections of an engagement independently. Mentors junior analysts.",
+    daytoday:"Building financial models, analysing management accounts, populating report templates, responding to IRL queries, supporting the manager on complex analysis.",
+    howthere:"1-3 years in TS after qualifying as an accountant (ACA/ACCA/CPA) or promoted from Analyst.",
+    whatitmeans:"Moving from pure execution to ownership of specific workstreams. The bridge between junior and management grades."
+  },
+  {
+    level:"Associate / Analyst",
+    alt:"Analyst, Graduate, Consultant",
+    tier:3, tierLabel:"ANALYST",
+    bigfour:"Associate / Analyst",
+    boutique:"Analyst / Junior Analyst",
+    focus:"Entry level. Executes specific analytical tasks under manager supervision. Often a recent graduate or newly qualified accountant.",
+    daytoday:"Building data room trackers, populating templates, formatting reports, running basic financial analysis, compiling IRL responses.",
+    howthere:"Graduate hire or lateral from audit. Typically studying for ACA/ACCA/CPA qualification.",
+    whatitmeans:"The foundation of every engagement. Analysts produce the raw output that managers review and directors sign off. High volume, deadline-driven work."
+  }
 ];
 
 const PERSONAS = [
@@ -522,34 +640,60 @@ function renderCO(c){
 
 function renderFirms(){
   return FIRMS.map(function(f){
-    return '<div class="firm-card" style="background:'+f.bg+';border-color:'+f.border+'">'+
+    return '<div class="firm-card" style="background:'+(f.bg||'var(--surface)')+';border-color:'+(f.border||'var(--border)')+'">'+
       '<div class="firm-card-top">'+
-        '<div class="firm-icon" style="background:'+f.bg+';border:1px solid '+f.border+'">'+f.icon+'</div>'+
-        '<div><div class="firm-card-title">'+f.title+'</div><div class="firm-card-sub">'+f.sub+'</div></div>'+
+        '<div class="firm-icon" style="background:'+(f.bg||'var(--surface)')+';border:1px solid '+(f.border||'var(--border)')+'">'+f.icon+'</div>'+
+        '<div style="flex:1"><div class="firm-card-title">'+f.title+'</div><div class="firm-card-sub">'+f.sub+'</div></div>'+
       '</div>'+
-      '<div class="firm-desc">'+f.desc+'</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">'+
+        '<div>'+
+          '<div style="font-size:10px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:var(--royal);margin-bottom:5px;font-weight:700">What this firm does</div>'+
+          '<div style="font-size:13px;color:var(--text2);line-height:1.6">'+f.what+'</div>'+
+        '</div>'+
+        '<div>'+
+          '<div style="font-size:10px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:var(--royal);margin-bottom:5px;font-weight:700">How it is structured</div>'+
+          '<div style="font-size:13px;color:var(--text2);line-height:1.6">'+f.structure+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="background:rgba(61,80,244,.05);border:1px solid rgba(61,80,244,.15);border-radius:var(--r);padding:10px 14px;margin-bottom:12px">'+
+        '<div style="font-size:10px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:var(--royal);margin-bottom:5px;font-weight:700">Where FDD fits</div>'+
+        '<div style="font-size:13px;color:var(--text2);line-height:1.5">'+f.fddfit+'</div>'+
+      '</div>'+
       '<div class="firm-examples">'+f.examples.map(function(e){return '<div class="firm-ex">'+e+'</div>'}).join('')+'</div>'+
-      '<div class="firm-why"><div class="firm-why-lbl">Why they matter</div>'+f.why+'</div>'+
     '</div>'
   }).join('')
 }
 
 function renderSeniority(){
-  return '<div class="sen-table">'+
-    '<div class="sen-hdr">'+
-      '<div class="sen-hdr-cell">Title</div>'+
-      '<div class="sen-hdr-cell">Alt Titles</div>'+
-      '<div class="sen-hdr-cell">What They Care About</div>'+
-      '<div class="sen-hdr-cell">Buying Role</div>'+
-    '</div>'+
+  return '<div style="display:flex;flex-direction:column;gap:14px;margin:20px 0">'+
     SENIORITY.map(function(s){
-      var tc = s.tier===1?'tier1':s.tier===2?'tier2':'';
       var tbc = s.tier===1?'tb1':s.tier===2?'tb2':'tb3';
-      return '<div class="sen-row '+tc+'">'+
-        '<div class="sen-cell"><strong>'+s.level+'</strong><span class="tier-badge '+tbc+'">'+s.tierLabel+'</span></div>'+
-        '<div class="sen-cell alt">'+s.alt+'</div>'+
-        '<div class="sen-cell">'+s.focus+'</div>'+
-        '<div class="sen-cell">'+s.buy+'</div>'+
+      var bgc = s.tier===1?'rgba(61,80,244,.04)':s.tier===2?'rgba(53,255,233,.02)':'var(--surface)';
+      var bdc = s.tier===1?'rgba(61,80,244,.18)':s.tier===2?'rgba(53,255,233,.15)':'var(--border)';
+      return '<div style="background:'+bgc+';border:1px solid '+bdc+';border-radius:var(--rl);padding:18px 20px;box-shadow:var(--sh)">'+
+        '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">'+
+          '<span class="tier-badge '+tbc+'" style="font-size:10px">'+s.tierLabel+'</span>'+
+          '<div style="font-size:16px;font-weight:800;color:var(--text);letter-spacing:-.3px">'+s.level+'</div>'+
+        '</div>'+
+        '<div style="font-size:11px;font-family:var(--mono);color:var(--muted);margin-bottom:12px">Also known as: '+s.alt+'</div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
+          '<div>'+
+            '<div style="font-size:10px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:var(--royal);margin-bottom:5px;font-weight:700">What this role actually is</div>'+
+            '<div style="font-size:13px;color:var(--text2);line-height:1.6">'+s.focus+'</div>'+
+          '</div>'+
+          '<div>'+
+            '<div style="font-size:10px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:var(--royal);margin-bottom:5px;font-weight:700">Day to day</div>'+
+            '<div style="font-size:13px;color:var(--text2);line-height:1.6">'+s.daytoday+'</div>'+
+          '</div>'+
+          '<div>'+
+            '<div style="font-size:10px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-weight:700">How they got here</div>'+
+            '<div style="font-size:13px;color:var(--text2);line-height:1.6">'+s.howthere+'</div>'+
+          '</div>'+
+          '<div style="background:rgba(61,80,244,.04);border:1px solid rgba(61,80,244,.12);border-radius:var(--r);padding:10px 12px">'+
+            '<div style="font-size:10px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:var(--royal);margin-bottom:5px;font-weight:700">What it means in practice</div>'+
+            '<div style="font-size:13px;color:var(--text2);line-height:1.6">'+s.whatitmeans+'</div>'+
+          '</div>'+
+        '</div>'+
       '</div>'
     }).join('')+
   '</div>'
