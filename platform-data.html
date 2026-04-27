@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platform Data Requirements — PinpointAI Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#211847;--dark:#0F0D2A;--royal:#3D50F4;--royal2:#2E3FD0;
+  --cyan:#35FFE9;--red:#FA295F;--white:#FFFFFF;--midgray:#7E8587;
+  --bg:#EEF0F8;--surface:#FFF;--card:#F5F6FC;--border:#E0E3F0;
+  --text:#1A1835;--text2:#3A3D5C;--muted:#7E8587;--faint:#CDD0E8;
+  --green:#0A7A4A;--green-bg:rgba(10,122,74,.08);--green-bdr:rgba(10,122,74,.22);
+  --amber:#8A5500;--amber-bg:rgba(200,130,0,.08);--amber-bdr:rgba(200,130,0,.25);
+  --font:'Rubik',system-ui,sans-serif;--mono:'JetBrains Mono','Courier New',monospace;
+  --r:8px;--rl:12px;--rxl:16px;
+  --sh:0 1px 3px rgba(33,24,71,.07);--shm:0 4px 16px rgba(33,24,71,.1);
+  --sidebar-w:272px;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-weight:300;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(33,24,71,.15);border-radius:2px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes dot{0%,80%,100%{opacity:.2;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
+.fu{animation:fadeUp .22s ease-out}
+
+#app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* TOPBAR */
+#tb{height:56px;display:flex;align-items:center;padding:0 18px;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;gap:0;z-index:200}
+.tb-logo{display:flex;align-items:center;gap:8px;padding-right:18px;border-right:1px solid rgba(255,255,255,.1);text-decoration:none;flex-shrink:0}
+.tb-logo-box{width:28px;height:28px;background:var(--royal);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.tb-logo-box svg{width:15px;height:15px}
+.tb-logo-name{font-size:13px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.tb-logo-name b{color:var(--cyan);font-weight:700}
+.tb-mid{flex:1;display:flex;align-items:center;padding:0 18px;gap:14px;min-width:0;overflow:hidden}
+.tb-course{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);white-space:nowrap}
+.tb-sep{width:1px;height:16px;background:rgba(255,255,255,.1);flex-shrink:0}
+.tb-sec{font-size:12px;color:rgba(255,255,255,.7);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.tb-back{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:var(--dark);text-decoration:none;letter-spacing:.5px;transition:all .15s;padding:6px 14px;border-radius:6px;border:none;background:#35FFE9;font-weight:700}
+.tb-back:hover{background:#20EDD6;transform:translateY(-1px)}
+.tb-prog-val{font-size:11px;font-family:var(--mono);color:rgba(255,255,255,.5);font-weight:600}
+.tb-ring{position:relative;width:32px;height:32px;flex-shrink:0}
+.tb-ring svg{transform:rotate(-90deg)}
+.tb-ring-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-family:var(--mono);color:var(--cyan);font-weight:600}
+.tb-menu-btn{background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;padding:6px;border-radius:6px;display:flex;align-items:center;transition:all .15s}
+.tb-menu-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+
+#main{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+#sb{width:var(--sidebar-w);flex-shrink:0;background:var(--dark);border-right:1px solid rgba(255,255,255,.05);overflow-y:auto;display:flex;flex-direction:column;transition:width .2s}
+#sb.closed{width:0;overflow:hidden}
+.sb-top{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.06);background:linear-gradient(135deg,rgba(61,80,244,.18) 0%,rgba(53,255,233,.04) 100%)}
+.sb-top-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:12px}
+.sb-cards{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.sb-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);padding:10px 12px}
+.sb-card-n{font-size:22px;font-weight:700;font-family:var(--mono);color:#fff;line-height:1}
+.sb-card-n.c{color:var(--cyan)}
+.sb-card-l{font-size:10px;color:rgba(255,255,255,.4);margin-top:3px}
+.sb-mods{padding:6px 0 20px}
+.sb-grp{padding:12px 16px 4px;font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.mi{cursor:pointer;border-left:2px solid transparent;transition:all .15s}
+.mi:hover{background:rgba(255,255,255,.04)}
+.mi.on{background:rgba(61,80,244,.16);border-left-color:var(--royal)}
+.mi-hdr{display:flex;align-items:center;gap:9px;padding:8px 14px}
+.mi-ico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:rgba(255,255,255,.06)}
+.mi.on .mi-ico{background:rgba(61,80,244,.28)}
+.mi-info{flex:1;min-width:0}
+.mi-name{font-size:12px;font-weight:600;color:rgba(255,255,255,.65);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.mi.on .mi-name{color:#fff}
+.mi-meta{display:flex;align-items:center;gap:5px;margin-top:2px}
+.mi-id{font-size:9px;font-family:var(--mono);color:rgba(255,255,255,.3)}
+.mi.on .mi-id{color:rgba(61,80,244,.75)}
+.mi-t{font-size:9px;font-family:var(--mono);color:rgba(255,255,255,.25)}
+.mi-ck{width:15px;height:15px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:7px;flex-shrink:0}
+.mi-ck.ok{background:rgba(53,255,233,.14);border-color:var(--cyan);color:var(--cyan)}
+.si-list{padding:1px 0 6px}
+.si{display:flex;align-items:center;gap:7px;padding:5px 14px 5px 48px;cursor:pointer;transition:background .12s}
+.si:hover{background:rgba(255,255,255,.04)}
+.si.on{background:rgba(61,80,244,.1)}
+.si-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:5px;transition:all .15s}
+.si-dot.ok{border-color:var(--cyan);background:rgba(53,255,233,.18);color:var(--cyan)}
+.si-dot.cur{border-color:var(--royal);background:rgba(61,80,244,.28)}
+.si-lbl{font-size:11px;color:rgba(255,255,255,.45);line-height:1.35}
+.si.on .si-lbl{color:rgba(255,255,255,.85)}
+.si.done .si-lbl{color:rgba(53,255,233,.55)}
+
+/* CONTENT */
+#ct{flex:1;overflow-y:auto;background:var(--bg)}
+#cti{max-width:720px;margin:0 auto;padding:36px 44px 90px}
+
+/* LESSON HEADER */
+.lhdr{background:var(--surface);border:1px solid var(--border);border-radius:var(--rxl);padding:24px 28px;margin-bottom:26px;box-shadow:var(--sh)}
+.lcrumb{display:flex;align-items:center;gap:8px;margin-bottom:11px;flex-wrap:wrap}
+.lcrumb-ico{width:20px;height:20px;border-radius:5px;background:rgba(61,80,244,.1);display:flex;align-items:center;justify-content:center;font-size:10px}
+.lcrumb-chev{color:var(--muted);font-size:11px}
+.badge{font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:20px;letter-spacing:.4px;font-weight:600;border:1px solid}
+.badge-key{background:rgba(250,41,95,.08);color:#C8144A;border-color:rgba(200,20,74,.22)}
+.ltitle{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.5px;line-height:1.25;margin-bottom:10px}
+.lmeta{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.lmi{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);font-family:var(--mono)}
+.lmi svg{width:12px;height:12px;opacity:.55}
+.lpbar{height:3px;background:var(--border);border-radius:2px;margin-top:12px;overflow:hidden}
+.lpfill{height:100%;background:linear-gradient(90deg,var(--royal),var(--cyan));border-radius:2px;transition:width .4s}
+
+/* BODY */
+.btext p{font-size:15px;line-height:1.82;color:var(--text2);margin-bottom:15px}
+
+/* CALLOUTS */
+.co{padding:14px 18px;border-radius:var(--rl);margin:18px 0;font-size:14px;line-height:1.7;border:1px solid}
+.co-blue{background:rgba(61,80,244,.06);border-color:rgba(61,80,244,.2);color:#1A2880}
+.co-green{background:var(--green-bg);border-color:var(--green-bdr);color:var(--green)}
+.co-amber{background:var(--amber-bg);border-color:var(--amber-bdr);color:var(--amber)}
+.co-red{background:rgba(200,20,74,.07);border-color:rgba(200,20,74,.22);color:#8A1A1A}
+.co-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;opacity:.65;font-weight:700}
+
+/* PERSONA CARDS */
+.persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.persona-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;box-shadow:var(--sh);transition:all .15s;cursor:pointer}
+.persona-card:hover{border-color:rgba(61,80,244,.3);box-shadow:0 4px 20px rgba(61,80,244,.1);transform:translateY(-1px)}
+.persona-card.primary{border-color:rgba(61,80,244,.25);background:rgba(61,80,244,.03)}
+.persona-card.secondary{border-color:rgba(53,255,233,.15);background:rgba(53,255,233,.02)}
+.persona-card.tertiary{border-color:rgba(255,255,255,.15);background:var(--card)}
+.pc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.pc-title{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+.pc-badge{font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:20px;letter-spacing:.5px;font-weight:600;border:1px solid}
+.pcb-primary{background:rgba(61,80,244,.1);color:var(--royal);border-color:rgba(61,80,244,.25)}
+.pcb-secondary{background:rgba(53,255,233,.1);color:#0A7A6A;border-color:rgba(53,255,233,.3)}
+.pcb-tertiary{background:var(--card);color:var(--muted);border-color:var(--border)}
+.pc-role{font-size:11px;font-family:var(--mono);color:var(--muted);margin-bottom:10px;letter-spacing:.3px}
+.pc-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+.pc-tags{display:flex;flex-wrap:wrap;gap:5px}
+.pc-tag{font-size:10px;font-family:var(--mono);background:var(--card);border:1px solid var(--border);color:var(--muted);padding:2px 8px;border-radius:10px}
+
+/* SENIORITY TABLE */
+.sen-table{margin:20px 0;border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh)}
+.sen-hdr{display:grid;grid-template-columns:2fr 2fr 3fr 2fr;gap:0;background:var(--navy);padding:10px 16px}
+.sen-hdr-cell{font-size:10px;font-family:var(--mono);color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.sen-row{display:grid;grid-template-columns:2fr 2fr 3fr 2fr;gap:0;padding:12px 16px;border-top:1px solid var(--border);transition:background .12s}
+.sen-row:hover{background:rgba(61,80,244,.03)}
+.sen-row.tier1{background:rgba(61,80,244,.04)}
+.sen-row.tier2{background:rgba(53,255,233,.03)}
+.sen-cell{font-size:12px;color:var(--text2);padding-right:12px;line-height:1.4}
+.sen-cell strong{color:var(--text);font-weight:600;display:block;margin-bottom:2px}
+.sen-cell.alt{font-size:11px;color:var(--muted);font-family:var(--mono)}
+.tier-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:10px;font-weight:600;letter-spacing:.5px}
+.tb1{background:rgba(61,80,244,.1);color:var(--royal);border:1px solid rgba(61,80,244,.2)}
+.tb2{background:rgba(53,255,233,.08);color:#0A7A6A;border:1px solid rgba(53,255,233,.2)}
+.tb3{background:var(--card);color:var(--muted);border:1px solid var(--border)}
+
+/* FIRM TYPE CARDS */
+.firm-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:20px 0}
+.firm-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;box-shadow:var(--sh)}
+.firm-card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.firm-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.firm-card-title{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+.firm-card-sub{font-size:11px;font-family:var(--mono);color:var(--muted);margin-top:2px}
+.firm-desc{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:14px}
+.firm-examples{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.firm-ex{font-size:11px;font-family:var(--mono);background:var(--card);border:1px solid var(--border);color:var(--text2);padding:3px 10px;border-radius:6px;font-weight:500}
+.firm-why{background:rgba(61,80,244,.05);border:1px solid rgba(61,80,244,.15);border-radius:var(--r);padding:10px 14px;font-size:12px;color:#1A2880;line-height:1.55}
+.firm-why-lbl{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:rgba(61,80,244,.6);margin-bottom:4px;font-weight:700}
+
+/* APPROACH CARDS */
+.approach-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:20px 0}
+.ap-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px;box-shadow:var(--sh)}
+.ap-level{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-weight:700}
+.ap-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.2px}
+.ap-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+.ap-do{font-size:11px;color:var(--green);font-family:var(--mono);margin-bottom:3px}
+.ap-dont{font-size:11px;color:#8A1A1A;font-family:var(--mono);margin-bottom:3px}
+
+/* PROSE */
+.prose{background:var(--dark);border:1px solid rgba(255,255,255,.07);border-radius:var(--rl);padding:20px 24px;margin:20px 0;font-size:13px;line-height:1.9;color:rgba(255,255,255,.65);white-space:pre-wrap;font-family:var(--mono)}
+
+/* FINN */
+.fw{margin-top:32px;border-radius:var(--rxl);overflow:hidden;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shm)}
+.fh{height:52px;display:flex;align-items:center;gap:12px;padding:0 18px;background:var(--navy)}
+.fav-wrap{position:relative}
+.fav{width:32px;height:32px;border-radius:8px;background:var(--royal);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
+.fon{position:absolute;bottom:-1px;right:-1px;width:9px;height:9px;border-radius:50%;background:var(--cyan);border:2px solid var(--navy)}
+.finfo{flex:1}
+.fname{font-size:13px;color:#fff;font-weight:700}
+.fsub{font-size:9px;color:rgba(255,255,255,.4);font-family:var(--mono);margin-top:1px}
+.fai{font-size:9px;font-family:var(--mono);background:rgba(53,255,233,.12);color:var(--cyan);border:1px solid rgba(53,255,233,.22);padding:3px 8px;border-radius:20px;letter-spacing:.5px;font-weight:600}
+.fmsgs{max-height:380px;overflow-y:auto;padding:16px 18px;display:none;background:var(--card)}
+.fmsgs.vis{display:block}
+.mr{display:flex;gap:9px;margin-bottom:13px}
+.mr.u{justify-content:flex-end}
+.mav{width:24px;height:24px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--mono);margin-top:1px;font-weight:700}
+.mav.f{background:var(--royal);color:#fff}
+.mav.y{background:var(--navy);color:rgba(255,255,255,.6)}
+.mb{max-width:80%;padding:10px 14px;font-size:14px;line-height:1.75;white-space:pre-wrap;word-break:break-word;border-radius:var(--r)}
+.mb.f{background:var(--surface);border:1px solid var(--border);color:var(--text2);border-radius:2px var(--r) var(--r) var(--r)}
+.mb.u{background:var(--navy);color:rgba(255,255,255,.82);border-radius:var(--r) 2px var(--r) var(--r)}
+.tdots{display:flex;gap:5px;padding:3px 0;align-items:center}
+.tdot{width:7px;height:7px;border-radius:50%;background:var(--royal);animation:dot 1.2s infinite}
+.fst{padding:13px 18px;background:var(--card);border-bottom:1px solid var(--border)}
+.fst-lbl{font-size:9px;font-family:var(--mono);color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:9px;font-weight:700}
+.fst-g{display:flex;flex-wrap:wrap;gap:6px}
+.fsbtn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.fsbtn:hover{background:rgba(61,80,244,.06);border-color:rgba(61,80,244,.3);color:var(--royal)}
+.fin{display:flex;gap:8px;padding:11px 14px;border-top:1px solid var(--border)}
+.fta{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);padding:9px 13px;font-size:14px;font-family:var(--font);color:var(--text);resize:none;max-height:100px;line-height:1.5;transition:border-color .15s}
+.fta:focus{outline:none;border-color:var(--royal);background:var(--surface)}
+.fta::placeholder{color:var(--muted)}
+.fsnd{width:38px;height:38px;border-radius:var(--r);border:none;background:var(--royal);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;transition:all .15s}
+.fsnd:hover{background:var(--royal2);transform:scale(1.04)}
+.fsnd:disabled{background:var(--faint);cursor:default;transform:none}
+
+/* NAV */
+.lnav{margin-top:40px;padding-top:22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.nbk{display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:var(--r);border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:600;transition:all .15s}
+.nbk:hover:not(:disabled){background:var(--card);color:var(--text)}
+.nbk:disabled{color:var(--faint);border-color:var(--faint);cursor:default}
+.nnx{display:flex;align-items:center;gap:8px;padding:11px 22px;border-radius:var(--r);border:none;background:var(--royal);color:#fff;cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:700;letter-spacing:.3px;transition:all .15s;box-shadow:0 2px 12px rgba(61,80,244,.3)}
+.nnx:hover{background:var(--royal2);box-shadow:0 4px 20px rgba(61,80,244,.4);transform:translateY(-1px)}
+.nnx.done{background:var(--green);box-shadow:0 2px 12px rgba(10,122,74,.25)}
+
+@media(max-width:700px){
+  #cti{padding:20px 16px 80px}
+  #sb{position:fixed;top:0;left:0;height:100vh;z-index:300}
+  #sb.closed{width:0}
+  .tb-sec{display:none}
+  .persona-grid{grid-template-columns:1fr}
+  .approach-grid{grid-template-columns:1fr}
+  .sen-hdr,.sen-row{grid-template-columns:1fr 1fr}
+}
+
+/* LISTEN BUTTON */
+.listen-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:600;letter-spacing:.5px;transition:all .15s}
+.listen-btn:hover{border-color:var(--royal);color:var(--royal);background:rgba(61,80,244,.05)}
+.listen-btn.playing{border-color:var(--royal);color:var(--royal);background:rgba(61,80,244,.08)}
+.stop-btn{border-color:rgba(200,20,74,.3)!important;color:#C8144A!important;background:rgba(200,20,74,.06)!important}
+.listen-btn.playing:hover{border-color:var(--red);color:var(--red);background:rgba(200,20,74,.06)}
+.listen-btn svg{width:13px;height:13px;flex-shrink:0}
+
+.dataset-card{background:var(--surface);border-radius:var(--rxl);padding:20px 22px;box-shadow:var(--sh);transition:all .15s;margin-bottom:12px}
+.dataset-card:hover{box-shadow:var(--shm)}
+.dataset-card.critical{border:1.5px solid rgba(61,80,244,.25);background:rgba(61,80,244,.02)}
+.dataset-card.supporting{border:1.5px solid rgba(10,122,74,.2);background:rgba(10,122,74,.02)}
+.dc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.dc-left{display:flex;align-items:flex-start;gap:12px}
+.dc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.critical .dc-icon{background:rgba(61,80,244,.1);border:1px solid rgba(61,80,244,.2)}
+.supporting .dc-icon{background:var(--green-bg);border:1px solid var(--green-bdr)}
+.dc-name{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-.3px;margin-bottom:3px}
+.dc-sub{font-size:12px;font-family:var(--mono);color:var(--muted)}
+.dc-badge{font-size:9px;font-family:var(--mono);padding:4px 10px;border-radius:20px;letter-spacing:.5px;font-weight:700;border:1px solid;flex-shrink:0}
+.badge-critical{background:rgba(61,80,244,.1);color:var(--royal);border-color:rgba(61,80,244,.25)}
+.badge-supporting{background:var(--green-bg);color:var(--green);border-color:var(--green-bdr)}
+.badge-conditional{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bdr)}
+.dc-body{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding-top:14px;border-top:1px solid var(--border)}
+.dc-section-lbl{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:600}
+.dc-text{font-size:13px;color:var(--text2);line-height:1.65;font-weight:300}
+.dc-formats{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.dc-format{font-size:10px;font-family:var(--mono);background:var(--card);border:1px solid var(--border);color:var(--text2);padding:2px 8px;border-radius:5px;font-weight:500}
+.dc-format.preferred{background:rgba(61,80,244,.08);border-color:rgba(61,80,244,.2);color:var(--royal)}
+.req-checklist{display:flex;flex-direction:column;gap:7px;margin:18px 0}
+.req-item{display:flex;align-items:center;gap:12px;padding:11px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all .15s}
+.req-item:hover{border-color:var(--rbb)}
+.req-item.checked{background:var(--green-bg);border-color:var(--green-bdr)}
+.req-box{width:18px;height:18px;border-radius:5px;flex-shrink:0;border:1.5px solid var(--faint);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;transition:all .15s}
+.req-item.checked .req-box{background:var(--green);border-color:var(--green);color:#fff}
+.req-label{font-size:13px;color:var(--text2);font-weight:400;flex:1}
+.req-item.checked .req-label{text-decoration:line-through;color:var(--muted)}
+.req-badge{font-size:9px;font-family:var(--mono);padding:2px 7px;border-radius:10px;font-weight:700;flex-shrink:0;border:1px solid}
+.badge-platform{background:rgba(61,80,244,.1);color:var(--royal);border-color:rgba(61,80,244,.25);font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:20px;letter-spacing:.4px;font-weight:600}
+@media(max-width:700px){.dc-body{grid-template-columns:1fr}}
+</style>
+<body>
+<div id="app">
+  <div id="tb">
+    <a class="tb-logo" href="index.html">
+      <div class="tb-logo-box"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg></div>
+      <div class="tb-logo-name">Pinpoint<b>AI</b></div>
+    </a>
+    <div class="tb-mid">
+      <div class="tb-course">Platform Data</div>
+      <div class="tb-sep"></div>
+      <div class="tb-sec" id="tb-sec">Loading...</div>
+    </div>
+    <div class="tb-right">
+      <a class="tb-back" href="glossary.html" style="background:transparent;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.55);margin-right:8px">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Glossary
+      </a>
+      <div class="tb-prog-val" id="pg-lbl">0 / 0</div>
+      <div class="tb-ring">
+        <svg width="32" height="32" viewBox="0 0 32 32">
+          <circle cx="16" cy="16" r="12" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="2.5"/>
+          <circle id="rng" cx="16" cy="16" r="12" fill="none" stroke="#35FFE9" stroke-width="2.5" stroke-dasharray="75.4" stroke-dashoffset="75.4" stroke-linecap="round" style="transition:stroke-dashoffset .4s"/>
+        </svg>
+        <div class="tb-ring-n" id="rng-n">0%</div>
+      </div>
+      <button class="tb-menu-btn" onclick="toggleSidebar()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <a class="tb-back" href="index.html">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Dashboard
+      </a>
+    </div>
+  </div>
+  <div id="main">
+    <div id="sb">
+      <div class="sb-top">
+        <div class="sb-top-lbl">Your progress</div>
+        <div class="sb-cards">
+          <div class="sb-card"><div class="sb-card-n c" id="sb-done">0</div><div class="sb-card-l">Completed</div></div>
+          <div class="sb-card"><div class="sb-card-n" id="sb-left">40</div><div class="sb-card-l">Min left</div></div>
+        </div>
+      </div>
+      <div class="sb-mods"><div class="sb-grp">Sections</div><div id="sb-nav"></div></div>
+    </div>
+    <div id="ct"><div id="cti"></div></div>
+  </div>
+</div>
+<script>
+const MODULES = [
+  {
+    id:"M1", icon:"📦", title:"What PinpointAI Needs", subtitle:"The datasets that power the platform", time:15,
+    starters:[
+      "Why does PinpointAI need a trial balance as well as management accounts?",
+      "What is a chart of accounts and why does it matter for the platform?",
+      "What happens if the target can only provide two of the three critical datasets?",
+      "How do I explain to a client what data they need to provide?"
+    ],
+    sections:[
+      {id:"M1S1", title:"Why data quality determines output quality",
+       content:"PinpointAI automates the most time-consuming parts of financial due diligence. But the platform can only work with what it is given.\n\nThe quality, completeness, and format of the data uploaded directly determines the quality of the output. A clean, well-structured trial balance produces a detailed, accurate analysis. A single PDF of management accounts produces a much more limited result.\n\nUnderstanding exactly what data the platform needs, why each dataset matters, and what formats work best means you can advise clients upfront, avoid delays mid-engagement, and get the best output from day one.",
+       callout:{type:"blue",label:"Key principle",text:"PinpointAI is only as good as the data it receives. Setting clear data expectations at the start of every engagement is the single most important step in getting a strong output."}
+      },
+      {id:"M1S2", title:"Critical datasets — required for every engagement",
+       content:"These three datasets are required for PinpointAI to run a full analysis. Without all three the platform output will be materially limited. Request them on day one of every engagement.",
+       type:"critical"
+      },
+      {id:"M1S3", title:"Supporting datasets — recommended where available",
+       content:"These datasets are not required for the platform to function but significantly enhance the depth and accuracy of the analysis. Include them in the IRL alongside the critical datasets.",
+       type:"supporting"
+      }
+    ]
+  },
+  {
+    id:"M2", icon:"📋", title:"Requesting the Data", subtitle:"How to ask for what you need", time:15,
+    starters:[
+      "How do I explain to a seller why we need a trial balance?",
+      "What if the target uses Xero or QuickBooks?",
+      "How long should it take a target to provide these datasets?",
+      "What do I do if the seller says they do not have a chart of accounts?"
+    ],
+    sections:[
+      {id:"M2S1", title:"Building the data request into your IRL",
+       content:"The IRL is sent to the seller at the start of diligence. The PinpointAI data requirements should be a dedicated section of the IRL, clearly labelled with specific format guidance.\n\nDo not bury the data request in a general list of financial information. Be explicit: name each dataset, specify the format, and state the period required.",
+       callout:{type:"green",label:"Suggested IRL wording",text:"Section 4 - PinpointAI Platform Data\n\n4.1  Monthly Management Accounts (P&L and Balance Sheet) for the 36 months ended [date] - Excel format preferred\n4.2  Chart of Accounts - Excel or CSV export from accounting system\n4.3  Monthly Trial Balance for the 36 months ended [date] - Excel or CSV export\n4.4  Aged Debtors schedule at [most recent period end] - Excel format\n4.5  Aged Creditors schedule at [most recent period end] - Excel format"}
+      },
+      {id:"M2S2", title:"Accounting systems and what they can export",
+       content:"Most SME and mid-market targets use one of a handful of accounting systems. All major systems can export trial balances and chart of accounts. The challenge is that the finance team may never have been asked for these specific exports before.",
+       type:"systems"
+      },
+      {id:"M2S3", title:"What to do when data is missing or incomplete",
+       content:"Even with a clear IRL you will sometimes receive incomplete data. Always document what was requested, what was received, and when. If a critical dataset is missing, escalate to the client immediately.",
+       callout:{type:"amber",label:"Missing critical dataset",text:"If any of the three critical datasets are missing, tell the client immediately. The platform output will be materially limited. Do not attempt to work around the gap."},
+       callout2:{type:"blue",label:"Missing supporting dataset",text:"If a supporting dataset is missing, note it in the engagement tracker and continue. Flag it in the report as a limitation on the analysis."}
+      }
+    ]
+  },
+  {
+    id:"M3", icon:"✅", title:"Pre-Upload Checklist", subtitle:"Before you upload to PinpointAI", time:10,
+    starters:[
+      "What are the most common data quality issues before upload?",
+      "How do I check if a trial balance is complete?",
+      "What does PinpointAI do if there are gaps in the monthly data?",
+      "Is there a standard file naming convention?"
+    ],
+    sections:[
+      {id:"M3S1", title:"Checking data quality before upload",
+       content:"Before uploading to PinpointAI, run through this checklist. The most common issues are: missing months in the trial balance, management accounts that do not reconcile to the trial balance, a chart of accounts that has been restructured mid-period, and aged schedules from the wrong period end.",
+       type:"checklist"
+      },
+      {id:"M3S2", title:"Period coverage",
+       content:"PinpointAI works best with 36 months of monthly data. This gives the platform enough history to identify trends, normalise for seasonality, and produce a meaningful quality of earnings analysis.\n\nAlways use the most recent 36 months available. If the engagement is running in April 2024, the ideal period is April 2021 to March 2024.",
+       callout:{type:"blue",label:"Ideal coverage",text:"36 months of monthly data - most recent period first.\n\nMinimum viable: 24 months.\nBelow 12 months: flag to client as a material limitation before proceeding."}
+      }
+    ]
+  }
+];
+
+const CRITICAL_DATASETS = [
+  {icon:"\u{1F4CA}",name:"Monthly Management Accounts",sub:"Profit & Loss and Balance Sheet",badge:"CRITICAL",badgeClass:"badge-critical",cardClass:"critical",
+   what:"Monthly management accounts are the core financial records of the business. The internal P&L and balance sheet produced by the finance team each month. They are the primary input for quality of earnings analysis and EBITDA normalisation.",
+   why:"PinpointAI needs monthly granularity to identify seasonality patterns, spot unusual months, and produce an accurate LTM analysis. Annual accounts alone are not sufficient.",
+   formats:["Excel (.xlsx)","CSV","Google Sheets export"],preferred:"Excel (.xlsx)",
+   period:"36 months (3 full financial years)",
+   notes:"Must include both P&L and Balance Sheet. If management accounts are consolidated, request entity-level accounts for the specific business being acquired."},
+  {icon:"\u{1F5C2}\uFE0F",name:"Chart of Accounts",sub:"The full list of nominal codes used by the business",badge:"CRITICAL",badgeClass:"badge-critical",cardClass:"critical",
+   what:"The complete list of all nominal (GL) codes used in the accounting system, with their descriptions and categories. It maps every line in the trial balance to a meaningful label.",
+   why:"Without the chart of accounts, PinpointAI cannot correctly categorise income and expenditure lines, build the normalised P&L structure, or identify cost categories for EBITDA analysis.",
+   formats:["Excel (.xlsx)","CSV","Direct export from accounting system"],preferred:"CSV export from accounting system",
+   period:"Current - as at the most recent period end",
+   notes:"If the chart of accounts has been restructured during the analysis period, provide both the current and historical versions and note the date of any restructuring."},
+  {icon:"\u2696\uFE0F",name:"Monthly Trial Balance",sub:"Or Monthly General Ledger",badge:"CRITICAL",badgeClass:"badge-critical",cardClass:"critical",
+   what:"The complete list of all nominal code balances for each month. The most granular financial data available from the accounting system. Shows every GL code with movements for each period.",
+   why:"The trial balance is the most detailed and reliable source of financial data. It allows PinpointAI to build the analysis from the ground up and cross-check management accounts.",
+   formats:["Excel (.xlsx)","CSV","Direct export from Xero, Sage, QuickBooks, NetSuite"],preferred:"CSV export from accounting system",
+   period:"Monthly for 36 months",
+   notes:"If a monthly trial balance is not available, a monthly general ledger extract covering all accounts will work. The key requirement is monthly granularity at nominal code level."}
+];
+
+const SUPPORTING_DATASETS = [
+  {icon:"\u{1F465}",name:"Customer List / Schedule",sub:"Required where customers are tagged against unique GL codes",badge:"CONDITIONAL",badgeClass:"badge-conditional",cardClass:"supporting",
+   what:"A customer schedule mapping each customer to their revenue, ideally with their unique customer or GL code. Required when the accounting system uses customer-specific nominal codes.",
+   why:"Where customers are tagged against unique GL codes in the trial balance, PinpointAI can use the customer schedule to build customer-level revenue analysis and assess concentration risk.",
+   formats:["Excel (.xlsx)","CSV","CRM export"],preferred:"Excel (.xlsx)",
+   period:"Matching the trial balance period",
+   notes:"Only required if the target uses customer-level GL coding. If all revenue is posted to a single revenue code, this dataset is not needed."},
+  {icon:"\u{1F4E5}",name:"Aged Debtors (Receivables)",sub:"For the most recent period end",badge:"SUPPORTING",badgeClass:"badge-supporting",cardClass:"supporting",
+   what:"Breaks down all outstanding customer invoices by age. Shows what the business is owed and how long it has been outstanding.",
+   why:"Allows PinpointAI to assess the quality of the debtor balance, identify concentration risk, and flag potential bad debt provisions for the working capital analysis.",
+   formats:["Excel (.xlsx)","CSV","Export from accounting system"],preferred:"Excel (.xlsx)",
+   period:"Most recent period end",
+   notes:"Should include customer name, invoice reference, invoice date, due date, and balance by ageing bucket. Total should reconcile to trade debtors on the balance sheet."},
+  {icon:"\u{1F4E4}",name:"Aged Creditors (Payables)",sub:"For the most recent period end",badge:"SUPPORTING",badgeClass:"badge-supporting",cardClass:"supporting",
+   what:"Breaks down all outstanding supplier invoices by age. Shows what the business owes to suppliers and how long those obligations have been outstanding.",
+   why:"Supports the working capital analysis. Extended creditor days or a deteriorating creditor profile can indicate cash flow stress and affect the working capital peg calculation.",
+   formats:["Excel (.xlsx)","CSV","Export from accounting system"],preferred:"Excel (.xlsx)",
+   period:"Most recent period end",
+   notes:"Should include supplier name, invoice reference, invoice date, due date, and balance by ageing bucket. Total should reconcile to trade creditors on the balance sheet."}
+];
+
+const SYSTEMS = [
+  {name:"Xero",common:"SME, professional services",export:"Reports > Trial Balance (export CSV). Chart of Accounts under Accounting > Chart of Accounts > Export."},
+  {name:"Sage 50 / Sage 200",common:"SME to mid-market UK",export:"Nominal Activity report for trial balance. Chart of Accounts export from Nominal Ledger."},
+  {name:"QuickBooks",common:"SME, US-influenced businesses",export:"Reports > Trial Balance. Chart of Accounts under the Accounting tab."},
+  {name:"NetSuite",common:"Mid-market, PE-backed businesses",export:"Financial > Trial Balance report. Chart of Accounts via Lists > Accounting > Chart of Accounts."},
+  {name:"SAP / Oracle",common:"Large corporates",export:"Standard financial reports. Usually requires IT or finance team involvement to extract."},
+  {name:"Dynamics 365",common:"Mid to large market",export:"Finance > General Ledger > Trial Balance. Chart of accounts via Setup > Chart of Accounts."}
+];
+
+const CHECKLIST_ITEMS = [
+  {label:"Monthly management accounts cover the full 36-month period with no gaps",critical:true},
+  {label:"P&L and Balance Sheet are both included in the management accounts",critical:true},
+  {label:"Trial balance covers the same period as management accounts",critical:true},
+  {label:"Trial balance total assets reconcile to balance sheet total assets",critical:true},
+  {label:"Chart of accounts matches the nominal codes in the trial balance",critical:true},
+  {label:"No nominal codes in the trial balance are missing from the chart of accounts",critical:true},
+  {label:"Management accounts revenue reconciles to trial balance within a reasonable tolerance",critical:true},
+  {label:"Aged debtors total reconciles to trade debtors on the balance sheet",critical:false},
+  {label:"Aged creditors total reconciles to trade creditors on the balance sheet",critical:false},
+  {label:"File names clearly indicate the entity name and period covered",critical:false},
+  {label:"All files are in Excel or CSV format (not PDF)",critical:false}
+];
+
+var aM=0,aS=0;
+var done={},chats={};
+var sbOpen=true;
+function cK(){return aM+"-"+aS}
+
+var FINN_SYS = "You are Finn, a PinpointAI platform specialist. Help new team members understand the data requirements for PinpointAI. Be practical, plain English, no jargon without explanation. Do not use em dashes. 120-200 words per response.";
+
+function renderDatasetCards(datasets){
+  return datasets.map(function(d){
+    return "<div class=\"dataset-card "+d.cardClass+"\">" +
+      "<div class=\"dc-top\">" +
+        "<div class=\"dc-left\">" +
+          "<div class=\"dc-icon\">"+d.icon+"</div>" +
+          "<div><div class=\"dc-name\">"+d.name+"</div><div class=\"dc-sub\">"+d.sub+"</div></div>" +
+        "</div>" +
+        "<span class=\"dc-badge "+d.badgeClass+"\">"+d.badge+"</span>" +
+      "</div>" +
+      "<div class=\"dc-body\">" +
+        "<div><div class=\"dc-section-lbl\">What it is</div><div class=\"dc-text\">"+d.what+"</div></div>" +
+        "<div><div class=\"dc-section-lbl\">Why PinpointAI needs it</div><div class=\"dc-text\">"+d.why+"</div></div>" +
+        "<div><div class=\"dc-section-lbl\">Formats</div><div class=\"dc-formats\">"+d.formats.map(function(f){return "<span class=\"dc-format"+(f===d.preferred?" preferred":"")+"\">"+f+(f===d.preferred?" \u2605":"")+"</span>"}).join("")+"</div><div class=\"dc-text\" style=\"margin-top:8px\">Period: "+d.period+"</div></div>" +
+        "<div style=\"background:rgba(61,80,244,.04);border:1px solid rgba(61,80,244,.12);border-radius:var(--r);padding:10px 12px\"><div class=\"dc-section-lbl\" style=\"color:var(--royal)\">Notes</div><div class=\"dc-text\">"+d.notes+"</div></div>" +
+      "</div>" +
+    "</div>"
+  }).join("")
+}
+
+function renderSystems(){
+  return "<div style=\"display:flex;flex-direction:column;gap:10px;margin:18px 0\">" +
+    SYSTEMS.map(function(s){
+      return "<div style=\"background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:14px 18px;box-shadow:var(--sh)\">" +
+        "<div style=\"display:flex;align-items:center;gap:12px;margin-bottom:8px\">" +
+          "<div style=\"font-size:14px;font-weight:700;color:var(--text)\">"+s.name+"</div>" +
+          "<div style=\"font-size:11px;font-family:var(--mono);color:var(--muted)\">"+s.common+"</div>" +
+        "</div>" +
+        "<div style=\"font-size:13px;color:var(--text2);line-height:1.6\"><span style=\"font-size:10px;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;color:var(--royal);font-weight:700;margin-right:8px\">How to export</span>"+s.export+"</div>" +
+      "</div>"
+    }).join("") + "</div>"
+}
+
+function renderChecklist(){
+  return "<div class=\"req-checklist\">" +
+    CHECKLIST_ITEMS.map(function(item){
+      return "<div class=\"req-item\" onclick=\"ckToggle(this)\">" +
+        "<div class=\"req-box\"></div>" +
+        "<div class=\"req-label\">"+item.label+"</div>" +
+        "<span class=\"req-badge\" style=\"background:"+(item.critical?"rgba(200,20,74,.08)":"rgba(10,122,74,.08)")+";color:"+(item.critical?"var(--red)":"var(--green)")+";border-color:"+(item.critical?"rgba(200,20,74,.2)":"rgba(10,122,74,.2)")+"\">"+
+          (item.critical?"CRITICAL":"RECOMMENDED")+
+        "</span>" +
+      "</div>"
+    }).join("") + "</div>"
+}
+
+function ckToggle(el){el.classList.toggle("checked");el.querySelector(".req-box").textContent=el.classList.contains("checked")?"\u2713":"";}
+
+function renderCO(c){
+  if(!c) return "";
+  var icons={blue:"\u24d8",green:"\u2713",amber:"\u26a0",red:"\u26a0"};
+  return "<div class=\"co co-"+c.type+"\"><div class=\"co-lbl\">"+(icons[c.type]||"")+" "+(c.label||"")+"</div>"+c.text.replace(/\n/g,"<br>")+"</div>"
+}
+
+async function finnSend(q){
+  var key=cK();
+  if(!chats[key]) chats[key]=[];
+  chats[key].push({role:"user",content:q});
+  var msgs=document.getElementById("fmsgs");
+  if(msgs){msgs.classList.add("vis");finnRender(key);}
+  var st=document.getElementById("fst");if(st)st.style.display="none";
+  var ld=document.createElement("div");ld.id="fld";ld.className="mr fu";
+  ld.innerHTML="<div class=\"mav f\">F</div><div class=\"mb f\"><div class=\"tdots\"><div class=\"tdot\" style=\"animation-delay:0s\"></div><div class=\"tdot\" style=\"animation-delay:.2s\"></div><div class=\"tdot\" style=\"animation-delay:.4s\"></div></div></div>";
+  if(msgs){msgs.appendChild(ld);msgs.scrollTop=msgs.scrollHeight;}
+  var sec=MODULES[aM].sections[aS];
+  try{
+    var res=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:800,
+        system:FINN_SYS+"\n\nCurrent section: "+sec.title+".",messages:chats[key]})});
+    var data=await res.json();
+    var reply=(data.content&&data.content.find(function(b){return b.type==="text"}))||{text:"Something went wrong."};
+    chats[key].push({role:"assistant",content:reply.text});
+  }catch(e){chats[key].push({role:"assistant",content:"Network error - please try again."});}
+  var ld2=document.getElementById("fld");if(ld2)ld2.remove();
+  finnRender(key);
+}
+function finnRender(key){
+  var div=document.getElementById("fmsgs");if(!div)return;
+  div.innerHTML=(chats[key]||[]).map(function(m){
+    return "<div class=\"mr "+(m.role==="user"?"u":"")+" fu\">"+
+      (m.role==="assistant"?"<div class=\"mav f\">F</div>":"")+
+      "<div class=\"mb "+(m.role==="assistant"?"f":"u")+"\">"+m.content.replace(/\n/g,"<br>")+"</div>"+
+      (m.role==="user"?"<div class=\"mav y\">M</div>":"")+
+    "</div>"
+  }).join("");
+  div.scrollTop=div.scrollHeight;
+}
+function finnKey(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();finnSubmit();}var ta=document.getElementById("fta");if(ta){ta.style.height="auto";ta.style.height=Math.min(ta.scrollHeight,100)+"px";}}
+function finnSubmit(){var ta=document.getElementById("fta");var q=ta?ta.value.trim():"";if(!q)return;ta.value="";ta.style.height="auto";finnSend(q);}
+function totSec(){return MODULES.reduce(function(a,m){return a+m.sections.length},0)}
+function doneSec(){return Object.keys(done).filter(function(k){return done[k]}).length}
+function markDone(){done[aM+"-"+aS]=true;var mod=MODULES[aM];if(aS<mod.sections.length-1)aS++;else if(aM<MODULES.length-1){aM++;aS=0;}render();document.getElementById("ct").scrollTop=0;}
+function goBack(){if(aS>0)aS--;else if(aM>0){aM--;aS=MODULES[aM].sections.length-1;}render();document.getElementById("ct").scrollTop=0;}
+function goTo(mi,si){aM=mi;aS=si;render();document.getElementById("ct").scrollTop=0;if(window.innerWidth<700)toggleSidebar();}
+function toggleSidebar(){sbOpen=!sbOpen;document.getElementById("sb").classList.toggle("closed",!sbOpen);}
+
+function render(){
+  var mod=MODULES[aM],sec=mod.sections[aS];
+  var key=aM+"-"+aS,isDone=!!done[key],isFirst=aM===0&&aS===0,isLast=aM===MODULES.length-1&&aS===mod.sections.length-1;
+  var ts=totSec(),ds=doneSec(),pct=Math.round(ds/ts*100);
+  var rem=MODULES.slice(aM+1).reduce(function(a,m){return a+m.time},0)+Math.round(((mod.sections.length-aS)/mod.sections.length)*mod.time);
+  document.getElementById("tb-sec").textContent=mod.icon+" "+mod.title+" - "+sec.title;
+  document.getElementById("pg-lbl").textContent=ds+" / "+ts;
+  document.getElementById("rng-n").textContent=pct+"%";
+  document.getElementById("rng").style.strokeDashoffset=75.4-(75.4*pct/100);
+  document.getElementById("sb-done").textContent=ds;
+  document.getElementById("sb-left").textContent=rem;
+  document.getElementById("sb-nav").innerHTML=MODULES.map(function(m,mi){
+    var mA=mi===aM,mD=m.sections.every(function(_,si){return done[mi+"-"+si]});
+    var secs=mA?"<div class=\"si-list\">"+m.sections.map(function(s,si){
+      var sA=si===aS,sD=done[mi+"-"+si];
+      return "<div class=\"si"+(sA?" on":"")+(sD?" done":"")+"\" onclick=\"event.stopPropagation();goTo("+mi+","+si+")\"><div class=\"si-dot"+(sD?" ok":sA?" cur":"")+"\">"+((sD)?"\u2713":"")+"</div><span class=\"si-lbl\">"+s.title+"</span></div>"
+    }).join("")+"</div>":"";
+    return "<div class=\"mi"+(mA?" on":"")+"\" onclick=\"goTo("+mi+",0)\"><div class=\"mi-hdr\"><div class=\"mi-ico\">"+m.icon+"</div><div class=\"mi-info\"><div class=\"mi-name\">"+m.title+"</div><div class=\"mi-meta\"><span class=\"mi-id\">"+m.id+"</span><span class=\"mi-t\">~"+m.time+"m</span></div></div><div class=\"mi-ck"+(mD?" ok":"")+"\">"+((mD)?"\u2713":"")+"</div></div>"+secs+"</div>"
+  }).join("");
+  var secPct=Math.round((aS+1)/mod.sections.length*100);
+  var hasHist=chats[key]&&chats[key].length>0;
+  var body="<div class=\"btext\">"+sec.content.split("\n\n").map(function(p){return "<p>"+p+"</p>"}).join("")+"</div>";
+  if(sec.type==="critical") body+=renderDatasetCards(CRITICAL_DATASETS);
+  if(sec.type==="supporting") body+=renderDatasetCards(SUPPORTING_DATASETS);
+  if(sec.type==="systems") body+=renderSystems();
+  if(sec.type==="checklist") body+=renderChecklist();
+  if(sec.callout) body+=renderCO(sec.callout);
+  if(sec.callout2) body+=renderCO(sec.callout2);
+  document.getElementById("cti").innerHTML=
+    "<div class=\"lhdr\"><div class=\"lcrumb\"><div class=\"lcrumb-ico\">"+mod.icon+"</div><span style=\"color:var(--royal);font-weight:600;font-family:var(--mono);font-size:11px\">"+mod.id+" - "+mod.title+"</span><span style=\"color:var(--muted)\">&#8250;</span><span style=\"font-size:11px;font-family:var(--mono);color:var(--muted)\">Section "+(aS+1)+" of "+mod.sections.length+"</span><span class=\"badge badge-platform\">PLATFORM</span></div>"+
+    "<div class=\"ltitle\">"+sec.title+"</div>"+
+    "<div class=\"lmeta\"><div class=\"lmi\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polyline points=\"12 6 12 12 16 14\"/></svg>~"+mod.time+" min</div>"+(isDone?"<div class=\"lmi\" style=\"color:var(--green)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"><polyline points=\"20 6 9 17 4 12\"/></svg>Completed</div>":"")+"</div>"+
+    "<div class=\"lpbar\"><div class=\"lpfill\" style=\"width:"+secPct+"%\"></div></div></div>"+
+    body+
+    "<div class=\"fw\"><div class=\"fh\"><div class=\"fav-wrap\"><div class=\"fav\">&#127891;</div><div class=\"fon\"></div></div><div class=\"finfo\"><div class=\"fname\">Ask Finn</div><div class=\"fsub\">Platform Data Specialist</div></div><div class=\"fai\">AI TUTOR</div></div>"+
+    "<div id=\"fmsgs\" class=\"fmsgs"+(hasHist?" vis":"")+"\"></div>"+
+    (!hasHist?"<div id=\"fst\" class=\"fst\"><div class=\"fst-lbl\">Questions for this section</div><div class=\"fst-g\">"+mod.starters.map(function(q){return "<button class=\"fsbtn\" onclick=\"finnSend(this.textContent)\">"+q+"</button>"}).join("")+"</div></div>":"")+
+    "<div class=\"fin\"><textarea id=\"fta\" class=\"fta\" placeholder=\"Ask Finn anything about data requirements...\" rows=\"1\" onkeydown=\"finnKey(event)\"></textarea><button class=\"fsnd\" onclick=\"finnSubmit()\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"white\"><polygon points=\"22 2 15 22 11 13 2 9 22 2\"/></svg></button></div></div>"+
+    "<div class=\"lnav\"><button class=\"nbk\" onclick=\"goBack()\">"+(isFirst?" disabled":"")+"<svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"><polyline points=\"15 18 9 12 15 6\"/></svg> Back</button>"+
+    "<button class=\"nnx"+(isDone?" done":"")+"\" onclick=\"markDone()\">"+(isDone?"Done - Next":"Mark done")+" <svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"><polyline points=\"9 18 15 12 9 6\"/></svg></button></div>";
+  if(hasHist){finnRender(key);document.getElementById("fmsgs").classList.add("vis");}
+}
+render();
+</script>
+</body>
+</html>
