@@ -269,6 +269,37 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .req-item.checked .req-label{text-decoration:line-through;color:var(--muted)}
 .req-badge{font-size:9px;font-family:var(--mono);padding:2px 7px;border-radius:10px;font-weight:700;flex-shrink:0;border:1px solid}
 .badge-platform{background:rgba(61,80,244,.1);color:var(--royal);border-color:rgba(61,80,244,.25);font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:20px;letter-spacing:.4px;font-weight:600}
+
+/* EXAMPLE PREVIEW */
+.dc-example-wrap{grid-column:1/-1;margin-top:14px;padding-top:14px;border-top:1px dashed var(--border)}
+.dc-toggle{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:var(--r);border:1.5px solid rgba(61,80,244,.25);background:rgba(61,80,244,.06);color:var(--royal);cursor:pointer;font-size:11px;font-family:var(--mono);font-weight:700;letter-spacing:.5px;transition:all .15s}
+.dc-toggle:hover{background:rgba(61,80,244,.12);border-color:var(--royal)}
+.dc-toggle svg{width:11px;height:11px;transition:transform .2s}
+.dc-toggle.open svg{transform:rotate(180deg)}
+.dc-example{display:none;margin-top:14px;animation:fadeUp .25s ease-out}
+.dc-example.open{display:block}
+.dc-example-title{font-size:11px;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:700}
+.dc-example-sub{font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5}
+.ex-tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);box-shadow:var(--sh)}
+.ex-tbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px;min-width:560px}
+.ex-tbl thead{background:var(--navy)}
+.ex-tbl thead th{color:rgba(255,255,255,.85);font-weight:600;text-align:left;padding:9px 12px;font-size:10px;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;border-right:1px solid rgba(255,255,255,.08)}
+.ex-tbl thead th:last-child{border-right:none}
+.ex-tbl tbody tr{border-top:1px solid var(--border);transition:background .12s}
+.ex-tbl tbody tr:hover{background:rgba(61,80,244,.03)}
+.ex-tbl tbody tr.section-row{background:rgba(61,80,244,.05);font-weight:700}
+.ex-tbl tbody tr.total-row{background:var(--card);font-weight:700;border-top:2px solid var(--text)}
+.ex-tbl tbody tr.subtotal-row{background:rgba(61,80,244,.04);font-weight:600}
+.ex-tbl tbody td{padding:7px 12px;color:var(--text2);border-right:1px solid var(--border);white-space:nowrap}
+.ex-tbl tbody td:last-child{border-right:none}
+.ex-tbl tbody td.num{text-align:right;font-variant-numeric:tabular-nums}
+.ex-tbl tbody td.neg{color:var(--red)}
+.ex-tbl tbody td.amber-cell{color:var(--amber);font-weight:600}
+.ex-tbl tbody td.red-cell{color:var(--red);font-weight:600}
+.ex-tbl tbody td.label-strong{color:var(--text);font-weight:600}
+.ex-note{margin-top:10px;font-size:11px;color:var(--muted);line-height:1.5;padding:8px 12px;background:rgba(61,80,244,.04);border-left:3px solid var(--royal);border-radius:0 var(--r) var(--r) 0}
+.ex-note b{color:var(--royal);font-weight:700}
+
 @media(max-width:700px){.dc-body{grid-template-columns:1fr}}
 </style>
 <body>
@@ -431,6 +462,140 @@ const SUPPORTING_DATASETS = [
    notes:"Should include supplier name, invoice reference, invoice date, due date, and balance by ageing bucket. Total should reconcile to trade creditors on the balance sheet."}
 ];
 
+// Realistic example data based on FieldForce Ltd - a B2B SaaS business with ~£3.2m revenue
+const EXAMPLES = {
+  "Monthly Management Accounts":{
+    title:"Sample Management Accounts - FieldForce Ltd",
+    sub:"Monthly P&L (extract for 6 months of 2023). Real management accounts cover all 36 months and include a balance sheet on a separate tab.",
+    headers:["","Apr-23","May-23","Jun-23","Jul-23","Aug-23","Sep-23"],
+    rows:[
+      {cells:["Subscription Revenue","246,400","248,100","251,800","255,600","259,200","263,400"],cls:["label-strong","num","num","num","num","num","num"]},
+      {cells:["Implementation Revenue","12,200","9,800","14,500","11,300","8,700","16,200"],cls:["","num","num","num","num","num","num"]},
+      {cells:["Total Revenue","258,600","257,900","266,300","266,900","267,900","279,600"],cls:["label-strong","num","num","num","num","num","num"],section:"subtotal"},
+      {cells:["Cost of Sales","(48,200)","(48,500)","(49,800)","(50,100)","(50,400)","(51,800)"],cls:["","num neg","num neg","num neg","num neg","num neg","num neg"]},
+      {cells:["Gross Profit","210,400","209,400","216,500","216,800","217,500","227,800"],cls:["label-strong","num","num","num","num","num","num"],section:"subtotal"},
+      {cells:["Salaries & Wages","(118,200)","(118,200)","(118,200)","(118,200)","(120,400)","(120,400)"],cls:["","num neg","num neg","num neg","num neg","num neg","num neg"]},
+      {cells:["Marketing","(56,300)","(8,200)","(7,900)","(8,400)","(7,600)","(8,100)"],cls:["","num red-cell","num neg","num neg","num neg","num neg","num neg"]},
+      {cells:["Premises","(6,200)","(6,200)","(6,200)","(6,200)","(6,200)","(6,200)"],cls:["","num neg","num neg","num neg","num neg","num neg","num neg"]},
+      {cells:["IT & Software","(12,400)","(12,600)","(12,500)","(13,100)","(13,200)","(13,400)"],cls:["","num neg","num neg","num neg","num neg","num neg","num neg"]},
+      {cells:["Professional Fees","(4,200)","(3,800)","(8,900)","(4,100)","(3,900)","(4,200)"],cls:["","num neg","num neg","num neg","num neg","num neg","num neg"]},
+      {cells:["Other Overheads","(8,400)","(8,200)","(8,600)","(8,300)","(8,500)","(8,700)"],cls:["","num neg","num neg","num neg","num neg","num neg","num neg"]},
+      {cells:["EBITDA","4,700","52,200","54,200","58,500","57,700","66,800"],cls:["label-strong","num","num","num","num","num","num"],section:"total"}
+    ],
+    note:"<b>Watch for:</b> The April marketing spike of £56k looks unusual versus the £8k monthly run-rate. This is the kind of one-off cost (here, a rebrand) that PinpointAI flags automatically as a potential EBITDA addback."
+  },
+  "Chart of Accounts":{
+    title:"Sample Chart of Accounts - FieldForce Ltd",
+    sub:"Extract from a Xero export. The full chart typically has 80-150 codes covering every nominal line in the trial balance.",
+    headers:["GL Code","Account Name","Type","Category"],
+    rows:[
+      {cells:["4000","Subscription Revenue - UK","Revenue","Sales"],cls:["label-strong","","",""]},
+      {cells:["4001","Subscription Revenue - EU","Revenue","Sales"],cls:["label-strong","","",""]},
+      {cells:["4100","Implementation Fees","Revenue","Sales"],cls:["label-strong","","",""]},
+      {cells:["4900","Other Income","Revenue","Sales"],cls:["label-strong","","",""]},
+      {cells:["5000","Hosting & Infrastructure","Cost of Sales","COGS"],cls:["label-strong","","",""]},
+      {cells:["5100","Customer Success Salaries","Cost of Sales","COGS"],cls:["label-strong","","",""]},
+      {cells:["6000","Salaries - Sales","Overhead","Personnel"],cls:["label-strong","","",""]},
+      {cells:["6001","Salaries - Engineering","Overhead","Personnel"],cls:["label-strong","","",""]},
+      {cells:["6002","Salaries - G&A","Overhead","Personnel"],cls:["label-strong","","",""]},
+      {cells:["6100","Employer NI","Overhead","Personnel"],cls:["label-strong","","",""]},
+      {cells:["6200","Pension Contributions","Overhead","Personnel"],cls:["label-strong","","",""]},
+      {cells:["7000","Office Rent","Overhead","Premises"],cls:["label-strong","","",""]},
+      {cells:["7200","Marketing - Digital","Overhead","Marketing"],cls:["label-strong","","",""]},
+      {cells:["7201","Marketing - Events","Overhead","Marketing"],cls:["label-strong","","",""]},
+      {cells:["7202","Marketing - Other","Overhead","Marketing"],cls:["label-strong","","",""]},
+      {cells:["8000","Software Subscriptions","Overhead","IT"],cls:["label-strong","","",""]},
+      {cells:["8500","Legal & Professional","Overhead","Professional"],cls:["label-strong","","",""]},
+      {cells:["9000","Bank Interest","Finance","Finance"],cls:["label-strong","","",""]}
+    ],
+    note:"<b>Why this matters:</b> Each GL code in the trial balance is meaningless without the chart of accounts to map it to a category. PinpointAI uses this to automatically build the normalised P&L structure - separating COGS from overheads, grouping personnel costs, and identifying which lines feed into EBITDA."
+  },
+  "Monthly Trial Balance":{
+    title:"Sample Trial Balance - FieldForce Ltd",
+    sub:"Extract for September 2023. A real trial balance lists every active GL code with its monthly debit and credit movement and closing balance. Typically 80-150 rows per month.",
+    headers:["GL Code","Account Name","Debit (£)","Credit (£)","Balance (£)"],
+    rows:[
+      {cells:["1000","Bank Account - Current","263,400","-","412,800"],cls:["label-strong","","num","num","num"]},
+      {cells:["1100","Trade Debtors","-","-","187,400"],cls:["label-strong","","num","num","num"]},
+      {cells:["1200","Prepayments","-","-","18,200"],cls:["label-strong","","num","num","num"]},
+      {cells:["1500","Office Equipment (Net)","-","-","42,100"],cls:["label-strong","","num","num","num"]},
+      {cells:["2000","Trade Creditors","-","-","(34,600)"],cls:["label-strong","","num","num","num neg"]},
+      {cells:["2100","VAT Liability","-","-","(28,400)"],cls:["label-strong","","num","num","num neg"]},
+      {cells:["2200","PAYE/NI Liability","-","-","(31,800)"],cls:["label-strong","","num","num","num neg"]},
+      {cells:["2400","Director Loan Account","-","45,000","(45,000)"],cls:["label-strong","","num","num amber-cell","num neg"]},
+      {cells:["3000","Share Capital","-","-","(1,000)"],cls:["label-strong","","num","num","num neg"]},
+      {cells:["3100","Retained Earnings","-","-","(521,800)"],cls:["label-strong","","num","num","num neg"]},
+      {cells:["4000","Subscription Revenue - UK","-","247,200","(2,168,400)"],cls:["label-strong","","num","num","num neg"]},
+      {cells:["4001","Subscription Revenue - EU","-","16,200","(189,200)"],cls:["label-strong","","num","num","num neg"]},
+      {cells:["4100","Implementation Fees","-","16,200","(118,400)"],cls:["label-strong","","num","num","num neg"]},
+      {cells:["5000","Hosting & Infrastructure","18,400","-","156,800"],cls:["label-strong","","num","num","num"]},
+      {cells:["5100","Customer Success Salaries","33,400","-","298,200"],cls:["label-strong","","num","num","num"]},
+      {cells:["6000","Salaries - Sales","42,800","-","384,200"],cls:["label-strong","","num","num","num"]},
+      {cells:["6001","Salaries - Engineering","58,200","-","521,400"],cls:["label-strong","","num","num","num"]},
+      {cells:["7202","Marketing - Other","8,100","-","98,400"],cls:["label-strong","","num","num","num"]},
+      {cells:["TOTAL","","-","-","0"],cls:["label-strong","","num","num","num"],section:"total"}
+    ],
+    note:"<b>Watch for:</b> Director Loan Account at £45k (highlighted amber). Items like this often appear in the trial balance but get missed in the seller's draft completion accounts - exactly the kind of debt-like item PinpointAI helps identify automatically."
+  },
+  "Customer List / Schedule":{
+    title:"Sample Customer Schedule - FieldForce Ltd",
+    sub:"All active customers with revenue and contract details. PinpointAI uses this for concentration analysis and revenue quality scoring.",
+    headers:["Customer ID","Customer Name","Contract Type","Annual Revenue (£)","Renewal Date","Status"],
+    rows:[
+      {cells:["C0001","Northern Property Group","Annual","185,400","Mar-2024","Active"],cls:["","label-strong","","num","",""]},
+      {cells:["C0002","Coastal Facilities Ltd","Annual","142,800","Aug-2024","Active"],cls:["","label-strong","","num","",""]},
+      {cells:["C0003","Metro Building Services","Multi-year","128,400","Jan-2025","Active"],cls:["","label-strong","","num","",""]},
+      {cells:["C0004","Parkside Contractors","Annual","98,200","Feb-2024","At risk"],cls:["","label-strong","","num","","amber-cell"]},
+      {cells:["C0005","Vector Maintenance","Annual","87,600","Nov-2023","Active"],cls:["","label-strong","","num","",""]},
+      {cells:["C0006","Orion Building Services","Annual","55,200","Sep-2023","Churned"],cls:["","label-strong","","num neg","","red-cell"]},
+      {cells:["C0007","Apex Estate Management","Multi-year","82,400","Jun-2025","Active"],cls:["","label-strong","","num","",""]},
+      {cells:["C0008","Riverside Holdings","Annual","67,800","Apr-2024","Active"],cls:["","label-strong","","num","",""]},
+      {cells:["C0009","Crescent Properties","Annual","58,400","Dec-2023","Renewing"],cls:["","label-strong","","num","","amber-cell"]},
+      {cells:["C0010","Westway Services","Annual","52,200","Jul-2024","Active"],cls:["","label-strong","","num","",""]},
+      {cells:["...","11 other customers","Various","1,141,600","Various","Active"],cls:["muted","","","num","",""]},
+      {cells:["TOTAL","16 active customers","","2,099,000","",""],cls:["label-strong","label-strong","","num",""],section:"total"}
+    ],
+    note:"<b>Concentration risk:</b> Top 3 customers represent 22% of total revenue. Top 10 represent 90%. Orion churned in Sept 2023 (£55k ARR loss into 2024) - PinpointAI flags this kind of recent churn as a forward-looking risk to revenue."
+  },
+  "Aged Debtors (Receivables)":{
+    title:"Sample Aged Debtors - FieldForce Ltd",
+    sub:"As at 30 September 2023. Total reconciles to Trade Debtors of £187,400 in the balance sheet.",
+    headers:["Customer","Current","31-60 Days","61-90 Days","90+ Days","Total (£)"],
+    rows:[
+      {cells:["Northern Property Group","18,400","-","-","-","18,400"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["Coastal Facilities Ltd","14,200","-","-","-","14,200"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["Metro Building Services","12,800","-","-","-","12,800"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["Parkside Contractors","-","9,800","8,400","-","18,200"],cls:["label-strong","num","num amber-cell","num amber-cell","num","num"]},
+      {cells:["Vector Maintenance","-","-","-","12,400","12,400"],cls:["label-strong","num","num","num","num red-cell","num"]},
+      {cells:["Apex Estate Management","8,200","-","-","-","8,200"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["Riverside Holdings","6,800","2,400","-","-","9,200"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["Crescent Properties","5,800","-","-","-","5,800"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["Other (8 customers)","78,200","8,400","1,600","-","88,200"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["TOTAL","144,400","20,600","10,000","12,400","187,400"],cls:["label-strong","num","num","num amber-cell","num red-cell","num"],section:"total"},
+      {cells:["% of total","77%","11%","5%","7%","100%"],cls:["muted","muted","muted","amber-cell","red-cell",""]}
+    ],
+    note:"<b>Watch for:</b> Vector Maintenance at 90+ days (£12.4k) - dispute noted in seller's correspondence. Parkside drifting into 61-90 days. Both are signals of debtor quality issues that affect the working capital peg calculation."
+  },
+  "Aged Creditors (Payables)":{
+    title:"Sample Aged Creditors - FieldForce Ltd",
+    sub:"As at 30 September 2023. Total reconciles to Trade Creditors of £34,600 in the balance sheet.",
+    headers:["Supplier","Current","31-60 Days","61-90 Days","90+ Days","Total (£)"],
+    rows:[
+      {cells:["AWS (Hosting)","8,400","-","-","-","8,400"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["Microsoft 365","2,800","-","-","-","2,800"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["Office Landlord","6,200","-","-","-","6,200"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["Recruitment Partner","-","4,200","-","-","4,200"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["Marketing Agency","2,400","-","-","-","2,400"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["Legal Counsel","1,800","-","-","-","1,800"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["Insurance Broker","-","2,800","-","-","2,800"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["Other (12 suppliers)","5,200","800","-","-","6,000"],cls:["label-strong","num","num","num","num","num"]},
+      {cells:["TOTAL","26,800","7,800","-","-","34,600"],cls:["label-strong","num","num","num","num","num"],section:"total"},
+      {cells:["% of total","77%","23%","-","-","100%"],cls:["muted","muted","muted","muted","muted",""]}
+    ],
+    note:"<b>Watch for:</b> Healthy creditor profile - mostly current with no aged balances over 60 days. A deteriorating creditor profile (lots in 60+ days) signals cash flow stress and inflates the working capital position artificially."
+  }
+};
+
 const SYSTEMS = [
   {name:"Xero",common:"SME, professional services",export:"Reports > Trial Balance (export CSV). Chart of Accounts under Accounting > Chart of Accounts > Export."},
   {name:"Sage 50 / Sage 200",common:"SME to mid-market UK",export:"Nominal Activity report for trial balance. Chart of Accounts export from Nominal Ledger."},
@@ -461,6 +626,41 @@ function cK(){return aM+"-"+aS}
 
 var FINN_SYS = "You are Finn, a PinpointAI platform specialist. Help new team members understand the data requirements for PinpointAI. Be practical, plain English, no jargon without explanation. Do not use em dashes. 120-200 words per response.";
 
+function renderExample(name){
+  var ex=EXAMPLES[name];
+  if(!ex) return "";
+  var safeId="ex-"+name.replace(/[^a-zA-Z0-9]/g,"");
+  var headerRow="<tr>"+ex.headers.map(function(h){return "<th>"+h+"</th>"}).join("")+"</tr>";
+  var bodyRows=ex.rows.map(function(r){
+    var cls=r.section==="total"?"total-row":r.section==="subtotal"?"subtotal-row":r.section==="section"?"section-row":"";
+    var cells=r.cells.map(function(c,i){
+      var cellCls=(r.cls&&r.cls[i])?" class=\""+r.cls[i]+"\"":"";
+      return "<td"+cellCls+">"+c+"</td>"
+    }).join("");
+    return "<tr"+(cls?" class=\""+cls+"\"":"")+">"+cells+"</tr>"
+  }).join("");
+  return "<div class=\"dc-example-wrap\">"+
+    "<button class=\"dc-toggle\" onclick=\"toggleExample(this,'"+safeId+"')\">"+
+      "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"><polyline points=\"6 9 12 15 18 9\"/></svg>"+
+      "<span class=\"toggle-label\">View example data</span>"+
+    "</button>"+
+    "<div id=\""+safeId+"\" class=\"dc-example\">"+
+      "<div class=\"dc-example-title\">"+ex.title+"</div>"+
+      "<div class=\"dc-example-sub\">"+ex.sub+"</div>"+
+      "<div class=\"ex-tbl-wrap\"><table class=\"ex-tbl\"><thead>"+headerRow+"</thead><tbody>"+bodyRows+"</tbody></table></div>"+
+      (ex.note?"<div class=\"ex-note\">"+ex.note+"</div>":"")+
+    "</div>"+
+  "</div>"
+}
+
+function toggleExample(btn,id){
+  var ex=document.getElementById(id);
+  var lbl=btn.querySelector(".toggle-label");
+  var open=ex.classList.toggle("open");
+  btn.classList.toggle("open",open);
+  if(lbl) lbl.textContent=open?"Hide example data":"View example data";
+}
+
 function renderDatasetCards(datasets){
   return datasets.map(function(d){
     return "<div class=\"dataset-card "+d.cardClass+"\">" +
@@ -476,6 +676,7 @@ function renderDatasetCards(datasets){
         "<div><div class=\"dc-section-lbl\">Why PinpointAI needs it</div><div class=\"dc-text\">"+d.why+"</div></div>" +
         "<div><div class=\"dc-section-lbl\">Formats</div><div class=\"dc-formats\">"+d.formats.map(function(f){return "<span class=\"dc-format"+(f===d.preferred?" preferred":"")+"\">"+f+(f===d.preferred?" \u2605":"")+"</span>"}).join("")+"</div><div class=\"dc-text\" style=\"margin-top:8px\">Period: "+d.period+"</div></div>" +
         "<div style=\"background:rgba(61,80,244,.04);border:1px solid rgba(61,80,244,.12);border-radius:var(--r);padding:10px 12px\"><div class=\"dc-section-lbl\" style=\"color:var(--royal)\">Notes</div><div class=\"dc-text\">"+d.notes+"</div></div>" +
+        renderExample(d.name) +
       "</div>" +
     "</div>"
   }).join("")
