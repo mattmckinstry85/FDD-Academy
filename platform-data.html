@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Platform Data Requirements — PinpointAI Academy</title>
+<title>Platform Data Requirements - PinpointAI Academy</title>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -271,6 +271,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .badge-platform{background:rgba(61,80,244,.1);color:var(--royal);border-color:rgba(61,80,244,.25);font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:20px;letter-spacing:.4px;font-weight:600}
 
 /* EXAMPLE PREVIEW */
+/* CTA BANNER - sits between card header and detail sections */
+.dc-example-cta{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:linear-gradient(135deg,rgba(61,80,244,.07) 0%,rgba(53,255,233,.05) 100%);border:1.5px solid rgba(61,80,244,.2);border-radius:var(--r);margin:12px 0 4px;flex-wrap:wrap}
+.dc-example-cta-text{font-size:13px;color:var(--royal);font-weight:500}
+.dc-toggle-cta{background:var(--royal)!important;color:#fff!important;border-color:var(--royal)!important;padding:9px 18px!important;font-size:12px!important}
+.dc-toggle-cta:hover{background:var(--royal2)!important;border-color:var(--royal2)!important}
+.dc-toggle-cta svg{stroke:#fff!important}
 .dc-example-wrap{grid-column:1/-1;margin-top:14px;padding-top:14px;border-top:1px dashed var(--border)}
 .dc-toggle{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:var(--r);border:1.5px solid rgba(61,80,244,.25);background:rgba(61,80,244,.06);color:var(--royal);cursor:pointer;font-size:11px;font-family:var(--mono);font-weight:700;letter-spacing:.5px;transition:all .15s}
 .dc-toggle:hover{background:rgba(61,80,244,.12);border-color:var(--royal)}
@@ -355,22 +361,22 @@ const MODULES = [
   {
     id:"M1", icon:"📦", title:"What PinpointAI Needs", subtitle:"The datasets that power the platform", time:15,
     starters:[
-      "Why does PinpointAI need a trial balance as well as management accounts?",
-      "What is a chart of accounts and why does it matter for the platform?",
-      "What happens if the target can only provide two of the three critical datasets?",
-      "How do I explain to a client what data they need to provide?"
+      "I have no accounting background - can you explain why we need all these datasets?",
+      "What is the difference between a trial balance and a general ledger in plain English?",
+      "What is a chart of accounts? Why does it matter?",
+      "What happens if the seller can only give us some of the datasets?"
     ],
     sections:[
-      {id:"M1S1", title:"Why data quality determines output quality",
-       content:"PinpointAI automates the most time-consuming parts of financial due diligence. But the platform can only work with what it is given.\n\nThe quality, completeness, and format of the data uploaded directly determines the quality of the output. A clean, well-structured trial balance produces a detailed, accurate analysis. A single PDF of management accounts produces a much more limited result.\n\nUnderstanding exactly what data the platform needs, why each dataset matters, and what formats work best means you can advise clients upfront, avoid delays mid-engagement, and get the best output from day one.",
-       callout:{type:"blue",label:"Key principle",text:"PinpointAI is only as good as the data it receives. Setting clear data expectations at the start of every engagement is the single most important step in getting a strong output."}
+      {id:"M1S1", title:"Why the data you collect matters",
+       content:"PinpointAI is software that automates the most time-consuming parts of financial due diligence (FDD). FDD just means checking that a company's reported numbers actually hold up before someone buys it.\n\nBut the platform can only work with what it is given. The quality, completeness, and format of the data uploaded directly determines the quality of the output. Clean, well-structured spreadsheets produce a detailed, accurate analysis. A single scanned PDF produces a much more limited result.\n\nThis module walks you through every dataset PinpointAI needs, what each one actually is in plain English, why it matters, and how to ask for it. By the end you will be able to walk a client through their data requirements with confidence, even if you have no accounting background.",
+       callout:{type:"blue",label:"Quick translator - terms you will see",text:"FDD = Financial Due Diligence (checking the numbers before a deal)\nIRL = Information Request List (the list of things you ask the seller for)\nP&L = Profit and Loss statement (revenue minus costs = profit)\nGL = General Ledger (the master record of every transaction)\nTB = Trial Balance (a summary of every account at a point in time)\nCOA = Chart of Accounts (the list of all account categories used)\nEBITDA = Earnings Before Interest, Tax, Depreciation, Amortisation (a profit measure)\nDebtors = customers who owe the business money\nCreditors = suppliers the business owes money to\n\nDo not worry about memorising these. Each one is explained again where it appears."}
       },
-      {id:"M1S2", title:"Critical datasets — required for every engagement",
-       content:"These three datasets are required for PinpointAI to run a full analysis. Without all three the platform output will be materially limited. Request them on day one of every engagement.",
+      {id:"M1S2", title:"Critical datasets - needed for every engagement",
+       content:"These four datasets are needed for PinpointAI to run a full analysis. Without all four the platform output will be materially limited.\n\nThink of it like this: if PinpointAI was a cake, these four datasets are the flour, eggs, sugar, and butter. You can make do without one or two for a basic version, but the result will be much weaker.\n\nRequest these on day one of every engagement. Each card below explains what the dataset actually is, why PinpointAI needs it, and what good looks like - click 'View example data' to see what one looks like in practice.",
        type:"critical"
       },
-      {id:"M1S3", title:"Supporting datasets — recommended where available",
-       content:"These datasets are not required for the platform to function but significantly enhance the depth and accuracy of the analysis. Include them in the IRL alongside the critical datasets.",
+      {id:"M1S3", title:"Supporting datasets - strongly recommended",
+       content:"These datasets are not strictly required for the platform to function but significantly enhance the depth and accuracy of the analysis.\n\nIncluding them gives PinpointAI more to work with - things like customer concentration analysis, debtor (customer) and creditor (supplier) quality assessment, and working capital insights.\n\nInclude them in your IRL (Information Request List - the document you send the seller asking for everything you need) alongside the critical datasets.",
        type:"supporting"
       }
     ]
@@ -378,24 +384,24 @@ const MODULES = [
   {
     id:"M2", icon:"📋", title:"Requesting the Data", subtitle:"How to ask for what you need", time:15,
     starters:[
-      "How do I explain to a seller why we need a trial balance?",
-      "What if the target uses Xero or QuickBooks?",
-      "How long should it take a target to provide these datasets?",
-      "What do I do if the seller says they do not have a chart of accounts?"
+      "What exactly is an IRL and what should be in it?",
+      "How do I explain to a seller in plain English why we need a trial balance?",
+      "What if the target uses Xero or QuickBooks - where do these files come from?",
+      "How long should it take a target to provide these datasets?"
     ],
     sections:[
-      {id:"M2S1", title:"Building the data request into your IRL",
-       content:"The IRL is sent to the seller at the start of diligence. The PinpointAI data requirements should be a dedicated section of the IRL, clearly labelled with specific format guidance.\n\nDo not bury the data request in a general list of financial information. Be explicit: name each dataset, specify the format, and state the period required.",
-       callout:{type:"green",label:"Suggested IRL wording",text:"Section 4 - PinpointAI Platform Data\n\n4.1  Monthly Management Accounts (P&L and Balance Sheet) for the 36 months ended [date] - Excel format preferred\n4.2  Chart of Accounts - Excel or CSV export from accounting system\n4.3  Monthly Trial Balance for the 36 months ended [date] - Excel or CSV export\n4.4  Aged Debtors schedule at [most recent period end] - Excel format\n4.5  Aged Creditors schedule at [most recent period end] - Excel format"}
+      {id:"M2S1", title:"What is an IRL and how to build the data request into it",
+       content:"An IRL stands for Information Request List. It is the document you send the seller at the very start of a deal listing every piece of information you need from them - financials, contracts, employee records, tax filings, customer data, the lot.\n\nThink of it as a shopping list for the deal. The seller works through it and uploads everything to a shared folder (often called a 'data room').\n\nThe PinpointAI data requirements should be a dedicated section of the IRL, clearly labelled with specific format guidance. Do not bury the data request in a general list of financial information. Be explicit: name each dataset, specify the format (Excel preferred), and state the period required (usually 36 months / 3 years).",
+       callout:{type:"green",label:"Suggested IRL wording (copy and paste)",text:"Section 4 - PinpointAI Platform Data\n\n4.1  Monthly Management Accounts (Profit & Loss and Balance Sheet) for the 36 months ended [date] - Excel format preferred\n4.2  Chart of Accounts (the list of all account codes used) - Excel or CSV export from accounting system\n4.3  Monthly Trial Balance for the 36 months ended [date] - Excel or CSV export\n4.4  Monthly General Ledger for the 36 months ended [date] - Excel or CSV export\n4.5  Aged Debtors schedule (customers who owe money) at [most recent month end] - Excel format\n4.6  Aged Creditors schedule (suppliers owed money) at [most recent month end] - Excel format"}
       },
       {id:"M2S2", title:"Accounting systems and what they can export",
-       content:"Most SME and mid-market targets use one of a handful of accounting systems. All major systems can export trial balances and chart of accounts. The challenge is that the finance team may never have been asked for these specific exports before.",
+       content:"Most small to mid-sized companies use one of a handful of accounting software systems (Xero, Sage, QuickBooks, NetSuite). These are tools the finance team uses to record every transaction the business makes.\n\nAll of them can export the data PinpointAI needs. The challenge is that the finance team may never have been asked for these specific exports before, so they might not know exactly where to find them. Having a quick guide ready helps avoid back-and-forth.",
        type:"systems"
       },
       {id:"M2S3", title:"What to do when data is missing or incomplete",
-       content:"Even with a clear IRL you will sometimes receive incomplete data. Always document what was requested, what was received, and when. If a critical dataset is missing, escalate to the client immediately.",
-       callout:{type:"amber",label:"Missing critical dataset",text:"If any of the three critical datasets are missing, tell the client immediately. The platform output will be materially limited. Do not attempt to work around the gap."},
-       callout2:{type:"blue",label:"Missing supporting dataset",text:"If a supporting dataset is missing, note it in the engagement tracker and continue. Flag it in the report as a limitation on the analysis."}
+       content:"Even with a clear IRL you will sometimes receive incomplete data. Always document what was requested, what was received, and when.\n\nIf a critical dataset is missing, escalate to the client (the buyer who hired you) immediately. Do not just push on and hope - it will affect the quality of your work and the value of the platform output.",
+       callout:{type:"amber",label:"If a critical dataset is missing",text:"If any of the four critical datasets is missing, tell the client (the buyer) immediately. The platform output will be materially weaker. Do not attempt to push on and hope for the best - it always comes back to bite."},
+       callout2:{type:"blue",label:"If a supporting dataset is missing",text:"If a supporting dataset (e.g. aged debtors) is missing, note it in your engagement tracker and continue. Flag it in your final report as a limitation - meaning, a known gap in what you were able to analyse."}
       }
     ]
   },
@@ -408,58 +414,64 @@ const MODULES = [
       "Is there a standard file naming convention?"
     ],
     sections:[
-      {id:"M3S1", title:"Checking data quality before upload",
-       content:"Before uploading to PinpointAI, run through this checklist. The most common issues are: missing months in the trial balance, management accounts that do not reconcile to the trial balance, a chart of accounts that has been restructured mid-period, and aged schedules from the wrong period end.",
+      {id:"M3S1", title:"Checking data quality before you upload",
+       content:"Before uploading anything to PinpointAI, run through the checklist below. The most common issues are:\n\n1) Missing months in the data (e.g. you have Jan-Nov but no December)\n2) Management accounts that do not 'reconcile' to the trial balance - meaning the totals do not match. The numbers should agree because they come from the same source\n3) A chart of accounts that has been restructured halfway through the period (account codes changed names or were merged)\n4) Aged debtor/creditor schedules dated at the wrong month end\n\nTaking 15 minutes to check these things before upload saves hours of rework later.",
        type:"checklist"
       },
-      {id:"M3S2", title:"Period coverage",
-       content:"PinpointAI works best with 36 months of monthly data. This gives the platform enough history to identify trends, normalise for seasonality, and produce a meaningful quality of earnings analysis.\n\nAlways use the most recent 36 months available. If the engagement is running in April 2024, the ideal period is April 2021 to March 2024.",
-       callout:{type:"blue",label:"Ideal coverage",text:"36 months of monthly data - most recent period first.\n\nMinimum viable: 24 months.\nBelow 12 months: flag to client as a material limitation before proceeding."}
+      {id:"M3S2", title:"How much data do we need? (Period coverage)",
+       content:"PinpointAI works best with 36 months (3 years) of monthly data. This gives the platform enough history to:\n\n- Spot trends (is revenue growing, flat, or declining?)\n- Account for seasonality (some businesses make most of their money in Q4)\n- Build a meaningful 'quality of earnings' analysis (essentially: how reliable are the reported profits?)\n\nAlways use the most recent 36 months available. If the engagement is running in April 2024, the ideal period is April 2021 to March 2024.",
+       callout:{type:"blue",label:"How much is enough?",text:"Ideal: 36 months of monthly data, most recent first.\n\nMinimum workable: 24 months.\n\nUnder 12 months: flag this to the client as a material limitation before proceeding. The analysis will be much weaker."}
       }
     ]
   }
 ];
 
 const CRITICAL_DATASETS = [
-  {icon:"\u{1F4CA}",name:"Monthly Management Accounts",sub:"Profit & Loss and Balance Sheet",badge:"CRITICAL",badgeClass:"badge-critical",cardClass:"critical",
-   what:"Monthly management accounts are the core financial records of the business. The internal P&L and balance sheet produced by the finance team each month. They are the primary input for quality of earnings analysis and EBITDA normalisation.",
-   why:"PinpointAI needs monthly granularity to identify seasonality patterns, spot unusual months, and produce an accurate LTM analysis. Annual accounts alone are not sufficient.",
+  {icon:"\u{1F4CA}",name:"Monthly Management Accounts",sub:"Profit & Loss (P&L) and Balance Sheet",badge:"CRITICAL",badgeClass:"badge-critical",cardClass:"critical",
+   what:"The internal financial reports the business produces every month for its own management team. There are two parts:\n\n1) Profit & Loss (P&L) - shows revenue minus costs to arrive at profit for the month\n2) Balance Sheet - a snapshot at month end showing what the business owns (assets), owes (liabilities), and what is left over (equity)\n\nThese are produced by the finance team and used internally to track performance.",
+   why:"PinpointAI needs monthly numbers (not just annual) so it can spot trends, identify unusual months, and build an accurate 'LTM' figure (Last Twelve Months - the most recent 12 months of trading, often used as the basis for valuation).",
    formats:["Excel (.xlsx)","CSV","Google Sheets export"],preferred:"Excel (.xlsx)",
    period:"36 months (3 full financial years)",
-   notes:"Must include both P&L and Balance Sheet. If management accounts are consolidated, request entity-level accounts for the specific business being acquired."},
-  {icon:"\u{1F5C2}\uFE0F",name:"Chart of Accounts",sub:"The full list of nominal codes used by the business",badge:"CRITICAL",badgeClass:"badge-critical",cardClass:"critical",
-   what:"The complete list of all nominal (GL) codes used in the accounting system, with their descriptions and categories. It maps every line in the trial balance to a meaningful label.",
-   why:"Without the chart of accounts, PinpointAI cannot correctly categorise income and expenditure lines, build the normalised P&L structure, or identify cost categories for EBITDA analysis.",
+   notes:"Must include both the P&L and the Balance Sheet (often on separate tabs). If the company is part of a larger group and the accounts cover multiple entities, ask specifically for accounts of just the business being bought."},
+  {icon:"\u{1F5C2}\uFE0F",name:"Chart of Accounts",sub:"The full list of categories used to record transactions",badge:"CRITICAL",badgeClass:"badge-critical",cardClass:"critical",
+   what:"Often shortened to 'COA'. Think of it as the master index of every category the accounting system uses to bucket transactions - 'Subscription Revenue', 'Office Rent', 'Salaries - Sales', and so on.\n\nEach category has a code (a 'nominal code' or 'GL code' - same thing, e.g. 4000, 6001) and a description. Every transaction the business records gets posted to one of these codes.",
+   why:"The trial balance and general ledger contain hundreds of code numbers. Without the chart of accounts to translate them, the data is just a list of numbers with no meaning. PinpointAI uses the chart to know that '6000 = Salaries' so it can group costs correctly.",
    formats:["Excel (.xlsx)","CSV","Direct export from accounting system"],preferred:"CSV export from accounting system",
-   period:"Current - as at the most recent period end",
-   notes:"If the chart of accounts has been restructured during the analysis period, provide both the current and historical versions and note the date of any restructuring."},
-  {icon:"\u2696\uFE0F",name:"Monthly Trial Balance",sub:"Or Monthly General Ledger",badge:"CRITICAL",badgeClass:"badge-critical",cardClass:"critical",
-   what:"The complete list of all nominal code balances for each month. The most granular financial data available from the accounting system. Shows every GL code with movements for each period.",
-   why:"The trial balance is the most detailed and reliable source of financial data. It allows PinpointAI to build the analysis from the ground up and cross-check management accounts.",
+   period:"Current - as at the most recent month end",
+   notes:"If the company has reorganised its categories during the 3-year period (e.g. merged or renamed codes), ask for both the current and the older versions, plus the date of the change."},
+  {icon:"\u2696\uFE0F",name:"Monthly Trial Balance",sub:"A monthly summary showing every account's balance",badge:"CRITICAL",badgeClass:"badge-critical",cardClass:"critical",
+   what:"Often shortened to 'TB'. A list, produced at the end of every month, showing every active account code (from the Chart of Accounts) and what its balance is at that point in time.\n\nIt is called a 'trial balance' because if the bookkeeping has been done correctly, the total of all debits should equal the total of all credits - the books 'balance'.\n\nIt is essentially a structured summary of the entire business at one moment.",
+   why:"The trial balance is the most reliable source of financial data because it comes directly from the accounting system. PinpointAI uses it to cross-check the management accounts and build the analysis from the ground up - making sure the reported numbers are real.",
    formats:["Excel (.xlsx)","CSV","Direct export from Xero, Sage, QuickBooks, NetSuite"],preferred:"CSV export from accounting system",
-   period:"Monthly for 36 months",
-   notes:"If a monthly trial balance is not available, a monthly general ledger extract covering all accounts will work. The key requirement is monthly granularity at nominal code level."}
+   period:"One trial balance per month, for 36 months",
+   notes:"You need a separate trial balance for each month-end (so 36 trial balances for 3 years), not just one combined version."},
+  {icon:"\u{1F4D6}",name:"Monthly General Ledger",sub:"The full record of every transaction the business has made",badge:"CRITICAL",badgeClass:"badge-critical",cardClass:"critical",
+   what:"Often shortened to 'GL'. The general ledger is the master record of every single transaction the business has posted, line by line.\n\nIf the trial balance is the summary (\"Salaries account total: £120,000 in March\"), the general ledger is the detail (\"15 Mar - John Smith salary - £4,200; 15 Mar - Jane Doe salary - £3,800; ...\").\n\nThink of the trial balance as the table of contents and the general ledger as the full book.",
+   why:"PinpointAI uses the general ledger to investigate unusual items at transaction level - for example, the platform can identify a single £56k payment in marketing for an annual rebrand, separate from regular monthly spend. This is the kind of detail that drives EBITDA adjustments.\n\nWithout it, the analysis is limited to monthly totals and cannot dig into specific transactions.",
+   formats:["Excel (.xlsx)","CSV","Direct export from accounting system"],preferred:"CSV export from accounting system",
+   period:"Monthly for 36 months (or as one continuous file covering 36 months)",
+   notes:"The export should include: transaction date, account code, description, debit amount, credit amount, and a reference (invoice number, journal number). If the seller resists due to file size, accept it month by month."}
 ];
 
 const SUPPORTING_DATASETS = [
-  {icon:"\u{1F465}",name:"Customer List / Schedule",sub:"Required where customers are tagged against unique GL codes",badge:"CONDITIONAL",badgeClass:"badge-conditional",cardClass:"supporting",
-   what:"A customer schedule mapping each customer to their revenue, ideally with their unique customer or GL code. Required when the accounting system uses customer-specific nominal codes.",
-   why:"Where customers are tagged against unique GL codes in the trial balance, PinpointAI can use the customer schedule to build customer-level revenue analysis and assess concentration risk.",
+  {icon:"\u{1F465}",name:"Customer List / Schedule",sub:"List of customers and what they pay - only needed in some cases",badge:"CONDITIONAL",badgeClass:"badge-conditional",cardClass:"supporting",
+   what:"A list of all the company's customers, showing how much each one pays, ideally with a unique customer ID or code.\n\nWhy 'conditional'? Some businesses set up their accounting system so that each customer has its own dedicated revenue code (e.g. customer A = code 4001, customer B = code 4002). In that case, this list is needed to translate the codes back into customer names.\n\nOther businesses post all revenue to one general code. In that case, this list is not strictly needed - but is still useful for concentration analysis.",
+   why:"PinpointAI uses this to identify concentration risk - meaning, how dependent is the business on a small number of customers? Losing a top-3 customer is a much bigger deal than losing a 50th customer.",
    formats:["Excel (.xlsx)","CSV","CRM export"],preferred:"Excel (.xlsx)",
    period:"Matching the trial balance period",
-   notes:"Only required if the target uses customer-level GL coding. If all revenue is posted to a single revenue code, this dataset is not needed."},
-  {icon:"\u{1F4E5}",name:"Aged Debtors (Receivables)",sub:"For the most recent period end",badge:"SUPPORTING",badgeClass:"badge-supporting",cardClass:"supporting",
-   what:"Breaks down all outstanding customer invoices by age. Shows what the business is owed and how long it has been outstanding.",
-   why:"Allows PinpointAI to assess the quality of the debtor balance, identify concentration risk, and flag potential bad debt provisions for the working capital analysis.",
+   notes:"Ask the seller: 'Are customers tagged with unique account codes in your accounting system?' If yes, this dataset is essential. If no, it is still strongly recommended."},
+  {icon:"\u{1F4E5}",name:"Aged Debtors (Receivables)",sub:"List of customers who owe the business money",badge:"SUPPORTING",badgeClass:"badge-supporting",cardClass:"supporting",
+   what:"'Debtors' is the British accounting word for customers who owe the business money (i.e. invoices that have been issued but not yet paid). 'Receivables' is the American word for the same thing.\n\nThe 'aged' bit means the report groups these unpaid invoices by how old they are: under 30 days (current), 31-60 days, 61-90 days, 90+ days. The older an invoice gets, the less likely it is to be paid.",
+   why:"PinpointAI uses this to assess the quality of the debtor balance. A business with lots of old, unpaid invoices may be overstating its profits (because some of these invoices may never be collected). It also feeds into the 'working capital' analysis - which affects the final price the buyer pays.",
    formats:["Excel (.xlsx)","CSV","Export from accounting system"],preferred:"Excel (.xlsx)",
-   period:"Most recent period end",
-   notes:"Should include customer name, invoice reference, invoice date, due date, and balance by ageing bucket. Total should reconcile to trade debtors on the balance sheet."},
-  {icon:"\u{1F4E4}",name:"Aged Creditors (Payables)",sub:"For the most recent period end",badge:"SUPPORTING",badgeClass:"badge-supporting",cardClass:"supporting",
-   what:"Breaks down all outstanding supplier invoices by age. Shows what the business owes to suppliers and how long those obligations have been outstanding.",
-   why:"Supports the working capital analysis. Extended creditor days or a deteriorating creditor profile can indicate cash flow stress and affect the working capital peg calculation.",
+   period:"As at the most recent month end",
+   notes:"Should include customer name, invoice number, invoice date, due date, and balance by age bucket. The total of all unpaid invoices on this report should match the 'Trade Debtors' figure on the Balance Sheet - if it does not, ask why."},
+  {icon:"\u{1F4E4}",name:"Aged Creditors (Payables)",sub:"List of suppliers the business owes money to",badge:"SUPPORTING",badgeClass:"badge-supporting",cardClass:"supporting",
+   what:"The opposite of debtors. 'Creditors' (UK) or 'Payables' (US) are suppliers the business owes money to (i.e. invoices the business has received but not yet paid).\n\nLike the debtor report, this is grouped by age: current, 31-60 days, 61-90 days, 90+ days.",
+   why:"A creditor profile that is heavily skewed to older buckets (lots of unpaid invoices over 60 days) is a warning sign - it can mean the business is short on cash and stretching its suppliers. This affects both the working capital analysis and the buyer's view on the health of the business.",
    formats:["Excel (.xlsx)","CSV","Export from accounting system"],preferred:"Excel (.xlsx)",
-   period:"Most recent period end",
-   notes:"Should include supplier name, invoice reference, invoice date, due date, and balance by ageing bucket. Total should reconcile to trade creditors on the balance sheet."}
+   period:"As at the most recent month end",
+   notes:"Should include supplier name, invoice number, invoice date, due date, and balance by age bucket. The total should match the 'Trade Creditors' figure on the Balance Sheet."}
 ];
 
 // Realistic example data based on FieldForce Ltd - a B2B SaaS business with ~£3.2m revenue
@@ -482,7 +494,7 @@ const EXAMPLES = {
       {cells:["Other Overheads","(8,400)","(8,200)","(8,600)","(8,300)","(8,500)","(8,700)"],cls:["","num neg","num neg","num neg","num neg","num neg","num neg"]},
       {cells:["EBITDA","4,700","52,200","54,200","58,500","57,700","66,800"],cls:["label-strong","num","num","num","num","num","num"],section:"total"}
     ],
-    note:"<b>Watch for:</b> The April marketing spike of £56k looks unusual versus the £8k monthly run-rate. This is the kind of one-off cost (here, a rebrand) that PinpointAI flags automatically as a potential EBITDA addback."
+    note:"<b>Watch for:</b> The April marketing spike of £56k looks unusual versus the £8k monthly run-rate (the typical monthly amount). This is the kind of one-off cost (here, a rebrand) that PinpointAI flags automatically as a potential 'EBITDA addback' - meaning, an item that should be removed from costs because it is not expected to repeat, making the underlying profit look healthier."
   },
   "Chart of Accounts":{
     title:"Sample Chart of Accounts - FieldForce Ltd",
@@ -508,11 +520,11 @@ const EXAMPLES = {
       {cells:["8500","Legal & Professional","Overhead","Professional"],cls:["label-strong","","",""]},
       {cells:["9000","Bank Interest","Finance","Finance"],cls:["label-strong","","",""]}
     ],
-    note:"<b>Why this matters:</b> Each GL code in the trial balance is meaningless without the chart of accounts to map it to a category. PinpointAI uses this to automatically build the normalised P&L structure - separating COGS from overheads, grouping personnel costs, and identifying which lines feed into EBITDA."
+    note:"<b>Why this matters:</b> Without this list, the codes in the trial balance are just numbers - 4000, 6001, 7202 - with no meaning. PinpointAI uses the Chart of Accounts to translate them into categories (Revenue, Personnel, Marketing) and group them properly into the standard P&L structure used to calculate EBITDA (a key profit measure)."
   },
   "Monthly Trial Balance":{
     title:"Sample Trial Balance - FieldForce Ltd",
-    sub:"Extract for September 2023. A real trial balance lists every active GL code with its monthly debit and credit movement and closing balance. Typically 80-150 rows per month.",
+    sub:"Extract for September 2023. A real trial balance lists every active account code with its closing balance. Typically 80-150 rows per month. The total of all positive and negative balances should add to zero (i.e. it 'balances').",
     headers:["GL Code","Account Name","Debit (£)","Credit (£)","Balance (£)"],
     rows:[
       {cells:["1000","Bank Account - Current","263,400","-","412,800"],cls:["label-strong","","num","num","num"]},
@@ -535,7 +547,26 @@ const EXAMPLES = {
       {cells:["7202","Marketing - Other","8,100","-","98,400"],cls:["label-strong","","num","num","num"]},
       {cells:["TOTAL","","-","-","0"],cls:["label-strong","","num","num","num"],section:"total"}
     ],
-    note:"<b>Watch for:</b> Director Loan Account at £45k (highlighted amber). Items like this often appear in the trial balance but get missed in the seller's draft completion accounts - exactly the kind of debt-like item PinpointAI helps identify automatically."
+    note:"<b>Watch for:</b> Director Loan Account at £45k (highlighted amber). The 'director loan' means the company owes money to one of its owners. Items like this often appear in the trial balance but get missed in the seller's draft completion accounts - and they reduce the price the buyer pays. Exactly the kind of 'debt-like item' PinpointAI helps identify automatically."
+  },
+  "Monthly General Ledger":{
+    title:"Sample General Ledger - FieldForce Ltd",
+    sub:"Extract from April 2023 showing transactions in the Marketing - Other account (code 7202). A real general ledger shows every individual transaction across every account - typically thousands of lines per month.",
+    headers:["Date","Account","Description","Debit (£)","Credit (£)","Reference"],
+    rows:[
+      {cells:["02-Apr-23","7202 Marketing - Other","LinkedIn Ads - April subscription","1,200","-","INV-7841"],cls:["","label-strong","","num","",""]},
+      {cells:["05-Apr-23","7202 Marketing - Other","Google Ads - weekly spend","850","-","INV-7892"],cls:["","label-strong","","num","",""]},
+      {cells:["12-Apr-23","7202 Marketing - Other","Brand Studios - rebrand project","28,000","-","INV-7945"],cls:["","label-strong","red-cell","num red-cell","",""]},
+      {cells:["12-Apr-23","7202 Marketing - Other","Brand Studios - logo design","6,500","-","INV-7946"],cls:["","label-strong","red-cell","num red-cell","",""]},
+      {cells:["14-Apr-23","7202 Marketing - Other","Brand Studios - website rebuild","12,800","-","INV-7947"],cls:["","label-strong","red-cell","num red-cell","",""]},
+      {cells:["18-Apr-23","7202 Marketing - Other","LinkedIn Ads - top up","1,400","-","INV-8012"],cls:["","label-strong","","num","",""]},
+      {cells:["20-Apr-23","7202 Marketing - Other","Trade press subscription","450","-","INV-8054"],cls:["","label-strong","","num","",""]},
+      {cells:["25-Apr-23","7202 Marketing - Other","Email platform - monthly","800","-","INV-8087"],cls:["","label-strong","","num","",""]},
+      {cells:["28-Apr-23","7202 Marketing - Other","Google Ads - weekly spend","920","-","INV-8104"],cls:["","label-strong","","num","",""]},
+      {cells:["30-Apr-23","7202 Marketing - Other","Misc marketing supplies","380","-","INV-8125"],cls:["","label-strong","","num","",""]},
+      {cells:["TOTAL April","","","56,300","-","---"],cls:["label-strong","","","num",""],section:"total"}
+    ],
+    note:"<b>Why this matters:</b> The trial balance just shows that Marketing in April was £56,300 - one number. The general ledger shows what made up that number. Three transactions to 'Brand Studios' totalling £47,300 stand out - this was a one-off rebrand project. Without the general ledger, you cannot tell what is normal monthly spend versus a one-off cost. PinpointAI uses this transaction-level detail to automatically identify items like this for the EBITDA addback list."
   },
   "Customer List / Schedule":{
     title:"Sample Customer Schedule - FieldForce Ltd",
@@ -555,7 +586,7 @@ const EXAMPLES = {
       {cells:["...","11 other customers","Various","1,141,600","Various","Active"],cls:["muted","","","num","",""]},
       {cells:["TOTAL","16 active customers","","2,099,000","",""],cls:["label-strong","label-strong","","num",""],section:"total"}
     ],
-    note:"<b>Concentration risk:</b> Top 3 customers represent 22% of total revenue. Top 10 represent 90%. Orion churned in Sept 2023 (£55k ARR loss into 2024) - PinpointAI flags this kind of recent churn as a forward-looking risk to revenue."
+    note:"<b>Concentration risk:</b> Top 3 customers represent 22% of total revenue. Top 10 represent 90% - meaning the business is heavily dependent on a small number of customers. Orion 'churned' (left as a customer) in Sept 2023, costing £55k of ARR (Annual Recurring Revenue - the ongoing yearly amount that customer was paying) into 2024. PinpointAI flags this kind of recent loss as a forward-looking risk."
   },
   "Aged Debtors (Receivables)":{
     title:"Sample Aged Debtors - FieldForce Ltd",
@@ -574,7 +605,7 @@ const EXAMPLES = {
       {cells:["TOTAL","144,400","20,600","10,000","12,400","187,400"],cls:["label-strong","num","num","num amber-cell","num red-cell","num"],section:"total"},
       {cells:["% of total","77%","11%","5%","7%","100%"],cls:["muted","muted","muted","amber-cell","red-cell",""]}
     ],
-    note:"<b>Watch for:</b> Vector Maintenance at 90+ days (£12.4k) - dispute noted in seller's correspondence. Parkside drifting into 61-90 days. Both are signals of debtor quality issues that affect the working capital peg calculation."
+    note:"<b>Watch for:</b> Vector Maintenance at 90+ days (£12.4k) - flagged as a dispute in the seller's correspondence, meaning there is a disagreement and the customer may never pay. Parkside has invoices drifting into 31-60 and 61-90 day buckets. Both are signals that the debtor balance might be lower quality than it looks - which directly affects the price the buyer pays via the working capital adjustment."
   },
   "Aged Creditors (Payables)":{
     title:"Sample Aged Creditors - FieldForce Ltd",
@@ -592,31 +623,32 @@ const EXAMPLES = {
       {cells:["TOTAL","26,800","7,800","-","-","34,600"],cls:["label-strong","num","num","num","num","num"],section:"total"},
       {cells:["% of total","77%","23%","-","-","100%"],cls:["muted","muted","muted","muted","muted",""]}
     ],
-    note:"<b>Watch for:</b> Healthy creditor profile - mostly current with no aged balances over 60 days. A deteriorating creditor profile (lots in 60+ days) signals cash flow stress and inflates the working capital position artificially."
+    note:"<b>Watch for:</b> Healthy creditor profile - mostly current, with no aged balances over 60 days. A deteriorating profile (lots of unpaid invoices over 60 days old) signals the business may be short on cash and stretching its suppliers - an early warning sign. It also artificially inflates the working capital position because the business is sitting on cash it owes."
   }
 };
 
 const SYSTEMS = [
-  {name:"Xero",common:"SME, professional services",export:"Reports > Trial Balance (export CSV). Chart of Accounts under Accounting > Chart of Accounts > Export."},
-  {name:"Sage 50 / Sage 200",common:"SME to mid-market UK",export:"Nominal Activity report for trial balance. Chart of Accounts export from Nominal Ledger."},
-  {name:"QuickBooks",common:"SME, US-influenced businesses",export:"Reports > Trial Balance. Chart of Accounts under the Accounting tab."},
-  {name:"NetSuite",common:"Mid-market, PE-backed businesses",export:"Financial > Trial Balance report. Chart of Accounts via Lists > Accounting > Chart of Accounts."},
-  {name:"SAP / Oracle",common:"Large corporates",export:"Standard financial reports. Usually requires IT or finance team involvement to extract."},
-  {name:"Dynamics 365",common:"Mid to large market",export:"Finance > General Ledger > Trial Balance. Chart of accounts via Setup > Chart of Accounts."}
+  {name:"Xero",common:"Smaller businesses, professional services",export:"For Trial Balance: Reports > Trial Balance (export as CSV). For General Ledger: Reports > General Ledger Detail. For Chart of Accounts: Accounting > Chart of Accounts > Export."},
+  {name:"Sage 50 / Sage 200",common:"Small to mid-sized UK businesses",export:"For Trial Balance: Period End reports > Trial Balance. For General Ledger: Nominal Activity report (run for all accounts). For Chart of Accounts: Nominal Ledger > Print List of Accounts."},
+  {name:"QuickBooks",common:"Smaller businesses, US-influenced companies",export:"For Trial Balance: Reports > Trial Balance. For General Ledger: Reports > General Ledger. For Chart of Accounts: Accounting tab > Chart of Accounts > Run report."},
+  {name:"NetSuite",common:"Mid-sized businesses, often private equity backed",export:"For Trial Balance: Financial > Reports > Trial Balance. For General Ledger: General Ledger Detail report. For Chart of Accounts: Lists > Accounting > Chart of Accounts."},
+  {name:"SAP / Oracle",common:"Large corporates",export:"Standard financial reporting modules. Usually requires the IT or finance team to run the extract for you - they will know the exact path."},
+  {name:"Dynamics 365",common:"Mid to large businesses",export:"For Trial Balance: Finance > General Ledger > Trial Balance. For General Ledger: General Ledger > Inquiries and Reports. For Chart of Accounts: Setup > Chart of Accounts."}
 ];
 
 const CHECKLIST_ITEMS = [
   {label:"Monthly management accounts cover the full 36-month period with no gaps",critical:true},
-  {label:"P&L and Balance Sheet are both included in the management accounts",critical:true},
-  {label:"Trial balance covers the same period as management accounts",critical:true},
-  {label:"Trial balance total assets reconcile to balance sheet total assets",critical:true},
-  {label:"Chart of accounts matches the nominal codes in the trial balance",critical:true},
-  {label:"No nominal codes in the trial balance are missing from the chart of accounts",critical:true},
-  {label:"Management accounts revenue reconciles to trial balance within a reasonable tolerance",critical:true},
-  {label:"Aged debtors total reconciles to trade debtors on the balance sheet",critical:false},
-  {label:"Aged creditors total reconciles to trade creditors on the balance sheet",critical:false},
-  {label:"File names clearly indicate the entity name and period covered",critical:false},
-  {label:"All files are in Excel or CSV format (not PDF)",critical:false}
+  {label:"Both the P&L (Profit & Loss) and Balance Sheet are included in the management accounts",critical:true},
+  {label:"Trial balance covers the same period as the management accounts",critical:true},
+  {label:"Trial balance total assets reconcile (match) to balance sheet total assets",critical:true},
+  {label:"General Ledger covers the same period at transaction level (every entry, every month)",critical:true},
+  {label:"Chart of Accounts matches the codes used in the trial balance and general ledger",critical:true},
+  {label:"No codes appear in the trial balance that are missing from the chart of accounts",critical:true},
+  {label:"Management accounts revenue reconciles (matches) to the trial balance within a small tolerance",critical:true},
+  {label:"Aged debtors total reconciles to 'Trade Debtors' on the balance sheet",critical:false},
+  {label:"Aged creditors total reconciles to 'Trade Creditors' on the balance sheet",critical:false},
+  {label:"File names clearly indicate the company name and period covered",critical:false},
+  {label:"All files are in Excel (.xlsx) or CSV format - not PDF or scanned images",critical:false}
 ];
 
 var aM=0,aS=0;
@@ -624,9 +656,10 @@ var done={},chats={};
 var sbOpen=true;
 function cK(){return aM+"-"+aS}
 
-var FINN_SYS = "You are Finn, a PinpointAI platform specialist. Help new team members understand the data requirements for PinpointAI. Be practical, plain English, no jargon without explanation. Do not use em dashes. 120-200 words per response.";
+var FINN_SYS = "You are Finn, a PinpointAI platform specialist tutor. The person you are speaking to has NO accounting or finance background and is brand new to financial due diligence. They may not know basic terms.\n\nRules:\n- Always assume zero prior knowledge. If you use any acronym (IRL, GL, TB, COA, P&L, EBITDA, LTM, ARR, NI, VAT, COGS, EBIT, etc.) you MUST define it the first time it appears in your response. Example: 'the trial balance (TB - a monthly summary of every account in the accounting system)'.\n- Use plain everyday English. Treat the reader as smart but completely new to this world.\n- Use short sentences. Use analogies where they help (e.g. 'think of the chart of accounts like a contents page').\n- Do not use em dashes (use hyphens or commas instead).\n- Keep responses 100-180 words. Do not pad.\n- If a question is itself unclear because the user might not know what they are asking, gently restate the question in plainer terms before answering.";
 
-function renderExample(name){
+
+function renderExampleInline(name){
   var ex=EXAMPLES[name];
   if(!ex) return "";
   var safeId="ex-"+name.replace(/[^a-zA-Z0-9]/g,"");
@@ -639,30 +672,25 @@ function renderExample(name){
     }).join("");
     return "<tr"+(cls?" class=\""+cls+"\"":"")+">"+cells+"</tr>"
   }).join("");
-  return "<div class=\"dc-example-wrap\">"+
-    "<button class=\"dc-toggle\" onclick=\"toggleExample(this,'"+safeId+"')\">"+
-      "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"><polyline points=\"6 9 12 15 18 9\"/></svg>"+
-      "<span class=\"toggle-label\">View example data</span>"+
-    "</button>"+
-    "<div id=\""+safeId+"\" class=\"dc-example\">"+
-      "<div class=\"dc-example-title\">"+ex.title+"</div>"+
-      "<div class=\"dc-example-sub\">"+ex.sub+"</div>"+
-      "<div class=\"ex-tbl-wrap\"><table class=\"ex-tbl\"><thead>"+headerRow+"</thead><tbody>"+bodyRows+"</tbody></table></div>"+
-      (ex.note?"<div class=\"ex-note\">"+ex.note+"</div>":"")+
-    "</div>"+
+  return "<div id=\""+safeId+"\" class=\"dc-example\">"+
+    "<div class=\"dc-example-title\">"+ex.title+"</div>"+
+    "<div class=\"dc-example-sub\">"+ex.sub+"</div>"+
+    "<div class=\"ex-tbl-wrap\"><table class=\"ex-tbl\"><thead>"+headerRow+"</thead><tbody>"+bodyRows+"</tbody></table></div>"+
+    (ex.note?"<div class=\"ex-note\">"+ex.note+"</div>":"")+
   "</div>"
 }
 
-function toggleExample(btn,id){
+function toggleExampleCta(btn,id){
   var ex=document.getElementById(id);
   var lbl=btn.querySelector(".toggle-label");
   var open=ex.classList.toggle("open");
   btn.classList.toggle("open",open);
-  if(lbl) lbl.textContent=open?"Hide example data":"View example data";
+  if(lbl) lbl.textContent=open?"Hide example":"View example data";
 }
 
 function renderDatasetCards(datasets){
   return datasets.map(function(d){
+    var hasEx=!!EXAMPLES[d.name];
     return "<div class=\"dataset-card "+d.cardClass+"\">" +
       "<div class=\"dc-top\">" +
         "<div class=\"dc-left\">" +
@@ -671,16 +699,24 @@ function renderDatasetCards(datasets){
         "</div>" +
         "<span class=\"dc-badge "+d.badgeClass+"\">"+d.badge+"</span>" +
       "</div>" +
+      (hasEx?"<div class=\"dc-example-cta\">" +
+        "<span class=\"dc-example-cta-text\">Not sure what this looks like? See a real example.</span>" +
+        "<button class=\"dc-toggle dc-toggle-cta\" onclick=\"toggleExampleCta(this,&apos;ex-"+d.name.replace(/[^a-zA-Z0-9]/g,"")+"&apos;)\">"+
+          "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"><polyline points=\"6 9 12 15 18 9\"/></svg>"+
+          "<span class=\"toggle-label\">View example data</span>"+
+        "</button>"+
+      "</div>":"") +
+      (hasEx?renderExampleInline(d.name):"") +
       "<div class=\"dc-body\">" +
         "<div><div class=\"dc-section-lbl\">What it is</div><div class=\"dc-text\">"+d.what+"</div></div>" +
         "<div><div class=\"dc-section-lbl\">Why PinpointAI needs it</div><div class=\"dc-text\">"+d.why+"</div></div>" +
-        "<div><div class=\"dc-section-lbl\">Formats</div><div class=\"dc-formats\">"+d.formats.map(function(f){return "<span class=\"dc-format"+(f===d.preferred?" preferred":"")+"\">"+f+(f===d.preferred?" \u2605":"")+"</span>"}).join("")+"</div><div class=\"dc-text\" style=\"margin-top:8px\">Period: "+d.period+"</div></div>" +
+        "<div><div class=\"dc-section-lbl\">Formats</div><div class=\"dc-formats\">"+d.formats.map(function(f){return "<span class=\"dc-format"+(f===d.preferred?" preferred":"")+"\">" +f+(f===d.preferred?" \u2605":"")+"</span>"}).join("")+"</div><div class=\"dc-text\" style=\"margin-top:8px\">Period: "+d.period+"</div></div>" +
         "<div style=\"background:rgba(61,80,244,.04);border:1px solid rgba(61,80,244,.12);border-radius:var(--r);padding:10px 12px\"><div class=\"dc-section-lbl\" style=\"color:var(--royal)\">Notes</div><div class=\"dc-text\">"+d.notes+"</div></div>" +
-        renderExample(d.name) +
       "</div>" +
     "</div>"
   }).join("")
 }
+
 
 function renderSystems(){
   return "<div style=\"display:flex;flex-direction:column;gap:10px;margin:18px 0\">" +
