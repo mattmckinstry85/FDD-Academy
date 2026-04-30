@@ -354,178 +354,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 
 .qual-wrap{margin:20px 0}
 </style>
-<!-- QUAL FRAMEWORK TEMPLATES (hidden) -->
-<div id="qual-grid-tpl" style="display:none">
-<div class="quads">
-<!-- Q1: NEEDS (top left) -->
-      <div class="quad quad-needs">
-        <div class="quad-label">
-          <div class="quad-num">1</div>
-          <div class="quad-title">Needs</div>
-        </div>
-        <div class="q-list">
-          <div class="q-item" onclick="showDetail('needs','deal-volume')">
-            <div class="q-bullet"></div>
-            <div class="q-text">How many FDD or QoE engagements does your team run per year?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('needs','team-size')">
-            <div class="q-bullet"></div>
-            <div class="q-text">How many people are in your transaction services team?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('needs','revenue')">
-            <div class="q-bullet"></div>
-            <div class="q-text">What is the typical fee range for an FDD engagement at your firm?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('needs','deal-size')">
-            <div class="q-bullet"></div>
-            <div class="q-text">What deal size do you typically work on — EV range?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('needs','targets')">
-            <div class="q-bullet"></div>
-            <div class="q-text">What are your growth targets for the practice this year?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('needs','growth')">
-            <div class="q-bullet"></div>
-            <div class="q-text">Are you looking to grow headcount or grow revenue per head?</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Q2: PAIN (top right) -->
-      <div class="quad quad-pain">
-        <div class="quad-label">
-          <div class="quad-num">2</div>
-          <div class="quad-title">Pain</div>
-        </div>
-        <div class="q-list">
-          <div class="q-item" onclick="showDetail('pain','time')">
-            <div class="q-bullet"></div>
-            <div class="q-text">How long does it take from data room access to first cut of the EBITDA bridge?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('pain','cost')">
-            <div class="q-bullet"></div>
-            <div class="q-text">What percentage of engagement hours are spent on data processing versus analysis?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('pain','quality')">
-            <div class="q-bullet"></div>
-            <div class="q-text">How confident are you in the consistency of outputs across different team members?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('pain','consequence')">
-            <div class="q-bullet"></div>
-            <div class="q-text">If nothing changes in your process over the next 12 months, what does that mean for the team?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('pain','capacity')">
-            <div class="q-bullet"></div>
-            <div class="q-text">Have you ever had to turn down work or delay a report because of capacity?</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Q3: SOURCES (bottom left) -->
-      <div class="quad quad-sources">
-        <div class="quad-label">
-          <div class="quad-num">3</div>
-          <div class="quad-title">Sources</div>
-        </div>
-        <div class="q-list">
-          <div class="q-item" onclick="showDetail('sources','process')">
-            <div class="q-bullet"></div>
-            <div class="q-text">Walk me through how your team currently processes a new data room — what happens in the first 48 hours?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('sources','tools')">
-            <div class="q-bullet"></div>
-            <div class="q-text">What tools does your team use today — beyond Excel?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('sources','outsource')">
-            <div class="q-bullet"></div>
-            <div class="q-text">Do you outsource any part of the analytical work — offshore, nearshore, or to juniors?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('sources','junior')">
-            <div class="q-bullet"></div>
-            <div class="q-text">How much of the initial data processing falls on your junior staff?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('sources','templates')">
-            <div class="q-bullet"></div>
-            <div class="q-text">Do you have standardised templates, or does each manager build their own approach?</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Q4: SOLUTION (bottom right) -->
-      <div class="quad quad-solution">
-        <div class="quad-label">
-          <div class="quad-num">4</div>
-          <div class="quad-title">Solution</div>
-        </div>
-        <div class="q-list">
-          <div class="q-item" onclick="showDetail('solution','bridge')">
-            <div class="q-bullet"></div>
-            <div class="q-text">What if you could get a structured first cut of the EBITDA bridge within hours of uploading the data room?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('solution','capacity')">
-            <div class="q-bullet"></div>
-            <div class="q-text">If your team got back 8-12 hours per engagement, what would you do with that capacity?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('solution','consistency')">
-            <div class="q-bullet"></div>
-            <div class="q-text">How important is it that every engagement follows the same analytical structure regardless of who runs it?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('solution','trial')">
-            <div class="q-bullet"></div>
-            <div class="q-text">Would it make sense to run PinpointAI alongside your next engagement so you can see the output before committing?</div>
-          </div>
-          <div class="q-item" onclick="showDetail('solution','decision')">
-            <div class="q-bullet"></div>
-            <div class="q-text">Who else in the firm would need to be involved in a decision like this?</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-</div>
-</div>
-<div id="qual-panel-tpl" style="display:none">
-<!-- DETAIL PANEL -->
-  <div class="detail-panel" id="detail-panel">
-    <div class="dp-top">
-      <div>
-        <div class="dp-quad-tag" id="dp-tag"></div>
-        <div class="dp-question" id="dp-question"></div>
-      </div>
-      <button class="dp-close" onclick="closeDetail()">&#10005; Close</button>
-    </div>
-    <div class="dp-body">
-      <div>
-        <div class="dp-col-lbl">Why ask this</div>
-        <div class="dp-why" id="dp-why"></div>
-      </div>
-      <div>
-        <div class="dp-col-lbl">What the answer tells you</div>
-        <div class="dp-good" id="dp-signals"></div>
-      </div>
-    </div>
-  </div>
-</div>
-<div id="qual-tips-tpl" style="display:none">
-<!-- BOTTOM TIPS -->
-  <div class="tips-row">
-    <div class="tip-card">
-      <div class="tip-card-lbl" style="color:rgba(61,80,244,.8)">Order matters</div>
-      <div class="tip-card-text">Always start with Needs before Pain. Understand their world first. If you go to pain too early you sound like every other vendor.</div>
-    </div>
-    <div class="tip-card">
-      <div class="tip-card-lbl" style="color:rgba(250,41,95,.8)">Let them talk</div>
-      <div class="tip-card-text">The best qualification calls are 70% them, 30% you. Ask a question, then be quiet. The detail comes in the silence.</div>
-    </div>
-    <div class="tip-card">
-      <div class="tip-card-lbl" style="color:rgba(53,255,133,.8)">Only pitch after pain</div>
-      <div class="tip-card-text">Do not move to the Solution quadrant until you have confirmed real pain in quadrant 2. A solution without a problem is just noise.</div>
-    </div>
-</div>
-
 <body>
 <div id="app">
-  <div id="tb">
+<div id="tb">
     <a class="tb-logo" href="index.html">
       <div class="tb-logo-box"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg></div>
       <div class="tb-logo-name">Pinpoint<b>AI</b></div>
@@ -991,5 +822,173 @@ function render(){
 }
 render();
 </script>
+<!-- QUAL FRAMEWORK TEMPLATES (hidden) -->
+<div id="qual-grid-tpl" style="display:none">
+<div class="quads">
+<!-- Q1: NEEDS (top left) -->
+      <div class="quad quad-needs">
+        <div class="quad-label">
+          <div class="quad-num">1</div>
+          <div class="quad-title">Needs</div>
+        </div>
+        <div class="q-list">
+          <div class="q-item" onclick="showDetail('needs','deal-volume')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How many FDD or QoE engagements does your team run per year?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','team-size')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How many people are in your transaction services team?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','revenue')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What is the typical fee range for an FDD engagement at your firm?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','deal-size')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What deal size do you typically work on — EV range?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','targets')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What are your growth targets for the practice this year?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','growth')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Are you looking to grow headcount or grow revenue per head?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2: PAIN (top right) -->
+      <div class="quad quad-pain">
+        <div class="quad-label">
+          <div class="quad-num">2</div>
+          <div class="quad-title">Pain</div>
+        </div>
+        <div class="q-list">
+          <div class="q-item" onclick="showDetail('pain','time')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How long does it take from data room access to first cut of the EBITDA bridge?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','cost')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What percentage of engagement hours are spent on data processing versus analysis?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','quality')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How confident are you in the consistency of outputs across different team members?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','consequence')">
+            <div class="q-bullet"></div>
+            <div class="q-text">If nothing changes in your process over the next 12 months, what does that mean for the team?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','capacity')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Have you ever had to turn down work or delay a report because of capacity?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3: SOURCES (bottom left) -->
+      <div class="quad quad-sources">
+        <div class="quad-label">
+          <div class="quad-num">3</div>
+          <div class="quad-title">Sources</div>
+        </div>
+        <div class="q-list">
+          <div class="q-item" onclick="showDetail('sources','process')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Walk me through how your team currently processes a new data room — what happens in the first 48 hours?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('sources','tools')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What tools does your team use today — beyond Excel?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('sources','outsource')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Do you outsource any part of the analytical work — offshore, nearshore, or to juniors?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('sources','junior')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How much of the initial data processing falls on your junior staff?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('sources','templates')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Do you have standardised templates, or does each manager build their own approach?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4: SOLUTION (bottom right) -->
+      <div class="quad quad-solution">
+        <div class="quad-label">
+          <div class="quad-num">4</div>
+          <div class="quad-title">Solution</div>
+        </div>
+        <div class="q-list">
+          <div class="q-item" onclick="showDetail('solution','bridge')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What if you could get a structured first cut of the EBITDA bridge within hours of uploading the data room?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('solution','capacity')">
+            <div class="q-bullet"></div>
+            <div class="q-text">If your team got back 8-12 hours per engagement, what would you do with that capacity?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('solution','consistency')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How important is it that every engagement follows the same analytical structure regardless of who runs it?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('solution','trial')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Would it make sense to run PinpointAI alongside your next engagement so you can see the output before committing?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('solution','decision')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Who else in the firm would need to be involved in a decision like this?</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+</div>
+</div>
+<div id="qual-panel-tpl" style="display:none">
+<!-- DETAIL PANEL -->
+  <div class="detail-panel" id="detail-panel">
+    <div class="dp-top">
+      <div>
+        <div class="dp-quad-tag" id="dp-tag"></div>
+        <div class="dp-question" id="dp-question"></div>
+      </div>
+      <button class="dp-close" onclick="closeDetail()">&#10005; Close</button>
+    </div>
+    <div class="dp-body">
+      <div>
+        <div class="dp-col-lbl">Why ask this</div>
+        <div class="dp-why" id="dp-why"></div>
+      </div>
+      <div>
+        <div class="dp-col-lbl">What the answer tells you</div>
+        <div class="dp-good" id="dp-signals"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="qual-tips-tpl" style="display:none">
+<!-- BOTTOM TIPS -->
+  <div class="tips-row">
+    <div class="tip-card">
+      <div class="tip-card-lbl" style="color:rgba(61,80,244,.8)">Order matters</div>
+      <div class="tip-card-text">Always start with Needs before Pain. Understand their world first. If you go to pain too early you sound like every other vendor.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-card-lbl" style="color:rgba(250,41,95,.8)">Let them talk</div>
+      <div class="tip-card-text">The best qualification calls are 70% them, 30% you. Ask a question, then be quiet. The detail comes in the silence.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-card-lbl" style="color:rgba(53,255,133,.8)">Only pitch after pain</div>
+      <div class="tip-card-text">Do not move to the Solution quadrant until you have confirmed real pain in quadrant 2. A solution without a problem is just noise.</div>
+    </div>
+</div>
 </body>
 </html>
