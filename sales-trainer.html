@@ -531,7 +531,7 @@ const DETAILS = {
   },
   "pain-time":{
     quad:"PAIN",quadColor:"rgba(250,41,95,.15)",quadText:"rgba(250,41,95,.9)",
-    question:"How long does it take from data room access to first cut of the EBITDA bridge?",
+    question:"How much time is your team spending building the databook, getting a first draft report together, and doing the initial analysis — across a typical engagement?",
     why:"This is the single best pain question. It forces them to articulate exactly where the time goes. Most teams will say 3-5 days. Some will say a week. PinpointAI can produce a structured first cut in hours. The gap between their answer and what is possible is your value proposition.",
     signals:[
       {type:"bad",text:"3+ days — strong pain signal, clear value case"},
@@ -679,6 +679,28 @@ const DETAILS = {
       {type:"good",text:"Yes with conditions — understand them and agree next steps"},
       {type:"warn",text:"Maybe, need to check — get a specific date and who else needs to be involved"},
       {type:"bad",text:"No — understand why before ending the call, do not accept it at face value"}
+    ]
+  },
+  "pain-ai-looking":{
+    quad:"PAIN",quadColor:"rgba(250,41,95,.15)",quadText:"rgba(250,41,95,.9)",
+    question:"Are you actively looking for AI solutions or just seeing what is out there?",
+    why:"This question instantly separates buyers from browsers. Someone actively looking has internal pressure, a budget conversation in progress, or a specific problem they are trying to solve. Someone just looking is curious but has no urgency. You need to know which one you are talking to before investing more time.",
+    signals:[
+      {type:"bad",text:"Actively looking — there is urgency, a problem they need to solve, or a mandate from above"},
+      {type:"bad",text:"They have already trialled something — find out what and why it did or did not work"},
+      {type:"warn",text:"Just looking — curious but no urgency, needs a pain conversation before moving forward"},
+      {type:"good",text:"Not looking at all — either very early stage or very resistant, adjust your approach"}
+    ]
+  },
+  "pain-ai-want":{
+    quad:"PAIN",quadColor:"rgba(250,41,95,.15)",quadText:"rgba(250,41,95,.9)",
+    question:"If you were to use AI in your workflow, what exactly would you want it to do?",
+    why:"This is one of the best questions you can ask. It gets them to articulate their own use case in their own words. Whatever they describe, PinpointAI almost certainly does. If they mention databooks, normalisation, EBITDA bridges, or report drafting — you are directly in their answer. Let them sell it to themselves.",
+    signals:[
+      {type:"bad",text:"They describe exactly what PinpointAI does — confirm it and move to demo"},
+      {type:"bad",text:"They say databook, normalisation, or first draft — use their exact words back to them"},
+      {type:"warn",text:"They are vague — help them get specific with follow-up questions"},
+      {type:"good",text:"They describe something outside our scope — be honest, understand what they need"}
     ]
   },
   "solution-decision":{
@@ -869,7 +891,7 @@ render();
         <div class="q-list">
           <div class="q-item" onclick="showDetail('pain','time')">
             <div class="q-bullet"></div>
-            <div class="q-text">How long does it take from data room access to first cut of the EBITDA bridge?</div>
+            <div class="q-text">How much time is your team spending building the databook, getting a first draft report together, and doing the initial analysis — across a typical engagement?</div>
           </div>
           <div class="q-item" onclick="showDetail('pain','cost')">
             <div class="q-bullet"></div>
@@ -886,6 +908,14 @@ render();
           <div class="q-item" onclick="showDetail('pain','capacity')">
             <div class="q-bullet"></div>
             <div class="q-text">Have you ever had to turn down work or delay a report because of capacity?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','ai-looking')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Are you actively looking for AI solutions or just seeing what is out there?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','ai-want')">
+            <div class="q-bullet"></div>
+            <div class="q-text">If you were to use AI in your workflow, what exactly would you want it to do?</div>
           </div>
         </div>
       </div>
