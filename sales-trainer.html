@@ -585,7 +585,7 @@ const DETAILS = {
     ]
   },
   "sources-process":{
-    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    quad:"SOURCES / PROCESS",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
     question:"Walk me through how your team currently processes a new data room.",
     why:"This is the most important question in the sources quadrant. Let them talk. You will learn exactly where the time goes, who does what, and where the bottlenecks are. This gives you specific language to use when you position PinpointAI later in the call.",
     signals:[
@@ -596,7 +596,7 @@ const DETAILS = {
     ]
   },
   "sources-tools":{
-    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    quad:"SOURCES / PROCESS",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
     question:"What tools does your team use today — beyond Excel?",
     why:"Understanding their current tech stack tells you whether they are open to tools, whether there are competing solutions, and whether PinpointAI needs to integrate with or replace anything. Most FDD teams are almost entirely Excel-based.",
     signals:[
@@ -607,7 +607,7 @@ const DETAILS = {
     ]
   },
   "sources-outsource":{
-    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    quad:"SOURCES / PROCESS",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
     question:"Do you outsource any part of the analytical work — offshore, nearshore, or to juniors?",
     why:"Outsourcing is a proxy for pain. If a firm is sending work offshore it is because it is too time-consuming for senior staff. This also tells you about quality concerns — offshore work often requires significant review time. PinpointAI can replace or reduce the need for outsourcing.",
     signals:[
@@ -618,7 +618,7 @@ const DETAILS = {
     ]
   },
   "sources-junior":{
-    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    quad:"SOURCES / PROCESS",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
     question:"How much of the initial data processing falls on your junior staff?",
     why:"Junior staff doing data processing is a double pain — it is expensive time relative to value, and it is a recruiting and retention risk. Analysts who spend all day formatting spreadsheets leave. Understanding how much of this work falls on juniors connects the tool to a talent conversation.",
     signals:[
@@ -628,7 +628,7 @@ const DETAILS = {
     ]
   },
   "sources-templates":{
-    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    quad:"SOURCES / PROCESS",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
     question:"Do you have standardised templates, or does each manager build their own approach?",
     why:"Lack of standardisation is both a quality risk and an efficiency cost. If every manager builds their own model, the review process is longer, training new joiners is harder, and outputs vary. This question surfaces a pain that partners feel but teams may not articulate.",
     signals:[
@@ -890,11 +890,11 @@ render();
         </div>
       </div>
 
-      <!-- Q3: SOURCES (bottom left) -->
+      <!-- Q3: SOURCES / PROCESS (bottom left) -->
       <div class="quad quad-sources">
         <div class="quad-label">
           <div class="quad-num">3</div>
-          <div class="quad-title">Sources</div>
+          <div class="quad-title">Sources / Process</div>
         </div>
         <div class="q-list">
           <div class="q-item" onclick="showDetail('sources','process')">
