@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Trainer — PinpointAI Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#211847;--dark:#0F0D2A;--royal:#3D50F4;--royal2:#2E3FD0;
+  --cyan:#35FFE9;--red:#FA295F;--white:#FFFFFF;--midgray:#7E8587;
+  --bg:#EEF0F8;--surface:#FFF;--card:#F5F6FC;--border:#E0E3F0;
+  --text:#1A1835;--text2:#3A3D5C;--muted:#7E8587;--faint:#CDD0E8;
+  --green:#0A7A4A;--green-bg:rgba(10,122,74,.08);--green-bdr:rgba(10,122,74,.22);
+  --amber:#8A5500;--amber-bg:rgba(200,130,0,.08);--amber-bdr:rgba(200,130,0,.25);
+  --font:'Rubik',system-ui,sans-serif;--mono:'JetBrains Mono','Courier New',monospace;
+  --r:8px;--rl:12px;--rxl:16px;
+  --sh:0 1px 3px rgba(33,24,71,.07);--shm:0 4px 16px rgba(33,24,71,.1);
+  --sidebar-w:272px;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-weight:300;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(33,24,71,.15);border-radius:2px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes dot{0%,80%,100%{opacity:.2;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
+.fu{animation:fadeUp .22s ease-out}
+
+#app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* TOPBAR */
+#tb{height:56px;display:flex;align-items:center;padding:0 18px;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;gap:0;z-index:200}
+.tb-logo{display:flex;align-items:center;gap:8px;padding-right:18px;border-right:1px solid rgba(255,255,255,.1);text-decoration:none;flex-shrink:0}
+.tb-logo-box{width:28px;height:28px;background:var(--royal);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.tb-logo-box svg{width:15px;height:15px}
+.tb-logo-name{font-size:13px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.tb-logo-name b{color:var(--cyan);font-weight:700}
+.tb-mid{flex:1;display:flex;align-items:center;padding:0 18px;gap:14px;min-width:0;overflow:hidden}
+.tb-course{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);white-space:nowrap}
+.tb-sep{width:1px;height:16px;background:rgba(255,255,255,.1);flex-shrink:0}
+.tb-sec{font-size:12px;color:rgba(255,255,255,.7);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.tb-back{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:var(--dark);text-decoration:none;letter-spacing:.5px;transition:all .15s;padding:6px 14px;border-radius:6px;border:none;background:#35FFE9;font-weight:700}
+.tb-back:hover{background:#20EDD6;transform:translateY(-1px)}
+.tb-prog-val{font-size:11px;font-family:var(--mono);color:rgba(255,255,255,.5);font-weight:600}
+.tb-ring{position:relative;width:32px;height:32px;flex-shrink:0}
+.tb-ring svg{transform:rotate(-90deg)}
+.tb-ring-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-family:var(--mono);color:var(--cyan);font-weight:600}
+.tb-menu-btn{background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;padding:6px;border-radius:6px;display:flex;align-items:center;transition:all .15s}
+.tb-menu-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+
+#main{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+#sb{width:var(--sidebar-w);flex-shrink:0;background:var(--dark);border-right:1px solid rgba(255,255,255,.05);overflow-y:auto;display:flex;flex-direction:column;transition:width .2s}
+#sb.closed{width:0;overflow:hidden}
+.sb-top{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.06);background:linear-gradient(135deg,rgba(61,80,244,.18) 0%,rgba(53,255,233,.04) 100%)}
+.sb-top-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:12px}
+.sb-cards{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.sb-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);padding:10px 12px}
+.sb-card-n{font-size:22px;font-weight:700;font-family:var(--mono);color:#fff;line-height:1}
+.sb-card-n.c{color:var(--cyan)}
+.sb-card-l{font-size:10px;color:rgba(255,255,255,.4);margin-top:3px}
+.sb-mods{padding:6px 0 20px}
+.sb-grp{padding:12px 16px 4px;font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.mi{cursor:pointer;border-left:2px solid transparent;transition:all .15s}
+.mi:hover{background:rgba(255,255,255,.04)}
+.mi.on{background:rgba(61,80,244,.16);border-left-color:var(--royal)}
+.mi-hdr{display:flex;align-items:center;gap:9px;padding:8px 14px}
+.mi-ico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:rgba(255,255,255,.06)}
+.mi.on .mi-ico{background:rgba(61,80,244,.28)}
+.mi-info{flex:1;min-width:0}
+.mi-name{font-size:12px;font-weight:600;color:rgba(255,255,255,.65);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.mi.on .mi-name{color:#fff}
+.mi-meta{display:flex;align-items:center;gap:5px;margin-top:2px}
+.mi-id{font-size:9px;font-family:var(--mono);color:rgba(255,255,255,.3)}
+.mi.on .mi-id{color:rgba(61,80,244,.75)}
+.mi-t{font-size:9px;font-family:var(--mono);color:rgba(255,255,255,.25)}
+.mi-ck{width:15px;height:15px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:7px;flex-shrink:0}
+.mi-ck.ok{background:rgba(53,255,233,.14);border-color:var(--cyan);color:var(--cyan)}
+.si-list{padding:1px 0 6px}
+.si{display:flex;align-items:center;gap:7px;padding:5px 14px 5px 48px;cursor:pointer;transition:background .12s}
+.si:hover{background:rgba(255,255,255,.04)}
+.si.on{background:rgba(61,80,244,.1)}
+.si-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:5px;transition:all .15s}
+.si-dot.ok{border-color:var(--cyan);background:rgba(53,255,233,.18);color:var(--cyan)}
+.si-dot.cur{border-color:var(--royal);background:rgba(61,80,244,.28)}
+.si-lbl{font-size:11px;color:rgba(255,255,255,.45);line-height:1.35}
+.si.on .si-lbl{color:rgba(255,255,255,.85)}
+.si.done .si-lbl{color:rgba(53,255,233,.55)}
+
+/* CONTENT */
+#ct{flex:1;overflow-y:auto;background:var(--bg)}
+#cti{max-width:720px;margin:0 auto;padding:36px 44px 90px}
+
+/* LESSON HEADER */
+.lhdr{background:var(--surface);border:1px solid var(--border);border-radius:var(--rxl);padding:24px 28px;margin-bottom:26px;box-shadow:var(--sh)}
+.lcrumb{display:flex;align-items:center;gap:8px;margin-bottom:11px;flex-wrap:wrap}
+.lcrumb-ico{width:20px;height:20px;border-radius:5px;background:rgba(61,80,244,.1);display:flex;align-items:center;justify-content:center;font-size:10px}
+.lcrumb-chev{color:var(--muted);font-size:11px}
+.badge{font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:20px;letter-spacing:.4px;font-weight:600;border:1px solid}
+.badge-key{background:rgba(250,41,95,.08);color:#C8144A;border-color:rgba(200,20,74,.22)}
+.ltitle{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.5px;line-height:1.25;margin-bottom:10px}
+.lmeta{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.lmi{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);font-family:var(--mono)}
+.lmi svg{width:12px;height:12px;opacity:.55}
+.lpbar{height:3px;background:var(--border);border-radius:2px;margin-top:12px;overflow:hidden}
+.lpfill{height:100%;background:linear-gradient(90deg,var(--royal),var(--cyan));border-radius:2px;transition:width .4s}
+
+/* BODY */
+.btext p{font-size:15px;line-height:1.82;color:var(--text2);margin-bottom:15px}
+
+/* CALLOUTS */
+.co{padding:14px 18px;border-radius:var(--rl);margin:18px 0;font-size:14px;line-height:1.7;border:1px solid}
+.co-blue{background:rgba(61,80,244,.06);border-color:rgba(61,80,244,.2);color:#1A2880}
+.co-green{background:var(--green-bg);border-color:var(--green-bdr);color:var(--green)}
+.co-amber{background:var(--amber-bg);border-color:var(--amber-bdr);color:var(--amber)}
+.co-red{background:rgba(200,20,74,.07);border-color:rgba(200,20,74,.22);color:#8A1A1A}
+.co-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;opacity:.65;font-weight:700}
+
+/* PERSONA CARDS */
+.persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.persona-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;box-shadow:var(--sh);transition:all .15s;cursor:pointer}
+.persona-card:hover{border-color:rgba(61,80,244,.3);box-shadow:0 4px 20px rgba(61,80,244,.1);transform:translateY(-1px)}
+.persona-card.primary{border-color:rgba(61,80,244,.25);background:rgba(61,80,244,.03)}
+.persona-card.secondary{border-color:rgba(53,255,233,.15);background:rgba(53,255,233,.02)}
+.persona-card.tertiary{border-color:rgba(255,255,255,.15);background:var(--card)}
+.pc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.pc-title{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+.pc-badge{font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:20px;letter-spacing:.5px;font-weight:600;border:1px solid}
+.pcb-primary{background:rgba(61,80,244,.1);color:var(--royal);border-color:rgba(61,80,244,.25)}
+.pcb-secondary{background:rgba(53,255,233,.1);color:#0A7A6A;border-color:rgba(53,255,233,.3)}
+.pcb-tertiary{background:var(--card);color:var(--muted);border-color:var(--border)}
+.pc-role{font-size:11px;font-family:var(--mono);color:var(--muted);margin-bottom:10px;letter-spacing:.3px}
+.pc-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+.pc-tags{display:flex;flex-wrap:wrap;gap:5px}
+.pc-tag{font-size:10px;font-family:var(--mono);background:var(--card);border:1px solid var(--border);color:var(--muted);padding:2px 8px;border-radius:10px}
+
+/* SENIORITY TABLE */
+.sen-table{margin:20px 0;border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh)}
+.sen-hdr{display:grid;grid-template-columns:2fr 2fr 3fr 2fr;gap:0;background:var(--navy);padding:10px 16px}
+.sen-hdr-cell{font-size:10px;font-family:var(--mono);color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.sen-row{display:grid;grid-template-columns:2fr 2fr 3fr 2fr;gap:0;padding:12px 16px;border-top:1px solid var(--border);transition:background .12s}
+.sen-row:hover{background:rgba(61,80,244,.03)}
+.sen-row.tier1{background:rgba(61,80,244,.04)}
+.sen-row.tier2{background:rgba(53,255,233,.03)}
+.sen-cell{font-size:12px;color:var(--text2);padding-right:12px;line-height:1.4}
+.sen-cell strong{color:var(--text);font-weight:600;display:block;margin-bottom:2px}
+.sen-cell.alt{font-size:11px;color:var(--muted);font-family:var(--mono)}
+.tier-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:10px;font-weight:600;letter-spacing:.5px}
+.tb1{background:rgba(61,80,244,.1);color:var(--royal);border:1px solid rgba(61,80,244,.2)}
+.tb2{background:rgba(53,255,233,.08);color:#0A7A6A;border:1px solid rgba(53,255,233,.2)}
+.tb3{background:var(--card);color:var(--muted);border:1px solid var(--border)}
+
+/* FIRM TYPE CARDS */
+.firm-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:20px 0}
+.firm-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;box-shadow:var(--sh)}
+.firm-card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.firm-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.firm-card-title{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+.firm-card-sub{font-size:11px;font-family:var(--mono);color:var(--muted);margin-top:2px}
+.firm-desc{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:14px}
+.firm-examples{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.firm-ex{font-size:11px;font-family:var(--mono);background:var(--card);border:1px solid var(--border);color:var(--text2);padding:3px 10px;border-radius:6px;font-weight:500}
+.firm-why{background:rgba(61,80,244,.05);border:1px solid rgba(61,80,244,.15);border-radius:var(--r);padding:10px 14px;font-size:12px;color:#1A2880;line-height:1.55}
+.firm-why-lbl{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:rgba(61,80,244,.6);margin-bottom:4px;font-weight:700}
+
+/* APPROACH CARDS */
+.approach-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:20px 0}
+.ap-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px;box-shadow:var(--sh)}
+.ap-level{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-weight:700}
+.ap-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.2px}
+.ap-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+.ap-do{font-size:11px;color:var(--green);font-family:var(--mono);margin-bottom:3px}
+.ap-dont{font-size:11px;color:#8A1A1A;font-family:var(--mono);margin-bottom:3px}
+
+/* PROSE */
+.prose{background:var(--dark);border:1px solid rgba(255,255,255,.07);border-radius:var(--rl);padding:20px 24px;margin:20px 0;font-size:13px;line-height:1.9;color:rgba(255,255,255,.65);white-space:pre-wrap;font-family:var(--mono)}
+
+/* FINN */
+.fw{margin-top:32px;border-radius:var(--rxl);overflow:hidden;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shm)}
+.fh{height:52px;display:flex;align-items:center;gap:12px;padding:0 18px;background:var(--navy)}
+.fav-wrap{position:relative}
+.fav{width:32px;height:32px;border-radius:8px;background:var(--royal);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
+.fon{position:absolute;bottom:-1px;right:-1px;width:9px;height:9px;border-radius:50%;background:var(--cyan);border:2px solid var(--navy)}
+.finfo{flex:1}
+.fname{font-size:13px;color:#fff;font-weight:700}
+.fsub{font-size:9px;color:rgba(255,255,255,.4);font-family:var(--mono);margin-top:1px}
+.fai{font-size:9px;font-family:var(--mono);background:rgba(53,255,233,.12);color:var(--cyan);border:1px solid rgba(53,255,233,.22);padding:3px 8px;border-radius:20px;letter-spacing:.5px;font-weight:600}
+.fmsgs{max-height:380px;overflow-y:auto;padding:16px 18px;display:none;background:var(--card)}
+.fmsgs.vis{display:block}
+.mr{display:flex;gap:9px;margin-bottom:13px}
+.mr.u{justify-content:flex-end}
+.mav{width:24px;height:24px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--mono);margin-top:1px;font-weight:700}
+.mav.f{background:var(--royal);color:#fff}
+.mav.y{background:var(--navy);color:rgba(255,255,255,.6)}
+.mb{max-width:80%;padding:10px 14px;font-size:14px;line-height:1.75;white-space:pre-wrap;word-break:break-word;border-radius:var(--r)}
+.mb.f{background:var(--surface);border:1px solid var(--border);color:var(--text2);border-radius:2px var(--r) var(--r) var(--r)}
+.mb.u{background:var(--navy);color:rgba(255,255,255,.82);border-radius:var(--r) 2px var(--r) var(--r)}
+.tdots{display:flex;gap:5px;padding:3px 0;align-items:center}
+.tdot{width:7px;height:7px;border-radius:50%;background:var(--royal);animation:dot 1.2s infinite}
+.fst{padding:13px 18px;background:var(--card);border-bottom:1px solid var(--border)}
+.fst-lbl{font-size:9px;font-family:var(--mono);color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:9px;font-weight:700}
+.fst-g{display:flex;flex-wrap:wrap;gap:6px}
+.fsbtn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.fsbtn:hover{background:rgba(61,80,244,.06);border-color:rgba(61,80,244,.3);color:var(--royal)}
+.fin{display:flex;gap:8px;padding:11px 14px;border-top:1px solid var(--border)}
+.fta{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);padding:9px 13px;font-size:14px;font-family:var(--font);color:var(--text);resize:none;max-height:100px;line-height:1.5;transition:border-color .15s}
+.fta:focus{outline:none;border-color:var(--royal);background:var(--surface)}
+.fta::placeholder{color:var(--muted)}
+.fsnd{width:38px;height:38px;border-radius:var(--r);border:none;background:var(--royal);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;transition:all .15s}
+.fsnd:hover{background:var(--royal2);transform:scale(1.04)}
+.fsnd:disabled{background:var(--faint);cursor:default;transform:none}
+
+/* NAV */
+.lnav{margin-top:40px;padding-top:22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.nbk{display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:var(--r);border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:600;transition:all .15s}
+.nbk:hover:not(:disabled){background:var(--card);color:var(--text)}
+.nbk:disabled{color:var(--faint);border-color:var(--faint);cursor:default}
+.nnx{display:flex;align-items:center;gap:8px;padding:11px 22px;border-radius:var(--r);border:none;background:var(--royal);color:#fff;cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:700;letter-spacing:.3px;transition:all .15s;box-shadow:0 2px 12px rgba(61,80,244,.3)}
+.nnx:hover{background:var(--royal2);box-shadow:0 4px 20px rgba(61,80,244,.4);transform:translateY(-1px)}
+.nnx.done{background:var(--green);box-shadow:0 2px 12px rgba(10,122,74,.25)}
+
+@media(max-width:700px){
+  #cti{padding:20px 16px 80px}
+  #sb{position:fixed;top:0;left:0;height:100vh;z-index:300}
+  #sb.closed{width:0}
+  .tb-sec{display:none}
+  .persona-grid{grid-template-columns:1fr}
+  .approach-grid{grid-template-columns:1fr}
+  .sen-hdr,.sen-row{grid-template-columns:1fr 1fr}
+}
+
+/* LISTEN BUTTON */
+.listen-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:600;letter-spacing:.5px;transition:all .15s}
+.listen-btn:hover{border-color:var(--royal);color:var(--royal);background:rgba(61,80,244,.05)}
+.listen-btn.playing{border-color:var(--royal);color:var(--royal);background:rgba(61,80,244,.08)}
+.stop-btn{border-color:rgba(200,20,74,.3)!important;color:#C8144A!important;background:rgba(200,20,74,.06)!important}
+.listen-btn.playing:hover{border-color:var(--red);color:var(--red);background:rgba(200,20,74,.06)}
+.listen-btn svg{width:13px;height:13px;flex-shrink:0}
+/* GRID */
+.grid-wrap{position:relative;margin-bottom:48px}
+
+/* AXIS LABELS */
+.axis-h{position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);pointer-events:none;z-index:2}
+.axis-h-line{height:1px;background:rgba(255,255,255,.12);width:100%;position:relative}
+.axis-h-line::before{content:"NEEDS";position:absolute;left:0;top:-9px;font-size:9px;font-family:var(--mono);letter-spacing:2px;color:rgba(255,255,255,.2);font-weight:600}
+.axis-h-line::after{content:"SOLUTIONS";position:absolute;right:0;top:-9px;font-size:9px;font-family:var(--mono);letter-spacing:2px;color:rgba(255,255,255,.2);font-weight:600;text-align:right}
+
+.axis-v{position:absolute;left:50%;top:0;bottom:0;transform:translateX(-50%);pointer-events:none;z-index:2}
+.axis-v-line{width:1px;background:rgba(255,255,255,.12);height:100%}
+
+/* QUADRANT GRID */
+.quads{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;position:relative;z-index:1}
+
+.quad{
+  position:relative;padding:28px 26px 24px;min-height:340px;
+  border:1px solid rgba(255,255,255,.06);
+  transition:border-color .2s;
+  overflow:hidden;
+}
+.quad::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .2s;pointer-events:none}
+.quad:hover{border-color:rgba(255,255,255,.12)}
+.quad:hover::before{opacity:1}
+
+.quad-needs{background:rgba(61,80,244,.06);border-radius:16px 2px 2px 2px}
+.quad-needs::before{background:radial-gradient(ellipse at top left, rgba(61,80,244,.12) 0%, transparent 70%)}
+.quad-pain{background:rgba(250,41,95,.05);border-radius:2px 16px 2px 2px}
+.quad-pain::before{background:radial-gradient(ellipse at top right, rgba(250,41,95,.1) 0%, transparent 70%)}
+.quad-sources{background:rgba(53,255,233,.04);border-radius:2px 2px 2px 16px}
+.quad-sources::before{background:radial-gradient(ellipse at bottom left, rgba(53,255,233,.08) 0%, transparent 70%)}
+.quad-solution{background:rgba(10,122,74,.05);border-radius:2px 2px 16px 2px}
+.quad-solution::before{background:radial-gradient(ellipse at bottom right, rgba(10,122,74,.1) 0%, transparent 70%)}
+
+.quad-label{display:flex;align-items:center;gap:8px;margin-bottom:18px}
+.quad-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--mono);font-weight:700;flex-shrink:0}
+.quad-needs .quad-num{background:rgba(61,80,244,.2);color:rgba(61,80,244,.9);border:1px solid rgba(61,80,244,.3)}
+.quad-pain .quad-num{background:rgba(250,41,95,.15);color:rgba(250,41,95,.9);border:1px solid rgba(250,41,95,.3)}
+.quad-sources .quad-num{background:rgba(53,255,233,.12);color:rgba(53,255,233,.8);border:1px solid rgba(53,255,233,.25)}
+.quad-solution .quad-num{background:rgba(10,122,74,.2);color:rgba(53,255,133,.8);border:1px solid rgba(10,122,74,.3)}
+.quad-title{font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;font-family:var(--mono)}
+.quad-needs .quad-title{color:rgba(61,80,244,.9)}
+.quad-pain .quad-title{color:rgba(250,41,95,.9)}
+.quad-sources .quad-title{color:rgba(53,255,233,.8)}
+.quad-solution .quad-title{color:rgba(53,255,133,.8)}
+
+/* QUESTIONS */
+.q-list{display:flex;flex-direction:column;gap:8px}
+.q-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 13px;border-radius:8px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+  cursor:pointer;transition:all .15s;
+  position:relative;
+}
+.q-item:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12);transform:translateX(2px)}
+.q-item.active{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+
+.quad-needs .q-item:hover,.quad-needs .q-item.active{background:rgba(61,80,244,.12);border-color:rgba(61,80,244,.3)}
+.quad-pain .q-item:hover,.quad-pain .q-item.active{background:rgba(250,41,95,.1);border-color:rgba(250,41,95,.3)}
+.quad-sources .q-item:hover,.quad-sources .q-item.active{background:rgba(53,255,233,.08);border-color:rgba(53,255,233,.25)}
+.quad-solution .q-item:hover,.quad-solution .q-item.active{background:rgba(10,122,74,.1);border-color:rgba(10,122,74,.3)}
+
+.q-bullet{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.quad-needs .q-bullet{background:rgba(61,80,244,.7)}
+.quad-pain .q-bullet{background:rgba(250,41,95,.7)}
+.quad-sources .q-bullet{background:rgba(53,255,233,.6)}
+.quad-solution .q-bullet{background:rgba(53,255,133,.6)}
+
+.q-text{font-size:13px;color:rgba(255,255,255,.65);line-height:1.45;font-weight:300;flex:1}
+.q-item:hover .q-text,.q-item.active .q-text{color:rgba(255,255,255,.9)}
+
+/* TOOLTIP / DETAIL PANEL */
+.detail-panel{
+  display:none;
+  margin-top:32px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;
+  padding:24px 28px;
+  animation:fadeUp .2s ease-out;
+}
+.detail-panel.vis{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.dp-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:16px}
+.dp-quad-tag{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;font-weight:700;flex-shrink:0}
+.dp-question{font-size:18px;font-weight:700;color:#fff;letter-spacing:-.3px;line-height:1.3;flex:1}
+.dp-body{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.dp-col-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px;font-weight:600}
+.dp-why{font-size:14px;color:rgba(255,255,255,.6);line-height:1.75;font-weight:300}
+.dp-good{display:flex;flex-direction:column;gap:6px}
+.dp-signal{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;border-radius:7px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+.dp-signal-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.dp-signal.good .dp-signal-dot{background:rgba(53,255,133,.7)}
+.dp-signal.warn .dp-signal-dot{background:rgba(255,180,0,.7)}
+.dp-signal.bad  .dp-signal-dot{background:rgba(250,41,95,.7)}
+.dp-signal-text{font-size:12px;color:rgba(255,255,255,.55);line-height:1.5;font-weight:300}
+
+/* CLOSE BTN */
+.dp-close{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);border-radius:6px;padding:5px 10px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all .15s;flex-shrink:0}
+.dp-close:hover{background:rgba(255,255,255,.12);color:#fff}
+
+/* BOTTOM TIPS */
+.tips-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.tip-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px 18px}
+.tip-card-lbl{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-weight:600}
+.tip-card-text{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;font-weight:300}
+
+@media(max-width:700px){
+  .quads{grid-template-columns:1fr}
+  .dp-body{grid-template-columns:1fr}
+  .tips-row{grid-template-columns:1fr}
+  .page-title{font-size:26px}
+}
+
+.qual-wrap{margin:20px 0}
+</style>
+<!-- QUAL FRAMEWORK TEMPLATES (hidden) -->
+<div id="qual-grid-tpl" style="display:none">
+<div class="quads">
+<!-- Q1: NEEDS (top left) -->
+      <div class="quad quad-needs">
+        <div class="quad-label">
+          <div class="quad-num">1</div>
+          <div class="quad-title">Needs</div>
+        </div>
+        <div class="q-list">
+          <div class="q-item" onclick="showDetail('needs','deal-volume')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How many FDD or QoE engagements does your team run per year?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','team-size')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How many people are in your transaction services team?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','revenue')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What is the typical fee range for an FDD engagement at your firm?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','deal-size')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What deal size do you typically work on — EV range?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','targets')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What are your growth targets for the practice this year?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','growth')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Are you looking to grow headcount or grow revenue per head?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2: PAIN (top right) -->
+      <div class="quad quad-pain">
+        <div class="quad-label">
+          <div class="quad-num">2</div>
+          <div class="quad-title">Pain</div>
+        </div>
+        <div class="q-list">
+          <div class="q-item" onclick="showDetail('pain','time')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How long does it take from data room access to first cut of the EBITDA bridge?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','cost')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What percentage of engagement hours are spent on data processing versus analysis?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','quality')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How confident are you in the consistency of outputs across different team members?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','consequence')">
+            <div class="q-bullet"></div>
+            <div class="q-text">If nothing changes in your process over the next 12 months, what does that mean for the team?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','capacity')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Have you ever had to turn down work or delay a report because of capacity?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3: SOURCES (bottom left) -->
+      <div class="quad quad-sources">
+        <div class="quad-label">
+          <div class="quad-num">3</div>
+          <div class="quad-title">Sources</div>
+        </div>
+        <div class="q-list">
+          <div class="q-item" onclick="showDetail('sources','process')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Walk me through how your team currently processes a new data room — what happens in the first 48 hours?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('sources','tools')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What tools does your team use today — beyond Excel?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('sources','outsource')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Do you outsource any part of the analytical work — offshore, nearshore, or to juniors?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('sources','junior')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How much of the initial data processing falls on your junior staff?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('sources','templates')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Do you have standardised templates, or does each manager build their own approach?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4: SOLUTION (bottom right) -->
+      <div class="quad quad-solution">
+        <div class="quad-label">
+          <div class="quad-num">4</div>
+          <div class="quad-title">Solution</div>
+        </div>
+        <div class="q-list">
+          <div class="q-item" onclick="showDetail('solution','bridge')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What if you could get a structured first cut of the EBITDA bridge within hours of uploading the data room?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('solution','capacity')">
+            <div class="q-bullet"></div>
+            <div class="q-text">If your team got back 8-12 hours per engagement, what would you do with that capacity?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('solution','consistency')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How important is it that every engagement follows the same analytical structure regardless of who runs it?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('solution','trial')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Would it make sense to run PinpointAI alongside your next engagement so you can see the output before committing?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('solution','decision')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Who else in the firm would need to be involved in a decision like this?</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+</div>
+</div>
+<div id="qual-panel-tpl" style="display:none">
+<!-- DETAIL PANEL -->
+  <div class="detail-panel" id="detail-panel">
+    <div class="dp-top">
+      <div>
+        <div class="dp-quad-tag" id="dp-tag"></div>
+        <div class="dp-question" id="dp-question"></div>
+      </div>
+      <button class="dp-close" onclick="closeDetail()">&#10005; Close</button>
+    </div>
+    <div class="dp-body">
+      <div>
+        <div class="dp-col-lbl">Why ask this</div>
+        <div class="dp-why" id="dp-why"></div>
+      </div>
+      <div>
+        <div class="dp-col-lbl">What the answer tells you</div>
+        <div class="dp-good" id="dp-signals"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="qual-tips-tpl" style="display:none">
+<!-- BOTTOM TIPS -->
+  <div class="tips-row">
+    <div class="tip-card">
+      <div class="tip-card-lbl" style="color:rgba(61,80,244,.8)">Order matters</div>
+      <div class="tip-card-text">Always start with Needs before Pain. Understand their world first. If you go to pain too early you sound like every other vendor.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-card-lbl" style="color:rgba(250,41,95,.8)">Let them talk</div>
+      <div class="tip-card-text">The best qualification calls are 70% them, 30% you. Ask a question, then be quiet. The detail comes in the silence.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-card-lbl" style="color:rgba(53,255,133,.8)">Only pitch after pain</div>
+      <div class="tip-card-text">Do not move to the Solution quadrant until you have confirmed real pain in quadrant 2. A solution without a problem is just noise.</div>
+    </div>
+</div>
+
+<body>
+<div id="app">
+  <div id="tb">
+    <a class="tb-logo" href="index.html">
+      <div class="tb-logo-box"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg></div>
+      <div class="tb-logo-name">Pinpoint<b>AI</b></div>
+    </a>
+    <div class="tb-mid">
+      <div class="tb-course">Sales Trainer</div>
+      <div class="tb-sep"></div>
+      <div class="tb-sec" id="tb-sec">Loading...</div>
+    </div>
+    <div class="tb-right">
+      <a class="tb-back" href="glossary.html" style="background:transparent;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.55);margin-right:8px">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Glossary
+      </a>
+      <div class="tb-prog-val" id="pg-lbl">0 / 0</div>
+      <div class="tb-ring">
+        <svg width="32" height="32" viewBox="0 0 32 32">
+          <circle cx="16" cy="16" r="12" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="2.5"/>
+          <circle id="rng" cx="16" cy="16" r="12" fill="none" stroke="#35FFE9" stroke-width="2.5" stroke-dasharray="75.4" stroke-dashoffset="75.4" stroke-linecap="round" style="transition:stroke-dashoffset .4s"/>
+        </svg>
+        <div class="tb-ring-n" id="rng-n">0%</div>
+      </div>
+      <button class="tb-menu-btn" onclick="toggleSidebar()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <a class="tb-back" href="index.html">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Dashboard
+      </a>
+    </div>
+  </div>
+  <div id="main">
+    <div id="sb">
+      <div class="sb-top">
+        <div class="sb-top-lbl">Your progress</div>
+        <div class="sb-cards">
+          <div class="sb-card"><div class="sb-card-n c" id="sb-done">0</div><div class="sb-card-l">Completed</div></div>
+          <div class="sb-card"><div class="sb-card-n" id="sb-left">70</div><div class="sb-card-l">Min left</div></div>
+        </div>
+      </div>
+      <div class="sb-mods"><div class="sb-grp">Modules</div><div id="sb-nav"></div></div>
+    </div>
+    <div id="ct"><div id="cti"></div></div>
+  </div>
+</div>
+<script>
+
+const MODULES = [
+  {id:"M1",icon:"🎯",title:"Qualification",subtitle:"The four-quadrant framework",time:30,
+   starters:["What is the most important question to ask in the Needs quadrant?","How do I know when to move from Pain to Solution?","What does a well-qualified prospect look like for PinpointAI?","What should I do if someone says they already have a process that works?"],
+   sections:[
+    {id:"M1S1",title:"Why qualification matters",
+     content:"Most deals are lost before the demo. They are lost in the discovery call when the wrong questions get asked, when the conversation moves to pitch mode too early, or when the rep has not established that real pain exists.\n\nQualification is not about gatekeeping. It is about having the right conversation with the right person at the right time. A well-qualified prospect will close faster, at a higher value, and with less friction.\n\nThe framework below gives you a structure for every discovery call. Four quadrants, each with a clear purpose. Work through them in order.",
+     callout:{type:"blue",label:"The golden rule",text:"Never move to the Solution quadrant until you have confirmed real pain in quadrant 2. A solution without a confirmed problem is just noise to the buyer."}
+    },
+    {id:"M1S2",title:"The qualification framework",
+     content:"Four quadrants. Use this on every discovery call. Click any question to see why it matters and what a strong answer looks like.",
+     type:"qual"
+    },
+    {id:"M1S3",title:"Scoring the call",
+     content:"After every discovery call, score the prospect against four criteria. Be honest. A 3/4 or 4/4 is worth pursuing hard. A 1/4 or 2/4 needs a specific next step to address the gap before you invest more time.\n\nCriteria: strong deal volume (10+ per year) or high fee per engagement (30k+). Confirmed time or quality pain in their own words. Clear understanding of current process and its limitations. Decision maker in the room or a named champion who can get them there.",
+     callout:{type:"green",label:"Strong prospect",text:"10+ deals per year. Has described a specific pain unprompted. Knows their process is inefficient. Has budget authority or a named path to it."},
+     callout2:{type:"amber",label:"Needs more work",text:"Fewer deals but growing fast. Pain acknowledged but not vivid. Process is structured but still manual. Decision maker not yet identified."}
+    }
+   ]
+  },
+  {id:"M2",icon:"📞",title:"Call Structure",subtitle:"Opening, discovery, close",time:20,
+   starters:["How should I open a cold call to a Senior Manager at a Big 4 firm?","What is the best way to transition from discovery to demo?","How do I handle it when someone says they are too busy to talk?","What should the first 60 seconds of a cold call sound like?"],
+   sections:[
+    {id:"M2S1",title:"The cold call structure",
+     content:"A cold call to an FDD professional has three jobs: get permission to talk, establish credibility fast, and earn a next step. You have about 20 seconds before they decide whether to keep listening.\n\nThe best openers for this market are specific, direct, and reference something about their world. Do not start with what PinpointAI does. Start with what they experience.",
+     callout:{type:"blue",label:"Strong opener",text:"Hi [name], it is [your name] from PinpointAI. I will be quick. We work with transaction services teams who are spending too much time on data processing in the first 48 hours of a deal. Is that something you recognise?"}
+    },
+    {id:"M2S2",title:"Handling common deflections",
+     content:"Every cold call hits a deflection. The most common ones in this market are predictable. Knowing your response in advance means you stay calm and keep the conversation moving.",
+     callout:{type:"amber",label:"We already have a process",text:"That is exactly who we work with. The question is how much of that process is still manual. Can I ask, how long does it take your team to get a first cut of the bridge after data room access?"},
+     callout2:{type:"amber",label:"Send me something",text:"I would rather not clog your inbox with something generic. Can I ask you one question first. How many FDD engagements does your team run per year? That will tell me whether what we do is even relevant for you."}
+    },
+    {id:"M2S3",title:"Earning the next step",
+     content:"Every call should end with a specific, time-bound next step. Not I will follow up but a date and a purpose. The best next step for a qualified prospect is a 30-minute demo on a live or recent engagement dataset.\n\nAlways end the call knowing exactly what happens next and when.",
+     callout:{type:"green",label:"Strong close",text:"Based on what you have told me, it sounds like there is something worth exploring. I can show you exactly what PinpointAI does in 30 minutes using a dataset that looks like your typical data room. Does [specific date] work?"}
+    }
+   ]
+  },
+  {id:"M3",icon:"⚡",title:"Objection Handling",subtitle:"The most common pushbacks",time:20,
+   starters:["How do I handle we already use Excel and it works fine?","What do I say when a Partner says the budget is not there?","How do I respond when someone says AI cannot be trusted with client data?","What if they say they tried something similar and it did not work?"],
+   sections:[
+    {id:"M3S1",title:"Why objections are good",
+     content:"An objection is not a rejection. It is a question in disguise. When someone says they already have a process, they are really asking you to convince them yours is better. When they say the budget is not there, they are often saying they are not convinced enough yet to fight for it.\n\nThe best response to any objection is a question, not a counter-argument. Questions keep the conversation alive and avoid the trap of a debate.",
+     callout:{type:"blue",label:"The objection framework",text:"1. Acknowledge: show you heard them\n2. Clarify: make sure you understand the real concern\n3. Respond: address the specific concern with evidence\n4. Check: confirm you have answered it"}
+    },
+    {id:"M3S2",title:"The most common objections",
+     content:"These are the objections you will hear most often in this market. Read each one until you can respond without thinking.",
+     callout:{type:"amber",label:"We already have a process that works",text:"Acknowledge: Good. That means your team is disciplined, which is exactly the profile PinpointAI works best with.\nClarify: When you say it works, do you mean it produces good output, or it produces good output efficiently?\nRespond: Most firms we work with have a process that works. The question is whether it works as fast as it could."},
+     callout2:{type:"amber",label:"We do not have the budget",text:"Acknowledge: Fair enough. Budget conversations are always timing-dependent.\nClarify: Is it that the budget does not exist, or that you would need to make a case for it?\nRespond: If I could show you that PinpointAI saves your team 8-12 hours per engagement, would that change the conversation about budget?"}
+    },
+    {id:"M3S3",title:"Data and AI concerns",
+     content:"In this market, data security and AI reliability are genuine concerns. Take them seriously and address them directly. A dismissive response to a data security question will end the conversation.",
+     callout:{type:"red",label:"I am not comfortable with client data going through an AI system",text:"That is a completely reasonable concern and one we hear often. PinpointAI does not store or share client data. Everything is processed within your own secure environment. I can send you our data security documentation. Would that help address it before we go further?"},
+     callout2:{type:"red",label:"How accurate is it? I cannot risk errors in an FDD report",text:"Accuracy is the most important thing. PinpointAI produces a structured first cut that your team then reviews and applies their judgement to. It is not a replacement for the analyst. It is the starting point that saves the first 8 hours. The partner still signs off on everything."}
+    }
+   ]
+  }
+];
+
+const DETAILS = {
+  "needs-deal-volume":{
+    quad:"NEEDS",quadColor:"rgba(61,80,244,.2)",quadText:"rgba(61,80,244,.9)",
+    question:"How many FDD or QoE engagements does your team run per year?",
+    why:"Deal volume tells you the scale of the opportunity and how quickly the pain compounds. A team running 5 engagements a year feels the inefficiency occasionally. A team running 50 feels it every week. Volume also tells you whether the ROI conversation is easy or hard.",
+    signals:[
+      {type:"good",text:"20+ engagements per year — strong ROI case, frequent pain"},
+      {type:"good",text:"10-20 — solid opportunity, ROI still works"},
+      {type:"warn",text:"5-10 — worth pursuing but ROI case needs careful framing"},
+      {type:"bad",text:"Under 5 — low urgency, longer sales cycle"}
+    ]
+  },
+  "needs-team-size":{
+    quad:"NEEDS",quadColor:"rgba(61,80,244,.2)",quadText:"rgba(61,80,244,.9)",
+    question:"How many people are in your transaction services team?",
+    why:"Team size tells you the scale of adoption, the number of licences, and how complex the rollout conversation will be. It also tells you whether you are talking to a boutique where one partner makes all decisions, or a larger practice with procurement processes.",
+    signals:[
+      {type:"good",text:"5-20 — manageable rollout, clear decision maker, strong fit"},
+      {type:"good",text:"20-50 — larger opportunity, may have a more structured buying process"},
+      {type:"warn",text:"50+ — big opportunity but expect procurement involvement and longer cycle"},
+      {type:"warn",text:"1-4 — very small, decision maker is usually right in front of you"}
+    ]
+  },
+  "needs-revenue":{
+    quad:"NEEDS",quadColor:"rgba(61,80,244,.2)",quadText:"rgba(61,80,244,.9)",
+    question:"What is the typical fee range for an FDD engagement at your firm?",
+    why:"Fee size tells you the billing rates and therefore the cost of the hours PinpointAI saves. If a firm bills £800 per hour and PinpointAI saves 10 hours per engagement, that is £8,000 of capacity freed per deal. This is the foundation of the ROI conversation.",
+    signals:[
+      {type:"good",text:"£50k-£150k per engagement — strong ROI case"},
+      {type:"good",text:"£20k-£50k — solid, ROI is clear"},
+      {type:"warn",text:"Under £20k — lower billing rates, ROI case is tighter"},
+      {type:"bad",text:"They won't say — move on, come back to this later"}
+    ]
+  },
+  "needs-deal-size":{
+    quad:"NEEDS",quadColor:"rgba(61,80,244,.2)",quadText:"rgba(61,80,244,.9)",
+    question:"What deal size do you typically work on?",
+    why:"Deal size tells you the complexity and data volume the team handles. Mid-market deals (£10m-£250m EV) are PinpointAI's sweet spot. Very small deals may have limited data rooms. Very large deals have massive data rooms where PinpointAI saves even more time.",
+    signals:[
+      {type:"good",text:"£10m-£500m EV — core mid-market, ideal fit"},
+      {type:"good",text:"£500m+ — high complexity, high value, PinpointAI saves significant time"},
+      {type:"warn",text:"Under £5m — simpler deals, smaller data rooms, lower urgency"},
+      {type:"bad",text:"Mostly micro-deals under £2m — likely not enough complexity to justify"}
+    ]
+  },
+  "needs-targets":{
+    quad:"NEEDS",quadColor:"rgba(61,80,244,.2)",quadText:"rgba(61,80,244,.9)",
+    question:"What are your growth targets for the practice this year?",
+    why:"Growth targets create urgency. A practice that wants to grow 20% this year cannot do it by hiring alone — they need to do more with the same people. This is exactly where PinpointAI fits. Targets also tell you what the partner is being measured on.",
+    signals:[
+      {type:"good",text:"Ambitious growth target — creates urgency and internal pressure"},
+      {type:"good",text:"Focused on margin improvement — PinpointAI directly addresses this"},
+      {type:"warn",text:"No clear target — harder to create urgency, longer cycle"},
+      {type:"bad",text:"Actively scaling back — not the right time"}
+    ]
+  },
+  "needs-growth":{
+    quad:"NEEDS",quadColor:"rgba(61,80,244,.2)",quadText:"rgba(61,80,244,.9)",
+    question:"Are you looking to grow headcount or grow revenue per head?",
+    why:"This question reveals their growth philosophy. A firm trying to grow revenue per head is explicitly trying to do more work without more people — which is exactly what PinpointAI enables. A firm focused on headcount growth is less immediately receptive but still relevant.",
+    signals:[
+      {type:"good",text:"Revenue per head — perfect alignment with PinpointAI's value proposition"},
+      {type:"good",text:"Both — they understand the efficiency argument"},
+      {type:"warn",text:"Headcount only — needs reframing, but still an opportunity"}
+    ]
+  },
+  "pain-time":{
+    quad:"PAIN",quadColor:"rgba(250,41,95,.15)",quadText:"rgba(250,41,95,.9)",
+    question:"How long does it take from data room access to first cut of the EBITDA bridge?",
+    why:"This is the single best pain question. It forces them to articulate exactly where the time goes. Most teams will say 3-5 days. Some will say a week. PinpointAI can produce a structured first cut in hours. The gap between their answer and what is possible is your value proposition.",
+    signals:[
+      {type:"bad",text:"3+ days — strong pain signal, clear value case"},
+      {type:"warn",text:"1-2 days — moderate pain, still a clear improvement"},
+      {type:"warn",text:"Same day — either very efficient or a very small data room"},
+      {type:"good",text:"They struggle to answer — means they have never measured it, even better"}
+    ]
+  },
+  "pain-cost":{
+    quad:"PAIN",quadColor:"rgba(250,41,95,.15)",quadText:"rgba(250,41,95,.9)",
+    question:"What percentage of engagement hours are spent on data processing versus analysis?",
+    why:"Most firms have never thought about this. When they do, the answer is usually uncomfortable — 30-50% of hours on data processing is common. This question makes the inefficiency visible. Once they have said the number out loud, the conversation shifts.",
+    signals:[
+      {type:"bad",text:"30%+ on processing — strong pain, clear ROI case"},
+      {type:"bad",text:"They admit it's too high — they already know the problem exists"},
+      {type:"warn",text:"They estimate 10-20% — lower pain but still relevant"},
+      {type:"good",text:"They have no idea — this is an opportunity to dig deeper"}
+    ]
+  },
+  "pain-quality":{
+    quad:"PAIN",quadColor:"rgba(250,41,95,.15)",quadText:"rgba(250,41,95,.9)",
+    question:"How confident are you in the consistency of outputs across different team members?",
+    why:"Quality inconsistency is a pain that partners feel but rarely talk about. When a report produced by a Senior Manager looks materially different from one produced by a Manager, it creates rework, review time, and reputational risk. PinpointAI standardises the analytical structure.",
+    signals:[
+      {type:"bad",text:"They mention inconsistency or rework — strong signal"},
+      {type:"bad",text:"They mention client complaints or report quality issues — very strong signal"},
+      {type:"warn",text:"They say it's fine but pause before answering — probe further"},
+      {type:"good",text:"They are confident and specific about why — they may have already solved this"}
+    ]
+  },
+  "pain-consequence":{
+    quad:"PAIN",quadColor:"rgba(250,41,95,.15)",quadText:"rgba(250,41,95,.9)",
+    question:"If nothing changes in your process over the next 12 months, what does that mean for the team?",
+    why:"This is the consequence question. It makes the cost of inaction explicit. A well-run team will tell you they will struggle to hit growth targets, burn out junior staff, or lose deals to faster competitors. This creates urgency that a product demonstration cannot.",
+    signals:[
+      {type:"bad",text:"They describe a real problem — capacity, quality, burnout, lost deals"},
+      {type:"bad",text:"They pause — means they know the answer is not good"},
+      {type:"warn",text:"They say things will be fine — probe with 'and what happens to growth targets?'"},
+      {type:"good",text:"They have a clear plan — understand it before positioning PinpointAI"}
+    ]
+  },
+  "pain-capacity":{
+    quad:"PAIN",quadColor:"rgba(250,41,95,.15)",quadText:"rgba(250,41,95,.9)",
+    question:"Have you ever had to turn down work or delay a report because of capacity?",
+    why:"Turning down work is the most expensive pain a professional services firm can have. If they have done it even once, it is a vivid, specific memory that you can anchor the entire conversation around. Delayed reports mean unhappy clients and reputational risk.",
+    signals:[
+      {type:"bad",text:"Yes, they have turned down work — maximum urgency signal"},
+      {type:"bad",text:"Yes, they have delayed reports — strong signal"},
+      {type:"warn",text:"They hedge — 'not exactly but...' — probe for the real story"},
+      {type:"good",text:"Never — they either have excess capacity or are not being honest"}
+    ]
+  },
+  "sources-process":{
+    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    question:"Walk me through how your team currently processes a new data room.",
+    why:"This is the most important question in the sources quadrant. Let them talk. You will learn exactly where the time goes, who does what, and where the bottlenecks are. This gives you specific language to use when you position PinpointAI later in the call.",
+    signals:[
+      {type:"good",text:"They describe a manual, ad hoc process — clear opportunity"},
+      {type:"good",text:"They mention specific pain points unprompted — use their language back to them"},
+      {type:"warn",text:"They have a structured process but it is all Excel — room for improvement"},
+      {type:"bad",text:"They already use automation tools — understand what and why before continuing"}
+    ]
+  },
+  "sources-tools":{
+    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    question:"What tools does your team use today — beyond Excel?",
+    why:"Understanding their current tech stack tells you whether they are open to tools, whether there are competing solutions, and whether PinpointAI needs to integrate with or replace anything. Most FDD teams are almost entirely Excel-based.",
+    signals:[
+      {type:"good",text:"Mostly Excel — classic profile, strong fit for PinpointAI"},
+      {type:"warn",text:"They use a data room tool — complementary, not competitive"},
+      {type:"warn",text:"They mention a specific AI or automation tool — understand it before responding"},
+      {type:"bad",text:"They have a recently-built internal solution — harder but not impossible"}
+    ]
+  },
+  "sources-outsource":{
+    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    question:"Do you outsource any part of the analytical work — offshore, nearshore, or to juniors?",
+    why:"Outsourcing is a proxy for pain. If a firm is sending work offshore it is because it is too time-consuming for senior staff. This also tells you about quality concerns — offshore work often requires significant review time. PinpointAI can replace or reduce the need for outsourcing.",
+    signals:[
+      {type:"good",text:"Yes, they outsource data processing — direct replacement use case"},
+      {type:"good",text:"Yes, they use offshore support — cost and quality implications, strong signal"},
+      {type:"warn",text:"They use juniors heavily — they feel this as a risk, not just a cost"},
+      {type:"bad",text:"No outsourcing, fully in-house — not disqualifying, just understand why"}
+    ]
+  },
+  "sources-junior":{
+    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    question:"How much of the initial data processing falls on your junior staff?",
+    why:"Junior staff doing data processing is a double pain — it is expensive time relative to value, and it is a recruiting and retention risk. Analysts who spend all day formatting spreadsheets leave. Understanding how much of this work falls on juniors connects the tool to a talent conversation.",
+    signals:[
+      {type:"bad",text:"Most of it — expensive, risky, clear opportunity"},
+      {type:"warn",text:"A fair amount — they know it is not ideal"},
+      {type:"good",text:"They spread it across the team — less junior-specific pain but still relevant"}
+    ]
+  },
+  "sources-templates":{
+    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    question:"Do you have standardised templates, or does each manager build their own approach?",
+    why:"Lack of standardisation is both a quality risk and an efficiency cost. If every manager builds their own model, the review process is longer, training new joiners is harder, and outputs vary. This question surfaces a pain that partners feel but teams may not articulate.",
+    signals:[
+      {type:"bad",text:"No standardisation — each manager does their own thing — clear pain"},
+      {type:"warn",text:"Some templates but inconsistently used — partial pain"},
+      {type:"good",text:"Strong standardisation — less pain but consistency argument still applies"}
+    ]
+  },
+  "solution-bridge":{
+    quad:"SOLUTION",quadColor:"rgba(10,122,74,.2)",quadText:"rgba(53,255,133,.8)",
+    question:"What if you could get a structured first cut of the EBITDA bridge within hours of uploading the data room?",
+    why:"This is your opening position statement, framed as a question. It directly addresses the time pain from quadrant 2. Do not say this until you have confirmed the pain exists. If they said it takes 3-5 days, this question lands hard. If you ask it cold, it sounds like a pitch.",
+    signals:[
+      {type:"good",text:"They lean in or ask how — buying signal, move to demo conversation"},
+      {type:"good",text:"They are sceptical but curious — validate with a specific example"},
+      {type:"warn",text:"They ask about accuracy — this is a quality objection, address directly"},
+      {type:"bad",text:"They are dismissive — either wrong time or wrong person, diagnose which"}
+    ]
+  },
+  "solution-capacity":{
+    quad:"SOLUTION",quadColor:"rgba(10,122,74,.2)",quadText:"rgba(53,255,133,.8)",
+    question:"If your team got back 8-12 hours per engagement, what would you do with that capacity?",
+    why:"This question makes the benefit concrete and personal. You are not talking about features, you are talking about what they can do differently. The answer tells you what they value most — more deals, better analysis, less stress, earlier deliveries. Use their answer in every follow-up.",
+    signals:[
+      {type:"good",text:"They have a specific answer — they have thought about this, high engagement"},
+      {type:"good",text:"They mention growth — connect directly to their targets from quadrant 1"},
+      {type:"warn",text:"They are vague — probe with 'what does that mean for your growth targets?'"},
+      {type:"bad",text:"They say they do not need it — confirm they understood the question"}
+    ]
+  },
+  "solution-consistency":{
+    quad:"SOLUTION",quadColor:"rgba(10,122,74,.2)",quadText:"rgba(53,255,133,.8)",
+    question:"How important is it that every engagement follows the same analytical structure regardless of who runs it?",
+    why:"This positions PinpointAI's standardisation benefit without making it sound like a criticism of their current team. It is framed as a question about their priorities. Partners who care about quality will respond strongly. It also surfaces whether consistency is a live concern.",
+    signals:[
+      {type:"good",text:"Very important — they connect it to quality or client expectations"},
+      {type:"good",text:"They mention a recent inconsistency issue — very strong, use it"},
+      {type:"warn",text:"Somewhat — they have not thought about it enough, help them do so"},
+      {type:"bad",text:"Not very — they are confident in their team, adjust your positioning"}
+    ]
+  },
+  "solution-trial":{
+    quad:"SOLUTION",quadColor:"rgba(10,122,74,.2)",quadText:"rgba(53,255,133,.8)",
+    question:"Would it make sense to run PinpointAI alongside your next engagement so you can see the output before committing?",
+    why:"This is your trial close. It removes the commitment barrier and replaces it with a specific, low-risk next step. You are not asking them to buy. You are asking them to try it on a real engagement. If they say yes, you have a live evaluation. If they hesitate, diagnose the blocker.",
+    signals:[
+      {type:"good",text:"Yes immediately — move to next steps, get a deal in the pipeline"},
+      {type:"good",text:"Yes with conditions — understand them and agree next steps"},
+      {type:"warn",text:"Maybe, need to check — get a specific date and who else needs to be involved"},
+      {type:"bad",text:"No — understand why before ending the call, do not accept it at face value"}
+    ]
+  },
+  "solution-decision":{
+    quad:"SOLUTION",quadColor:"rgba(10,122,74,.2)",quadText:"rgba(53,255,133,.8)",
+    question:"Who else in the firm would need to be involved in a decision like this?",
+    why:"This is your stakeholder mapping question. It tells you who the real decision maker is, whether there is a procurement process, and who your champion needs to get on side. Ask it after you have built rapport and established value — not as an opener.",
+    signals:[
+      {type:"good",text:"Just me — they are the decision maker, accelerate the process"},
+      {type:"good",text:"Me and one other — manageable, get the second person on a call"},
+      {type:"warn",text:"A few people — map them out, understand each person's concern"},
+      {type:"bad",text:"Procurement or IT — longer process, needs internal champion to navigate"}
+    ]
+  }
+};
+
+var activeDetail=null,aM=0,aS=0,done={},chats={},sbOpen=true;
+function cK(){return aM+"-"+aS}
+var FINN_SYS="You are Finn, a senior sales coach at PinpointAI. You coach new SDRs on selling PinpointAI to FDD and transaction services professionals. PinpointAI automates financial due diligence, saving teams 8-12 hours per engagement. Be direct, practical, and specific to this market. No em dashes. 150-220 words per response.";
+
+function showDetail(quad,key){
+  var id=quad+"-"+key,d=DETAILS[id];
+  if(!d)return;
+  document.querySelectorAll(".q-item").forEach(function(el){el.classList.remove("active");});
+  if(event&&event.currentTarget)event.currentTarget.classList.add("active");
+  var tag=document.getElementById("dp-tag");
+  if(!tag)return;
+  tag.textContent=d.quad;tag.style.background=d.quadColor;tag.style.color=d.quadText;
+  tag.style.border="1px solid "+d.quadText.replace(".9",".3");
+  tag.style.padding="3px 10px";tag.style.borderRadius="20px";tag.style.fontWeight="700";
+  document.getElementById("dp-question").textContent=d.question;
+  document.getElementById("dp-why").textContent=d.why;
+  var sig=document.getElementById("dp-signals");
+  sig.innerHTML=d.signals.map(function(s){
+    return '<div class="dp-signal '+s.type+'"><div class="dp-signal-dot"></div><div class="dp-signal-text">'+s.text+"</div></div>"
+  }).join("");
+  var panel=document.getElementById("detail-panel");
+  panel.classList.add("vis");
+  panel.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function closeDetail(){
+  var p=document.getElementById("detail-panel");
+  if(p)p.classList.remove("vis");
+  document.querySelectorAll(".q-item").forEach(function(el){el.classList.remove("active");});
+}
+
+function renderQual(){
+  var wrap=document.createElement("div");
+  wrap.className="qual-wrap";
+  var grid=document.getElementById("qual-grid-tpl");
+  var panel=document.getElementById("qual-panel-tpl");
+  var tips=document.getElementById("qual-tips-tpl");
+  wrap.innerHTML=(grid?grid.innerHTML:"")+(panel?panel.innerHTML:"")+(tips?tips.innerHTML:"");
+  return wrap.outerHTML;
+}
+
+function renderCO(c){
+  if(!c)return "";
+  var icons={blue:"&#9432;",green:"&#10003;",amber:"&#9888;",red:"&#9888;"};
+  return '<div class="co co-'+c.type+'"><div class="co-lbl">'+(icons[c.type]||"")+" "+(c.label||"")+'</div>'+c.text.replace(/\n/g,"<br>")+"</div>"
+}
+
+async function finnSend(q){
+  var key=cK();if(!chats[key])chats[key]=[];
+  chats[key].push({role:"user",content:q});
+  var msgs=document.getElementById("fmsgs");
+  if(msgs){msgs.classList.add("vis");finnRender(key);}
+  var st=document.getElementById("fst");if(st)st.style.display="none";
+  var ld=document.createElement("div");ld.id="fld";ld.className="mr fu";
+  ld.innerHTML='<div class="mav f">F</div><div class="mb f"><div class="tdots"><div class="tdot" style="animation-delay:0s"></div><div class="tdot" style="animation-delay:.2s"></div><div class="tdot" style="animation-delay:.4s"></div></div></div>';
+  if(msgs){msgs.appendChild(ld);msgs.scrollTop=msgs.scrollHeight;}
+  var sec=MODULES[aM].sections[aS];
+  try{
+    var res=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:1000,
+        system:FINN_SYS+"\n\nCurrent section: "+sec.title+".",messages:chats[key]})});
+    var data=await res.json();
+    var reply=(data.content&&data.content.find(function(b){return b.type==="text"}))||{text:"Something went wrong."};
+    chats[key].push({role:"assistant",content:reply.text});
+  }catch(e){chats[key].push({role:"assistant",content:"Network error - please try again."});}
+  var ld2=document.getElementById("fld");if(ld2)ld2.remove();
+  finnRender(key);
+}
+function finnRender(key){
+  var div=document.getElementById("fmsgs");if(!div)return;
+  div.innerHTML=(chats[key]||[]).map(function(m){
+    var cls='mr '+(m.role==="user"?"u":"")+" fu";
+    return '<div class="'+cls+'">'+
+      (m.role==="assistant"?'<div class="mav f">F</div>':'')+
+      '<div class="mb '+(m.role==="assistant"?"f":"u")+'">'+m.content.replace(/\n/g,'<br>')+'</div>'+
+      (m.role==="user"?'<div class="mav y">M</div>':'')+
+    '</div>'  
+  }).join("");div.scrollTop=div.scrollHeight;
+}
+function finnKey(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();finnSubmit();}var ta=document.getElementById("fta");if(ta){ta.style.height="auto";ta.style.height=Math.min(ta.scrollHeight,100)+"px";}}
+function finnSubmit(){var ta=document.getElementById("fta");var q=ta?ta.value.trim():"";if(!q)return;ta.value="";ta.style.height="auto";finnSend(q);}
+function totSec(){return MODULES.reduce(function(a,m){return a+m.sections.length},0)}
+function doneSec(){return Object.keys(done).filter(function(k){return done[k]}).length}
+function markDone(){done[aM+"-"+aS]=true;var mod=MODULES[aM];if(aS<mod.sections.length-1)aS++;else if(aM<MODULES.length-1){aM++;aS=0;}render();document.getElementById("ct").scrollTop=0;}
+function goBack(){if(aS>0)aS--;else if(aM>0){aM--;aS=MODULES[aM].sections.length-1;}render();document.getElementById("ct").scrollTop=0;}
+function goTo(mi,si){aM=mi;aS=si;render();document.getElementById("ct").scrollTop=0;if(window.innerWidth<700)toggleSidebar();}
+function toggleSidebar(){sbOpen=!sbOpen;document.getElementById("sb").classList.toggle("closed",!sbOpen);}
+
+function render(){
+  var mod=MODULES[aM],sec=mod.sections[aS],key=aM+"-"+aS;
+  var isDone=!!done[key],isFirst=aM===0&&aS===0,isLast=aM===MODULES.length-1&&aS===mod.sections.length-1;
+  var ts=totSec(),ds=doneSec(),pct=Math.round(ds/ts*100);
+  var rem=MODULES.slice(aM+1).reduce(function(a,m){return a+m.time},0)+Math.round(((mod.sections.length-aS)/mod.sections.length)*mod.time);
+  document.getElementById("tb-sec").textContent=mod.icon+" "+mod.title+" - "+sec.title;
+  document.getElementById("pg-lbl").textContent=ds+" / "+ts;
+  document.getElementById("rng-n").textContent=pct+"%";
+  document.getElementById("rng").style.strokeDashoffset=75.4-(75.4*pct/100);
+  document.getElementById("sb-done").textContent=ds;
+  document.getElementById("sb-left").textContent=rem;
+  document.getElementById("sb-nav").innerHTML=MODULES.map(function(m,mi){
+    var mA=mi===aM,mD=m.sections.every(function(_,si){return done[mi+"-"+si]});
+    var secs=mA?'<div class="si-list">'+m.sections.map(function(s,si){
+      var sA=si===aS,sD=done[mi+"-"+si];
+      return '<div class="si'+(sA?" on":"")+(sD?" done":"")+'" onclick="event.stopPropagation();goTo('+mi+','+si+')">'+'<div class="si-dot'+(sD?" ok":sA?" cur":"")+'">'+((sD)?"&#10003;":"")+'</div><span class="si-lbl">'+s.title+"</span></div>"
+    }).join("")+"</div>":"";
+    return '<div class="mi'+(mA?" on":"")+'" onclick="goTo('+mi+',0)"><div class="mi-hdr"><div class="mi-ico">'+m.icon+'</div><div class="mi-info"><div class="mi-name">'+m.title+'</div><div class="mi-meta"><span class="mi-id">'+m.id+'</span><span class="mi-t">~'+m.time+'m</span></div></div><div class="mi-ck'+(mD?" ok":"")+'">'+((mD)?"&#10003;":"")+"</div></div>"+secs+"</div>"
+  }).join("");
+  var secPct=Math.round((aS+1)/mod.sections.length*100),hasHist=chats[key]&&chats[key].length>0;
+  var body='<div class="btext">'+sec.content.split("\n\n").map(function(p){return "<p>"+p+"</p>"}).join("")+"</div>";
+  if(sec.type==="qual")body+=renderQual();
+  if(sec.callout)body+=renderCO(sec.callout);
+  if(sec.callout2)body+=renderCO(sec.callout2);
+  document.getElementById("cti").innerHTML=
+    '<div class="lhdr"><div class="lcrumb"><div class="lcrumb-ico">'+mod.icon+'</div>'+
+    '<span style="color:var(--royal);font-weight:600;font-family:var(--mono);font-size:11px">'+mod.id+" - "+mod.title+'</span><span style="color:var(--muted)">&#8250;</span>'+
+    '<span style="font-size:11px;font-family:var(--mono);color:var(--muted)">Section '+(aS+1)+" of "+mod.sections.length+"</span></div>"+
+    '<div class="ltitle">'+sec.title+"</div>"+
+    '<div class="lmeta"><div class="lmi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~'+mod.time+" min</div>"+(isDone?'<div class="lmi" style="color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Completed</div>':"")+"</div>"+
+    '<div class="lpbar"><div class="lpfill" style="width:'+secPct+'%"></div></div></div>'+
+    body+
+    '<div class="fw"><div class="fh"><div class="fav-wrap"><div class="fav">&#127891;</div><div class="fon"></div></div><div class="finfo"><div class="fname">Ask Finn</div><div class="fsub">Sales Coach</div></div><div class="fai">AI COACH</div></div>'+
+    '<div id="fmsgs" class="fmsgs'+(hasHist?" vis":"")+'"></div>'+
+    (!hasHist?'<div id="fst" class="fst"><div class="fst-lbl">Ask your coach</div><div class="fst-g">'+mod.starters.map(function(q){return '<button class="fsbtn" onclick="finnSend(this.textContent)">'+q+"</button>"}).join("")+"</div></div>":"")+
+    '<div class="fin"><textarea id="fta" class="fta" placeholder="Ask Finn anything about sales..." rows="1" onkeydown="finnKey(event)"></textarea><button class="fsnd" onclick="finnSubmit()"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div></div>'+
+    '<div class="lnav"><button class="nbk" onclick="goBack()"'+(isFirst?" disabled":"")+'><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg> Back</button>'+
+    '<button class="nnx'+(isDone?" done":"")+'" onclick="markDone()">'+(isDone?"Done - Next":"Mark done")+' <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></button></div>';
+  if(hasHist){finnRender(key);document.getElementById("fmsgs").classList.add("vis");}
+}
+render();
+</script>
+</body>
+</html>
