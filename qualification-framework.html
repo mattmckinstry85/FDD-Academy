@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qualification Framework — PinpointAI</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#211847;--dark:#0F0D2A;--royal:#3D50F4;--cyan:#35FFE9;--red:#FA295F;
+  --white:#fff;--font:'Rubik',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+html,body{min-height:100%;background:var(--dark);color:var(--white);font-family:var(--font);font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* TOPBAR */
+#tb{height:52px;display:flex;align-items:center;padding:0 24px;background:rgba(15,13,42,.95);border-bottom:1px solid rgba(255,255,255,.07);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);gap:14px}
+.tb-logo{display:flex;align-items:center;gap:8px;text-decoration:none;padding-right:14px;border-right:1px solid rgba(255,255,255,.1)}
+.tb-logo-box{width:26px;height:26px;background:var(--royal);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.tb-logo-box svg{width:14px;height:14px}
+.tb-logo-name{font-size:13px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.tb-logo-name b{color:var(--cyan)}
+.tb-title{font-size:11px;font-family:var(--mono);color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase}
+.tb-back{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:var(--dark);text-decoration:none;padding:6px 14px;border-radius:6px;background:var(--cyan);font-weight:700}
+.tb-back:hover{background:#20EDD6}
+
+/* PAGE */
+#page{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+
+.page-hero{text-align:center;margin-bottom:48px}
+.page-eyebrow{font-size:10px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+.page-title{font-size:36px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:10px}
+.page-sub{font-size:15px;color:rgba(255,255,255,.45);font-weight:300;max-width:500px;margin:0 auto;line-height:1.6}
+
+/* GRID */
+.grid-wrap{position:relative;margin-bottom:48px}
+
+/* AXIS LABELS */
+.axis-h{position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);pointer-events:none;z-index:2}
+.axis-h-line{height:1px;background:rgba(255,255,255,.12);width:100%;position:relative}
+.axis-h-line::before{content:"NEEDS";position:absolute;left:0;top:-9px;font-size:9px;font-family:var(--mono);letter-spacing:2px;color:rgba(255,255,255,.2);font-weight:600}
+.axis-h-line::after{content:"SOLUTIONS";position:absolute;right:0;top:-9px;font-size:9px;font-family:var(--mono);letter-spacing:2px;color:rgba(255,255,255,.2);font-weight:600;text-align:right}
+
+.axis-v{position:absolute;left:50%;top:0;bottom:0;transform:translateX(-50%);pointer-events:none;z-index:2}
+.axis-v-line{width:1px;background:rgba(255,255,255,.12);height:100%}
+
+/* QUADRANT GRID */
+.quads{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;position:relative;z-index:1}
+
+.quad{
+  position:relative;padding:28px 26px 24px;min-height:340px;
+  border:1px solid rgba(255,255,255,.06);
+  transition:border-color .2s;
+  overflow:hidden;
+}
+.quad::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .2s;pointer-events:none}
+.quad:hover{border-color:rgba(255,255,255,.12)}
+.quad:hover::before{opacity:1}
+
+.quad-needs{background:rgba(61,80,244,.06);border-radius:16px 2px 2px 2px}
+.quad-needs::before{background:radial-gradient(ellipse at top left, rgba(61,80,244,.12) 0%, transparent 70%)}
+.quad-pain{background:rgba(250,41,95,.05);border-radius:2px 16px 2px 2px}
+.quad-pain::before{background:radial-gradient(ellipse at top right, rgba(250,41,95,.1) 0%, transparent 70%)}
+.quad-sources{background:rgba(53,255,233,.04);border-radius:2px 2px 2px 16px}
+.quad-sources::before{background:radial-gradient(ellipse at bottom left, rgba(53,255,233,.08) 0%, transparent 70%)}
+.quad-solution{background:rgba(10,122,74,.05);border-radius:2px 2px 16px 2px}
+.quad-solution::before{background:radial-gradient(ellipse at bottom right, rgba(10,122,74,.1) 0%, transparent 70%)}
+
+.quad-label{display:flex;align-items:center;gap:8px;margin-bottom:18px}
+.quad-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--mono);font-weight:700;flex-shrink:0}
+.quad-needs .quad-num{background:rgba(61,80,244,.2);color:rgba(61,80,244,.9);border:1px solid rgba(61,80,244,.3)}
+.quad-pain .quad-num{background:rgba(250,41,95,.15);color:rgba(250,41,95,.9);border:1px solid rgba(250,41,95,.3)}
+.quad-sources .quad-num{background:rgba(53,255,233,.12);color:rgba(53,255,233,.8);border:1px solid rgba(53,255,233,.25)}
+.quad-solution .quad-num{background:rgba(10,122,74,.2);color:rgba(53,255,133,.8);border:1px solid rgba(10,122,74,.3)}
+.quad-title{font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;font-family:var(--mono)}
+.quad-needs .quad-title{color:rgba(61,80,244,.9)}
+.quad-pain .quad-title{color:rgba(250,41,95,.9)}
+.quad-sources .quad-title{color:rgba(53,255,233,.8)}
+.quad-solution .quad-title{color:rgba(53,255,133,.8)}
+
+/* QUESTIONS */
+.q-list{display:flex;flex-direction:column;gap:8px}
+.q-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 13px;border-radius:8px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+  cursor:pointer;transition:all .15s;
+  position:relative;
+}
+.q-item:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12);transform:translateX(2px)}
+.q-item.active{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+
+.quad-needs .q-item:hover,.quad-needs .q-item.active{background:rgba(61,80,244,.12);border-color:rgba(61,80,244,.3)}
+.quad-pain .q-item:hover,.quad-pain .q-item.active{background:rgba(250,41,95,.1);border-color:rgba(250,41,95,.3)}
+.quad-sources .q-item:hover,.quad-sources .q-item.active{background:rgba(53,255,233,.08);border-color:rgba(53,255,233,.25)}
+.quad-solution .q-item:hover,.quad-solution .q-item.active{background:rgba(10,122,74,.1);border-color:rgba(10,122,74,.3)}
+
+.q-bullet{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.quad-needs .q-bullet{background:rgba(61,80,244,.7)}
+.quad-pain .q-bullet{background:rgba(250,41,95,.7)}
+.quad-sources .q-bullet{background:rgba(53,255,233,.6)}
+.quad-solution .q-bullet{background:rgba(53,255,133,.6)}
+
+.q-text{font-size:13px;color:rgba(255,255,255,.65);line-height:1.45;font-weight:300;flex:1}
+.q-item:hover .q-text,.q-item.active .q-text{color:rgba(255,255,255,.9)}
+
+/* TOOLTIP / DETAIL PANEL */
+.detail-panel{
+  display:none;
+  margin-top:32px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;
+  padding:24px 28px;
+  animation:fadeUp .2s ease-out;
+}
+.detail-panel.vis{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.dp-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:16px}
+.dp-quad-tag{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;font-weight:700;flex-shrink:0}
+.dp-question{font-size:18px;font-weight:700;color:#fff;letter-spacing:-.3px;line-height:1.3;flex:1}
+.dp-body{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.dp-col-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px;font-weight:600}
+.dp-why{font-size:14px;color:rgba(255,255,255,.6);line-height:1.75;font-weight:300}
+.dp-good{display:flex;flex-direction:column;gap:6px}
+.dp-signal{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;border-radius:7px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+.dp-signal-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.dp-signal.good .dp-signal-dot{background:rgba(53,255,133,.7)}
+.dp-signal.warn .dp-signal-dot{background:rgba(255,180,0,.7)}
+.dp-signal.bad  .dp-signal-dot{background:rgba(250,41,95,.7)}
+.dp-signal-text{font-size:12px;color:rgba(255,255,255,.55);line-height:1.5;font-weight:300}
+
+/* CLOSE BTN */
+.dp-close{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);border-radius:6px;padding:5px 10px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all .15s;flex-shrink:0}
+.dp-close:hover{background:rgba(255,255,255,.12);color:#fff}
+
+/* BOTTOM TIPS */
+.tips-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.tip-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px 18px}
+.tip-card-lbl{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-weight:600}
+.tip-card-text{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;font-weight:300}
+
+@media(max-width:700px){
+  .quads{grid-template-columns:1fr}
+  .dp-body{grid-template-columns:1fr}
+  .tips-row{grid-template-columns:1fr}
+  .page-title{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<div id="tb">
+  <a class="tb-logo" href="index.html">
+    <div class="tb-logo-box"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg></div>
+    <div class="tb-logo-name">Pinpoint<b>AI</b></div>
+  </a>
+  <div class="tb-title">Sales Qualification</div>
+  <a class="tb-back" href="index.html">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Dashboard
+  </a>
+</div>
+
+<div id="page">
+
+  <div class="page-hero">
+    <div class="page-eyebrow">Sales Trainer — Qualification</div>
+    <h1 class="page-title">The Qualification Framework</h1>
+    <p class="page-sub">Four quadrants. Use this to structure every discovery call. Click any question to see why it matters and what good looks like.</p>
+  </div>
+
+  <div class="grid-wrap">
+    <div class="quads">
+
+      <!-- Q1: NEEDS (top left) -->
+      <div class="quad quad-needs">
+        <div class="quad-label">
+          <div class="quad-num">1</div>
+          <div class="quad-title">Needs</div>
+        </div>
+        <div class="q-list">
+          <div class="q-item" onclick="showDetail('needs','deal-volume')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How many FDD or QoE engagements does your team run per year?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','team-size')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How many people are in your transaction services team?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','revenue')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What is the typical fee range for an FDD engagement at your firm?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','deal-size')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What deal size do you typically work on — EV range?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','targets')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What are your growth targets for the practice this year?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('needs','growth')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Are you looking to grow headcount or grow revenue per head?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2: PAIN (top right) -->
+      <div class="quad quad-pain">
+        <div class="quad-label">
+          <div class="quad-num">2</div>
+          <div class="quad-title">Pain</div>
+        </div>
+        <div class="q-list">
+          <div class="q-item" onclick="showDetail('pain','time')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How long does it take from data room access to first cut of the EBITDA bridge?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','cost')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What percentage of engagement hours are spent on data processing versus analysis?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','quality')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How confident are you in the consistency of outputs across different team members?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','consequence')">
+            <div class="q-bullet"></div>
+            <div class="q-text">If nothing changes in your process over the next 12 months, what does that mean for the team?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('pain','capacity')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Have you ever had to turn down work or delay a report because of capacity?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3: SOURCES (bottom left) -->
+      <div class="quad quad-sources">
+        <div class="quad-label">
+          <div class="quad-num">3</div>
+          <div class="quad-title">Sources</div>
+        </div>
+        <div class="q-list">
+          <div class="q-item" onclick="showDetail('sources','process')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Walk me through how your team currently processes a new data room — what happens in the first 48 hours?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('sources','tools')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What tools does your team use today — beyond Excel?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('sources','outsource')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Do you outsource any part of the analytical work — offshore, nearshore, or to juniors?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('sources','junior')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How much of the initial data processing falls on your junior staff?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('sources','templates')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Do you have standardised templates, or does each manager build their own approach?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4: SOLUTION (bottom right) -->
+      <div class="quad quad-solution">
+        <div class="quad-label">
+          <div class="quad-num">4</div>
+          <div class="quad-title">Solution</div>
+        </div>
+        <div class="q-list">
+          <div class="q-item" onclick="showDetail('solution','bridge')">
+            <div class="q-bullet"></div>
+            <div class="q-text">What if you could get a structured first cut of the EBITDA bridge within hours of uploading the data room?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('solution','capacity')">
+            <div class="q-bullet"></div>
+            <div class="q-text">If your team got back 8-12 hours per engagement, what would you do with that capacity?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('solution','consistency')">
+            <div class="q-bullet"></div>
+            <div class="q-text">How important is it that every engagement follows the same analytical structure regardless of who runs it?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('solution','trial')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Would it make sense to run PinpointAI alongside your next engagement so you can see the output before committing?</div>
+          </div>
+          <div class="q-item" onclick="showDetail('solution','decision')">
+            <div class="q-bullet"></div>
+            <div class="q-text">Who else in the firm would need to be involved in a decision like this?</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DETAIL PANEL -->
+  <div class="detail-panel" id="detail-panel">
+    <div class="dp-top">
+      <div>
+        <div class="dp-quad-tag" id="dp-tag"></div>
+        <div class="dp-question" id="dp-question"></div>
+      </div>
+      <button class="dp-close" onclick="closeDetail()">&#10005; Close</button>
+    </div>
+    <div class="dp-body">
+      <div>
+        <div class="dp-col-lbl">Why ask this</div>
+        <div class="dp-why" id="dp-why"></div>
+      </div>
+      <div>
+        <div class="dp-col-lbl">What the answer tells you</div>
+        <div class="dp-good" id="dp-signals"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM TIPS -->
+  <div class="tips-row">
+    <div class="tip-card">
+      <div class="tip-card-lbl" style="color:rgba(61,80,244,.8)">Order matters</div>
+      <div class="tip-card-text">Always start with Needs before Pain. Understand their world first. If you go to pain too early you sound like every other vendor.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-card-lbl" style="color:rgba(250,41,95,.8)">Let them talk</div>
+      <div class="tip-card-text">The best qualification calls are 70% them, 30% you. Ask a question, then be quiet. The detail comes in the silence.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-card-lbl" style="color:rgba(53,255,133,.8)">Only pitch after pain</div>
+      <div class="tip-card-text">Do not move to the Solution quadrant until you have confirmed real pain in quadrant 2. A solution without a problem is just noise.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const DETAILS = {
+  "needs-deal-volume":{
+    quad:"NEEDS",quadColor:"rgba(61,80,244,.2)",quadText:"rgba(61,80,244,.9)",
+    question:"How many FDD or QoE engagements does your team run per year?",
+    why:"Deal volume tells you the scale of the opportunity and how quickly the pain compounds. A team running 5 engagements a year feels the inefficiency occasionally. A team running 50 feels it every week. Volume also tells you whether the ROI conversation is easy or hard.",
+    signals:[
+      {type:"good",text:"20+ engagements per year — strong ROI case, frequent pain"},
+      {type:"good",text:"10-20 — solid opportunity, ROI still works"},
+      {type:"warn",text:"5-10 — worth pursuing but ROI case needs careful framing"},
+      {type:"bad",text:"Under 5 — low urgency, longer sales cycle"}
+    ]
+  },
+  "needs-team-size":{
+    quad:"NEEDS",quadColor:"rgba(61,80,244,.2)",quadText:"rgba(61,80,244,.9)",
+    question:"How many people are in your transaction services team?",
+    why:"Team size tells you the scale of adoption, the number of licences, and how complex the rollout conversation will be. It also tells you whether you are talking to a boutique where one partner makes all decisions, or a larger practice with procurement processes.",
+    signals:[
+      {type:"good",text:"5-20 — manageable rollout, clear decision maker, strong fit"},
+      {type:"good",text:"20-50 — larger opportunity, may have a more structured buying process"},
+      {type:"warn",text:"50+ — big opportunity but expect procurement involvement and longer cycle"},
+      {type:"warn",text:"1-4 — very small, decision maker is usually right in front of you"}
+    ]
+  },
+  "needs-revenue":{
+    quad:"NEEDS",quadColor:"rgba(61,80,244,.2)",quadText:"rgba(61,80,244,.9)",
+    question:"What is the typical fee range for an FDD engagement at your firm?",
+    why:"Fee size tells you the billing rates and therefore the cost of the hours PinpointAI saves. If a firm bills £800 per hour and PinpointAI saves 10 hours per engagement, that is £8,000 of capacity freed per deal. This is the foundation of the ROI conversation.",
+    signals:[
+      {type:"good",text:"£50k-£150k per engagement — strong ROI case"},
+      {type:"good",text:"£20k-£50k — solid, ROI is clear"},
+      {type:"warn",text:"Under £20k — lower billing rates, ROI case is tighter"},
+      {type:"bad",text:"They won't say — move on, come back to this later"}
+    ]
+  },
+  "needs-deal-size":{
+    quad:"NEEDS",quadColor:"rgba(61,80,244,.2)",quadText:"rgba(61,80,244,.9)",
+    question:"What deal size do you typically work on?",
+    why:"Deal size tells you the complexity and data volume the team handles. Mid-market deals (£10m-£250m EV) are PinpointAI's sweet spot. Very small deals may have limited data rooms. Very large deals have massive data rooms where PinpointAI saves even more time.",
+    signals:[
+      {type:"good",text:"£10m-£500m EV — core mid-market, ideal fit"},
+      {type:"good",text:"£500m+ — high complexity, high value, PinpointAI saves significant time"},
+      {type:"warn",text:"Under £5m — simpler deals, smaller data rooms, lower urgency"},
+      {type:"bad",text:"Mostly micro-deals under £2m — likely not enough complexity to justify"}
+    ]
+  },
+  "needs-targets":{
+    quad:"NEEDS",quadColor:"rgba(61,80,244,.2)",quadText:"rgba(61,80,244,.9)",
+    question:"What are your growth targets for the practice this year?",
+    why:"Growth targets create urgency. A practice that wants to grow 20% this year cannot do it by hiring alone — they need to do more with the same people. This is exactly where PinpointAI fits. Targets also tell you what the partner is being measured on.",
+    signals:[
+      {type:"good",text:"Ambitious growth target — creates urgency and internal pressure"},
+      {type:"good",text:"Focused on margin improvement — PinpointAI directly addresses this"},
+      {type:"warn",text:"No clear target — harder to create urgency, longer cycle"},
+      {type:"bad",text:"Actively scaling back — not the right time"}
+    ]
+  },
+  "needs-growth":{
+    quad:"NEEDS",quadColor:"rgba(61,80,244,.2)",quadText:"rgba(61,80,244,.9)",
+    question:"Are you looking to grow headcount or grow revenue per head?",
+    why:"This question reveals their growth philosophy. A firm trying to grow revenue per head is explicitly trying to do more work without more people — which is exactly what PinpointAI enables. A firm focused on headcount growth is less immediately receptive but still relevant.",
+    signals:[
+      {type:"good",text:"Revenue per head — perfect alignment with PinpointAI's value proposition"},
+      {type:"good",text:"Both — they understand the efficiency argument"},
+      {type:"warn",text:"Headcount only — needs reframing, but still an opportunity"}
+    ]
+  },
+  "pain-time":{
+    quad:"PAIN",quadColor:"rgba(250,41,95,.15)",quadText:"rgba(250,41,95,.9)",
+    question:"How long does it take from data room access to first cut of the EBITDA bridge?",
+    why:"This is the single best pain question. It forces them to articulate exactly where the time goes. Most teams will say 3-5 days. Some will say a week. PinpointAI can produce a structured first cut in hours. The gap between their answer and what is possible is your value proposition.",
+    signals:[
+      {type:"bad",text:"3+ days — strong pain signal, clear value case"},
+      {type:"warn",text:"1-2 days — moderate pain, still a clear improvement"},
+      {type:"warn",text:"Same day — either very efficient or a very small data room"},
+      {type:"good",text:"They struggle to answer — means they have never measured it, even better"}
+    ]
+  },
+  "pain-cost":{
+    quad:"PAIN",quadColor:"rgba(250,41,95,.15)",quadText:"rgba(250,41,95,.9)",
+    question:"What percentage of engagement hours are spent on data processing versus analysis?",
+    why:"Most firms have never thought about this. When they do, the answer is usually uncomfortable — 30-50% of hours on data processing is common. This question makes the inefficiency visible. Once they have said the number out loud, the conversation shifts.",
+    signals:[
+      {type:"bad",text:"30%+ on processing — strong pain, clear ROI case"},
+      {type:"bad",text:"They admit it's too high — they already know the problem exists"},
+      {type:"warn",text:"They estimate 10-20% — lower pain but still relevant"},
+      {type:"good",text:"They have no idea — this is an opportunity to dig deeper"}
+    ]
+  },
+  "pain-quality":{
+    quad:"PAIN",quadColor:"rgba(250,41,95,.15)",quadText:"rgba(250,41,95,.9)",
+    question:"How confident are you in the consistency of outputs across different team members?",
+    why:"Quality inconsistency is a pain that partners feel but rarely talk about. When a report produced by a Senior Manager looks materially different from one produced by a Manager, it creates rework, review time, and reputational risk. PinpointAI standardises the analytical structure.",
+    signals:[
+      {type:"bad",text:"They mention inconsistency or rework — strong signal"},
+      {type:"bad",text:"They mention client complaints or report quality issues — very strong signal"},
+      {type:"warn",text:"They say it's fine but pause before answering — probe further"},
+      {type:"good",text:"They are confident and specific about why — they may have already solved this"}
+    ]
+  },
+  "pain-consequence":{
+    quad:"PAIN",quadColor:"rgba(250,41,95,.15)",quadText:"rgba(250,41,95,.9)",
+    question:"If nothing changes in your process over the next 12 months, what does that mean for the team?",
+    why:"This is the consequence question. It makes the cost of inaction explicit. A well-run team will tell you they will struggle to hit growth targets, burn out junior staff, or lose deals to faster competitors. This creates urgency that a product demonstration cannot.",
+    signals:[
+      {type:"bad",text:"They describe a real problem — capacity, quality, burnout, lost deals"},
+      {type:"bad",text:"They pause — means they know the answer is not good"},
+      {type:"warn",text:"They say things will be fine — probe with 'and what happens to growth targets?'"},
+      {type:"good",text:"They have a clear plan — understand it before positioning PinpointAI"}
+    ]
+  },
+  "pain-capacity":{
+    quad:"PAIN",quadColor:"rgba(250,41,95,.15)",quadText:"rgba(250,41,95,.9)",
+    question:"Have you ever had to turn down work or delay a report because of capacity?",
+    why:"Turning down work is the most expensive pain a professional services firm can have. If they have done it even once, it is a vivid, specific memory that you can anchor the entire conversation around. Delayed reports mean unhappy clients and reputational risk.",
+    signals:[
+      {type:"bad",text:"Yes, they have turned down work — maximum urgency signal"},
+      {type:"bad",text:"Yes, they have delayed reports — strong signal"},
+      {type:"warn",text:"They hedge — 'not exactly but...' — probe for the real story"},
+      {type:"good",text:"Never — they either have excess capacity or are not being honest"}
+    ]
+  },
+  "sources-process":{
+    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    question:"Walk me through how your team currently processes a new data room.",
+    why:"This is the most important question in the sources quadrant. Let them talk. You will learn exactly where the time goes, who does what, and where the bottlenecks are. This gives you specific language to use when you position PinpointAI later in the call.",
+    signals:[
+      {type:"good",text:"They describe a manual, ad hoc process — clear opportunity"},
+      {type:"good",text:"They mention specific pain points unprompted — use their language back to them"},
+      {type:"warn",text:"They have a structured process but it is all Excel — room for improvement"},
+      {type:"bad",text:"They already use automation tools — understand what and why before continuing"}
+    ]
+  },
+  "sources-tools":{
+    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    question:"What tools does your team use today — beyond Excel?",
+    why:"Understanding their current tech stack tells you whether they are open to tools, whether there are competing solutions, and whether PinpointAI needs to integrate with or replace anything. Most FDD teams are almost entirely Excel-based.",
+    signals:[
+      {type:"good",text:"Mostly Excel — classic profile, strong fit for PinpointAI"},
+      {type:"warn",text:"They use a data room tool — complementary, not competitive"},
+      {type:"warn",text:"They mention a specific AI or automation tool — understand it before responding"},
+      {type:"bad",text:"They have a recently-built internal solution — harder but not impossible"}
+    ]
+  },
+  "sources-outsource":{
+    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    question:"Do you outsource any part of the analytical work — offshore, nearshore, or to juniors?",
+    why:"Outsourcing is a proxy for pain. If a firm is sending work offshore it is because it is too time-consuming for senior staff. This also tells you about quality concerns — offshore work often requires significant review time. PinpointAI can replace or reduce the need for outsourcing.",
+    signals:[
+      {type:"good",text:"Yes, they outsource data processing — direct replacement use case"},
+      {type:"good",text:"Yes, they use offshore support — cost and quality implications, strong signal"},
+      {type:"warn",text:"They use juniors heavily — they feel this as a risk, not just a cost"},
+      {type:"bad",text:"No outsourcing, fully in-house — not disqualifying, just understand why"}
+    ]
+  },
+  "sources-junior":{
+    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    question:"How much of the initial data processing falls on your junior staff?",
+    why:"Junior staff doing data processing is a double pain — it is expensive time relative to value, and it is a recruiting and retention risk. Analysts who spend all day formatting spreadsheets leave. Understanding how much of this work falls on juniors connects the tool to a talent conversation.",
+    signals:[
+      {type:"bad",text:"Most of it — expensive, risky, clear opportunity"},
+      {type:"warn",text:"A fair amount — they know it is not ideal"},
+      {type:"good",text:"They spread it across the team — less junior-specific pain but still relevant"}
+    ]
+  },
+  "sources-templates":{
+    quad:"SOURCES",quadColor:"rgba(53,255,233,.12)",quadText:"rgba(53,255,233,.8)",
+    question:"Do you have standardised templates, or does each manager build their own approach?",
+    why:"Lack of standardisation is both a quality risk and an efficiency cost. If every manager builds their own model, the review process is longer, training new joiners is harder, and outputs vary. This question surfaces a pain that partners feel but teams may not articulate.",
+    signals:[
+      {type:"bad",text:"No standardisation — each manager does their own thing — clear pain"},
+      {type:"warn",text:"Some templates but inconsistently used — partial pain"},
+      {type:"good",text:"Strong standardisation — less pain but consistency argument still applies"}
+    ]
+  },
+  "solution-bridge":{
+    quad:"SOLUTION",quadColor:"rgba(10,122,74,.2)",quadText:"rgba(53,255,133,.8)",
+    question:"What if you could get a structured first cut of the EBITDA bridge within hours of uploading the data room?",
+    why:"This is your opening position statement, framed as a question. It directly addresses the time pain from quadrant 2. Do not say this until you have confirmed the pain exists. If they said it takes 3-5 days, this question lands hard. If you ask it cold, it sounds like a pitch.",
+    signals:[
+      {type:"good",text:"They lean in or ask how — buying signal, move to demo conversation"},
+      {type:"good",text:"They are sceptical but curious — validate with a specific example"},
+      {type:"warn",text:"They ask about accuracy — this is a quality objection, address directly"},
+      {type:"bad",text:"They are dismissive — either wrong time or wrong person, diagnose which"}
+    ]
+  },
+  "solution-capacity":{
+    quad:"SOLUTION",quadColor:"rgba(10,122,74,.2)",quadText:"rgba(53,255,133,.8)",
+    question:"If your team got back 8-12 hours per engagement, what would you do with that capacity?",
+    why:"This question makes the benefit concrete and personal. You are not talking about features, you are talking about what they can do differently. The answer tells you what they value most — more deals, better analysis, less stress, earlier deliveries. Use their answer in every follow-up.",
+    signals:[
+      {type:"good",text:"They have a specific answer — they have thought about this, high engagement"},
+      {type:"good",text:"They mention growth — connect directly to their targets from quadrant 1"},
+      {type:"warn",text:"They are vague — probe with 'what does that mean for your growth targets?'"},
+      {type:"bad",text:"They say they do not need it — confirm they understood the question"}
+    ]
+  },
+  "solution-consistency":{
+    quad:"SOLUTION",quadColor:"rgba(10,122,74,.2)",quadText:"rgba(53,255,133,.8)",
+    question:"How important is it that every engagement follows the same analytical structure regardless of who runs it?",
+    why:"This positions PinpointAI's standardisation benefit without making it sound like a criticism of their current team. It is framed as a question about their priorities. Partners who care about quality will respond strongly. It also surfaces whether consistency is a live concern.",
+    signals:[
+      {type:"good",text:"Very important — they connect it to quality or client expectations"},
+      {type:"good",text:"They mention a recent inconsistency issue — very strong, use it"},
+      {type:"warn",text:"Somewhat — they have not thought about it enough, help them do so"},
+      {type:"bad",text:"Not very — they are confident in their team, adjust your positioning"}
+    ]
+  },
+  "solution-trial":{
+    quad:"SOLUTION",quadColor:"rgba(10,122,74,.2)",quadText:"rgba(53,255,133,.8)",
+    question:"Would it make sense to run PinpointAI alongside your next engagement so you can see the output before committing?",
+    why:"This is your trial close. It removes the commitment barrier and replaces it with a specific, low-risk next step. You are not asking them to buy. You are asking them to try it on a real engagement. If they say yes, you have a live evaluation. If they hesitate, diagnose the blocker.",
+    signals:[
+      {type:"good",text:"Yes immediately — move to next steps, get a deal in the pipeline"},
+      {type:"good",text:"Yes with conditions — understand them and agree next steps"},
+      {type:"warn",text:"Maybe, need to check — get a specific date and who else needs to be involved"},
+      {type:"bad",text:"No — understand why before ending the call, do not accept it at face value"}
+    ]
+  },
+  "solution-decision":{
+    quad:"SOLUTION",quadColor:"rgba(10,122,74,.2)",quadText:"rgba(53,255,133,.8)",
+    question:"Who else in the firm would need to be involved in a decision like this?",
+    why:"This is your stakeholder mapping question. It tells you who the real decision maker is, whether there is a procurement process, and who your champion needs to get on side. Ask it after you have built rapport and established value — not as an opener.",
+    signals:[
+      {type:"good",text:"Just me — they are the decision maker, accelerate the process"},
+      {type:"good",text:"Me and one other — manageable, get the second person on a call"},
+      {type:"warn",text:"A few people — map them out, understand each person's concern"},
+      {type:"bad",text:"Procurement or IT — longer process, needs internal champion to navigate"}
+    ]
+  }
+};
+
+var activeDetail = null;
+
+function showDetail(quad, key){
+  var id = quad+"-"+key;
+  var d = DETAILS[id];
+  if(!d) return;
+
+  // Update active state on q-items
+  document.querySelectorAll(".q-item").forEach(function(el){ el.classList.remove("active"); });
+  event.currentTarget.classList.add("active");
+
+  // Populate panel
+  var tag = document.getElementById("dp-tag");
+  tag.textContent = d.quad;
+  tag.style.background = d.quadColor;
+  tag.style.color = d.quadText;
+  tag.style.border = "1px solid "+d.quadText.replace(".9",".3");
+  tag.style.padding = "3px 10px";
+  tag.style.borderRadius = "20px";
+  tag.style.fontWeight = "700";
+
+  document.getElementById("dp-question").textContent = d.question;
+  document.getElementById("dp-why").textContent = d.why;
+
+  var signalsEl = document.getElementById("dp-signals");
+  signalsEl.innerHTML = d.signals.map(function(s){
+    return '<div class="dp-signal '+s.type+'">'+
+      '<div class="dp-signal-dot"></div>'+
+      '<div class="dp-signal-text">'+s.text+'</div>'+
+    '</div>'
+  }).join("");
+
+  var panel = document.getElementById("detail-panel");
+  panel.classList.add("vis");
+  panel.scrollIntoView({behavior:"smooth", block:"nearest"});
+  activeDetail = id;
+}
+
+function closeDetail(){
+  document.getElementById("detail-panel").classList.remove("vis");
+  document.querySelectorAll(".q-item").forEach(function(el){ el.classList.remove("active"); });
+  activeDetail = null;
+}
+</script>
+</body>
+</html>
