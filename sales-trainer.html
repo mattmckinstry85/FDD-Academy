@@ -262,13 +262,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .quad:hover{border-color:rgba(255,255,255,.12)}
 .quad:hover::before{opacity:1}
 
-.quad-needs{background:rgba(61,80,244,.06);border-radius:16px 2px 2px 2px}
+.quad-needs{background:rgba(61,80,244,.14);border-radius:16px 2px 2px 2px}
 .quad-needs::before{background:radial-gradient(ellipse at top left, rgba(61,80,244,.12) 0%, transparent 70%)}
-.quad-pain{background:rgba(250,41,95,.05);border-radius:2px 16px 2px 2px}
+.quad-pain{background:rgba(250,41,95,.12);border-radius:2px 16px 2px 2px}
 .quad-pain::before{background:radial-gradient(ellipse at top right, rgba(250,41,95,.1) 0%, transparent 70%)}
-.quad-sources{background:rgba(53,255,233,.04);border-radius:2px 2px 2px 16px}
+.quad-sources{background:rgba(53,255,233,.1);border-radius:2px 2px 2px 16px}
 .quad-sources::before{background:radial-gradient(ellipse at bottom left, rgba(53,255,233,.08) 0%, transparent 70%)}
-.quad-solution{background:rgba(10,122,74,.05);border-radius:2px 2px 16px 2px}
+.quad-solution{background:rgba(10,122,74,.12);border-radius:2px 2px 16px 2px}
 .quad-solution::before{background:radial-gradient(ellipse at bottom right, rgba(10,122,74,.1) 0%, transparent 70%)}
 
 .quad-label{display:flex;align-items:center;gap:8px;margin-bottom:18px}
@@ -278,10 +278,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .quad-sources .quad-num{background:rgba(53,255,233,.12);color:rgba(53,255,233,.8);border:1px solid rgba(53,255,233,.25)}
 .quad-solution .quad-num{background:rgba(10,122,74,.2);color:rgba(53,255,133,.8);border:1px solid rgba(10,122,74,.3)}
 .quad-title{font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;font-family:var(--mono)}
-.quad-needs .quad-title{color:rgba(61,80,244,.9)}
-.quad-pain .quad-title{color:rgba(250,41,95,.9)}
-.quad-sources .quad-title{color:rgba(53,255,233,.8)}
-.quad-solution .quad-title{color:rgba(53,255,133,.8)}
+.quad-needs .quad-title{color:#6B80FF}
+.quad-pain .quad-title{color:#FF6B8A}
+.quad-sources .quad-title{color:#35FFE9}
+.quad-solution .quad-title{color:#4DFF9A}
 
 /* QUESTIONS */
 .q-list{display:flex;flex-direction:column;gap:8px}
@@ -306,8 +306,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .quad-sources .q-bullet{background:rgba(53,255,233,.6)}
 .quad-solution .q-bullet{background:rgba(53,255,133,.6)}
 
-.q-text{font-size:13px;color:rgba(255,255,255,.65);line-height:1.45;font-weight:300;flex:1}
-.q-item:hover .q-text,.q-item.active .q-text{color:rgba(255,255,255,.9)}
+.q-text{font-size:13px;color:rgba(255,255,255,.92);line-height:1.45;font-weight:300;flex:1}
+.q-item:hover .q-text,.q-item.active .q-text{color:#fff}
 
 /* TOOLTIP / DETAIL PANEL */
 .detail-panel{
@@ -326,14 +326,14 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .dp-question{font-size:18px;font-weight:700;color:#fff;letter-spacing:-.3px;line-height:1.3;flex:1}
 .dp-body{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .dp-col-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px;font-weight:600}
-.dp-why{font-size:14px;color:rgba(255,255,255,.6);line-height:1.75;font-weight:300}
+.dp-why{font-size:14px;color:rgba(255,255,255,.85);line-height:1.75;font-weight:300}
 .dp-good{display:flex;flex-direction:column;gap:6px}
 .dp-signal{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;border-radius:7px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
 .dp-signal-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
 .dp-signal.good .dp-signal-dot{background:rgba(53,255,133,.7)}
 .dp-signal.warn .dp-signal-dot{background:rgba(255,180,0,.7)}
 .dp-signal.bad  .dp-signal-dot{background:rgba(250,41,95,.7)}
-.dp-signal-text{font-size:12px;color:rgba(255,255,255,.55);line-height:1.5;font-weight:300}
+.dp-signal-text{font-size:12px;color:rgba(255,255,255,.82);line-height:1.5;font-weight:300}
 
 /* CLOSE BTN */
 .dp-close{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);border-radius:6px;padding:5px 10px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all .15s;flex-shrink:0}
@@ -343,7 +343,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .tips-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
 .tip-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px 18px}
 .tip-card-lbl{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-weight:600}
-.tip-card-text{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;font-weight:300}
+.tip-card-text{font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;font-weight:300}
 
 @media(max-width:700px){
   .quads{grid-template-columns:1fr}
