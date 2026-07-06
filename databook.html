@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The FDD Databook — PinpointAI Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#211847;--dark:#0F0D2A;--royal:#3D50F4;--royal2:#2E3FD0;
+  --cyan:#35FFE9;--bg:#EEF0F8;--surface:#FFF;--card:#F5F6FC;--border:#E0E3F0;
+  --text:#1A1835;--text2:#3A3D5C;--muted:#7E8587;--faint:#CDD0E8;
+  --green:#0A7A4A;--green-bg:rgba(10,122,74,.08);--green-bdr:rgba(10,122,74,.22);
+  --red:#C8144A;--red-bg:rgba(200,20,74,.07);--red-bdr:rgba(200,20,74,.22);
+  --amber:#8A5500;--amber-bg:rgba(200,130,0,.07);--amber-bdr:rgba(200,130,0,.25);
+  --rb:rgba(61,80,244,.06);--rbb:rgba(61,80,244,.2);
+  --font:'Rubik',system-ui,sans-serif;--mono:'JetBrains Mono','Courier New',monospace;
+  --r:8px;--rl:12px;--rxl:16px;--sh:0 1px 3px rgba(33,24,71,.07);--shm:0 4px 16px rgba(33,24,71,.1);
+  --sidebar-w:268px;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-weight:300;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(33,24,71,.15);border-radius:2px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes dot{0%,80%,100%{opacity:.2;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
+.fu{animation:fadeUp .22s ease-out}
+#app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+#tb{height:56px;display:flex;align-items:center;padding:0 18px;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;z-index:200}
+.tb-logo{display:flex;align-items:center;gap:8px;padding-right:18px;border-right:1px solid rgba(255,255,255,.1);text-decoration:none;flex-shrink:0}
+.tb-logo-box{width:28px;height:28px;background:var(--royal);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.tb-logo-box svg{width:15px;height:15px}
+.tb-logo-name{font-size:13px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.tb-logo-name b{color:var(--cyan)}
+.tb-mid{flex:1;display:flex;align-items:center;padding:0 18px;gap:14px;min-width:0;overflow:hidden}
+.tb-course{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);white-space:nowrap}
+.tb-sep{width:1px;height:16px;background:rgba(255,255,255,.1);flex-shrink:0}
+.tb-sec{font-size:12px;color:rgba(255,255,255,.7);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.tb-glossary{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:rgba(255,255,255,.55);text-decoration:none;padding:6px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.12);font-weight:600;transition:all .15s}
+.tb-glossary:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+.tb-back{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:var(--dark);text-decoration:none;padding:6px 14px;border-radius:6px;background:var(--cyan);font-weight:700;transition:all .15s}
+.tb-back:hover{background:#20EDD6}
+.tb-prog-val{font-size:11px;font-family:var(--mono);color:rgba(255,255,255,.5);font-weight:600}
+.tb-ring{position:relative;width:32px;height:32px;flex-shrink:0}
+.tb-ring svg{transform:rotate(-90deg)}
+.tb-ring-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-family:var(--mono);color:var(--cyan);font-weight:600}
+.tb-menu-btn{background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;padding:6px;border-radius:6px;display:flex;align-items:center;transition:all .15s}
+.tb-menu-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+#main{display:flex;flex:1;overflow:hidden}
+#sb{width:var(--sidebar-w);flex-shrink:0;background:var(--dark);border-right:1px solid rgba(255,255,255,.05);overflow-y:auto;display:flex;flex-direction:column;transition:width .2s}
+#sb.closed{width:0;overflow:hidden}
+.sb-top{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.06);background:linear-gradient(135deg,rgba(61,80,244,.18) 0%,rgba(53,255,233,.04) 100%)}
+.sb-top-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px}
+.sb-cards{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.sb-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);padding:10px 12px}
+.sb-card-n{font-size:22px;font-weight:700;font-family:var(--mono);color:#fff;line-height:1}
+.sb-card-n.c{color:var(--cyan)}
+.sb-card-l{font-size:10px;color:rgba(255,255,255,.45);margin-top:3px}
+.sb-mods{padding:6px 0 20px}
+.sb-grp{padding:12px 16px 4px;font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.si{display:flex;align-items:center;gap:7px;padding:8px 14px 8px 18px;cursor:pointer;transition:background .12s;border-left:2px solid transparent}
+.si:hover{background:rgba(255,255,255,.04)}
+.si.on{background:rgba(61,80,244,.12);border-left-color:var(--royal)}
+.si.done{background:rgba(10,122,74,.06)}
+.si-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:5px;transition:all .15s}
+.si-dot.ok{border-color:var(--cyan);background:rgba(53,255,233,.18);color:var(--cyan)}
+.si-dot.cur{border-color:var(--royal);background:rgba(61,80,244,.28)}
+.si-lbl{font-size:12px;color:rgba(255,255,255,.55);line-height:1.35;font-weight:400}
+.si.on .si-lbl{color:rgba(255,255,255,.9);font-weight:500}
+.si.done .si-lbl{color:rgba(53,255,233,.65)}
+#ct{flex:1;overflow-y:auto;background:var(--bg)}
+#cti{max-width:740px;margin:0 auto;padding:36px 44px 90px}
+.lhdr{background:var(--surface);border:1px solid var(--border);border-radius:var(--rxl);padding:24px 28px;margin-bottom:26px;box-shadow:var(--sh)}
+.lcrumb{display:flex;align-items:center;gap:8px;margin-bottom:11px;flex-wrap:wrap}
+.lcrumb-ico{width:20px;height:20px;border-radius:5px;background:var(--rb);display:flex;align-items:center;justify-content:center;font-size:10px}
+.badge-db{background:var(--rb);color:var(--royal);border:1px solid var(--rbb);font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:20px;letter-spacing:.4px;font-weight:600}
+.ltitle{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.5px;line-height:1.25;margin-bottom:10px}
+.lmeta{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.lmi{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);font-family:var(--mono)}
+.lmi svg{width:12px;height:12px;opacity:.55}
+.lpbar{height:3px;background:var(--border);border-radius:2px;margin-top:12px;overflow:hidden}
+.lpfill{height:100%;background:linear-gradient(90deg,var(--royal),var(--cyan));border-radius:2px;transition:width .4s}
+.btext p{font-size:15px;line-height:1.82;color:var(--text2);margin-bottom:15px;font-weight:300}
+.co{padding:14px 18px;border-radius:var(--rl);margin:18px 0;font-size:14px;line-height:1.7;border:1px solid;font-weight:300}
+.co-blue{background:var(--rb);border-color:var(--rbb);color:#1A2880}
+.co-green{background:var(--green-bg);border-color:var(--green-bdr);color:var(--green)}
+.co-amber{background:var(--amber-bg);border-color:var(--amber-bdr);color:var(--amber)}
+.co-red{background:var(--red-bg);border-color:var(--red-bdr);color:var(--red)}
+.co-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;opacity:.65;font-weight:700}
+.an{background:linear-gradient(135deg,rgba(61,80,244,.04),rgba(53,255,233,.03));border:1px solid rgba(61,80,244,.12);border-radius:var(--rl);padding:16px 20px;margin:18px 0}
+.an-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:var(--royal);margin-bottom:8px;font-weight:700}
+.an-txt{font-size:14px;line-height:1.75;color:var(--text2);font-style:italic}
+
+/* DATABOOK EXAMPLE TABLES */
+.db-example{margin:22px 0;border-radius:var(--rl);overflow:hidden;border:1px solid var(--border);box-shadow:var(--sh)}
+.db-example-hdr{background:var(--navy);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.db-example-title{font-size:10px;font-family:var(--mono);color:rgba(255,255,255,.7);letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.db-example-sub{font-size:10px;font-family:var(--mono);color:rgba(255,255,255,.3)}
+.db-tab-bar{background:var(--dark);padding:0 14px;display:flex;gap:2px;border-bottom:1px solid rgba(255,255,255,.06)}
+.db-tab{font-size:10px;font-family:var(--mono);padding:7px 12px;color:rgba(255,255,255,.3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.db-tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.db-table{width:100%;border-collapse:collapse;background:var(--surface)}
+.db-table th{background:var(--card);padding:8px 12px;text-align:left;font-size:10px;font-family:var(--mono);color:var(--muted);letter-spacing:.5px;text-transform:uppercase;font-weight:600;border-bottom:1px solid var(--border);white-space:nowrap}
+.db-table th.num{text-align:right}
+.db-table td{padding:8px 12px;font-size:12px;font-family:var(--mono);color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap}
+.db-table td.num{text-align:right;color:var(--text);font-weight:500}
+.db-table td.pos{text-align:right;color:var(--green);font-weight:600}
+.db-table td.neg{text-align:right;color:var(--red);font-weight:500}
+.db-table td.head{background:rgba(33,24,71,.06);font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.db-table td.total{background:var(--navy);color:#fff;font-weight:700;font-family:var(--mono)}
+.db-table td.total.cyan{color:var(--cyan)}
+.db-table tr:last-child td{border-bottom:none}
+.db-table tr:hover td{background:rgba(61,80,244,.03)}
+.db-table tr:hover td.total{background:var(--navy)}
+.db-note{padding:8px 14px;background:var(--card);border-top:1px solid var(--border);font-size:11px;color:var(--muted);font-family:var(--mono)}
+
+/* COMPETITOR CARDS */
+.comp-grid{display:flex;flex-direction:column;gap:14px;margin:20px 0}
+.comp-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;box-shadow:var(--sh)}
+.comp-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.comp-name{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+.comp-type{font-size:10px;font-family:var(--mono);color:var(--muted);margin-top:2px}
+.comp-badge{font-size:9px;font-family:var(--mono);padding:3px 9px;border-radius:20px;font-weight:700;border:1px solid;flex-shrink:0}
+.comp-body{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding-top:12px;border-top:1px solid var(--border)}
+.comp-col-lbl{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:600}
+.comp-text{font-size:13px;color:var(--text2);line-height:1.6;font-weight:300}
+.comp-vs{margin-top:10px;padding:10px 13px;border-radius:var(--r);font-size:12px;line-height:1.55;font-weight:400}
+
+/* FINN */
+.fw{margin-top:32px;border-radius:var(--rxl);overflow:hidden;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shm)}
+.fh{height:52px;display:flex;align-items:center;gap:12px;padding:0 18px;background:var(--navy)}
+.fav-wrap{position:relative}
+.fav{width:32px;height:32px;border-radius:8px;background:var(--royal);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
+.fon{position:absolute;bottom:-1px;right:-1px;width:9px;height:9px;border-radius:50%;background:var(--cyan);border:2px solid var(--navy)}
+.finfo{flex:1}
+.fname{font-size:13px;color:#fff;font-weight:700}
+.fsub{font-size:9px;color:rgba(255,255,255,.4);font-family:var(--mono);margin-top:1px}
+.fai{font-size:9px;font-family:var(--mono);background:rgba(53,255,233,.12);color:var(--cyan);border:1px solid rgba(53,255,233,.22);padding:3px 8px;border-radius:20px;letter-spacing:.5px;font-weight:600}
+.fmsgs{max-height:380px;overflow-y:auto;padding:16px 18px;display:none;background:var(--card)}
+.fmsgs.vis{display:block}
+.mr{display:flex;gap:9px;margin-bottom:13px}
+.mr.u{justify-content:flex-end}
+.mav{width:24px;height:24px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--mono);margin-top:1px;font-weight:700}
+.mav.f{background:var(--royal);color:#fff}
+.mav.y{background:var(--navy);color:rgba(255,255,255,.6)}
+.mb{max-width:80%;padding:10px 14px;font-size:14px;line-height:1.75;white-space:pre-wrap;word-break:break-word;border-radius:var(--r);font-weight:300}
+.mb.f{background:var(--surface);border:1px solid var(--border);color:var(--text2);border-radius:2px var(--r) var(--r) var(--r)}
+.mb.u{background:var(--navy);color:rgba(255,255,255,.82);border-radius:var(--r) 2px var(--r) var(--r)}
+.tdots{display:flex;gap:5px;padding:3px 0;align-items:center}
+.tdot{width:7px;height:7px;border-radius:50%;background:var(--royal);animation:dot 1.2s infinite}
+.fst{padding:13px 18px;background:var(--card);border-bottom:1px solid var(--border)}
+.fst-lbl{font-size:9px;font-family:var(--mono);color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:9px;font-weight:700}
+.fst-g{display:flex;flex-wrap:wrap;gap:6px}
+.fsbtn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all .15s;font-family:var(--font);font-weight:400}
+.fsbtn:hover{background:var(--rb);border-color:var(--rbb);color:var(--royal)}
+.fin{display:flex;gap:8px;padding:11px 14px;border-top:1px solid var(--border)}
+.fta{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);padding:9px 13px;font-size:14px;font-family:var(--font);color:var(--text);resize:none;max-height:100px;line-height:1.5;transition:border-color .15s;font-weight:300}
+.fta:focus{outline:none;border-color:var(--royal);background:var(--surface)}
+.fta::placeholder{color:var(--muted)}
+.fsnd{width:38px;height:38px;border-radius:var(--r);border:none;background:var(--royal);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;transition:all .15s}
+.fsnd:hover{background:var(--royal2);transform:scale(1.04)}
+.lnav{margin-top:40px;padding-top:22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.nbk{display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:var(--r);border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:600;transition:all .15s}
+.nbk:hover:not(:disabled){background:var(--card);color:var(--text)}
+.nbk:disabled{color:var(--faint);border-color:var(--faint);cursor:default}
+.nnx{display:flex;align-items:center;gap:8px;padding:11px 22px;border-radius:var(--r);border:none;background:var(--royal);color:#fff;cursor:pointer;font-size:12px;font-family:var(--mono);font-weight:700;transition:all .15s;box-shadow:0 2px 12px rgba(61,80,244,.3)}
+.nnx:hover{background:var(--royal2);transform:translateY(-1px)}
+.nnx.done{background:var(--green)}
+@media(max-width:700px){#cti{padding:20px 16px 80px}#sb{position:fixed;top:0;left:0;height:100vh;z-index:300}#sb.closed{width:0}.tb-sec{display:none}.comp-body{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="tb">
+  <a class="tb-logo" href="index.html">
+    <div class="tb-logo-box"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg></div>
+    <div class="tb-logo-name">Pinpoint<b>AI</b></div>
+  </a>
+  <div class="tb-mid">
+    <div class="tb-course">FDD Databook</div>
+    <div class="tb-sep"></div>
+    <div class="tb-sec" id="tb-sec">Loading...</div>
+  </div>
+  <div class="tb-right">
+    <a class="tb-glossary" href="glossary.html">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Glossary
+    </a>
+    <div class="tb-prog-val" id="pg-lbl">0 / 7</div>
+    <div class="tb-ring">
+      <svg width="32" height="32" viewBox="0 0 32 32">
+        <circle cx="16" cy="16" r="12" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="2.5"/>
+        <circle id="rng" cx="16" cy="16" r="12" fill="none" stroke="#35FFE9" stroke-width="2.5" stroke-dasharray="75.4" stroke-dashoffset="75.4" stroke-linecap="round" style="transition:stroke-dashoffset .4s"/>
+      </svg>
+      <div class="tb-ring-n" id="rng-n">0%</div>
+    </div>
+    <button class="tb-menu-btn" onclick="toggleSidebar()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="tb-back" href="index.html">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Dashboard
+    </a>
+  </div>
+</div>
+<div id="main">
+  <div id="sb">
+    <div class="sb-top">
+      <div class="sb-top-lbl">Your progress</div>
+      <div class="sb-cards">
+        <div class="sb-card"><div class="sb-card-n c" id="sb-done">0</div><div class="sb-card-l">Completed</div></div>
+        <div class="sb-card"><div class="sb-card-n" id="sb-left">35</div><div class="sb-card-l">Min left</div></div>
+      </div>
+    </div>
+    <div class="sb-mods"><div class="sb-grp">Sections</div><div id="sb-nav"></div></div>
+  </div>
+  <div id="ct"><div id="cti"></div></div>
+</div>
+</div>
+<script>
+var TABS = {};
+
+function showTab(sectionId, tabName, btn){
+  var tabs = document.querySelectorAll('[data-section="'+sectionId+'"]');
+  tabs.forEach(function(t){ t.style.display = 'none'; });
+  var target = document.getElementById(sectionId+'-'+tabName);
+  if(target) target.style.display = 'block';
+  var btns = btn.parentElement.querySelectorAll('.db-tab');
+  btns.forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+}
+
+const SECTIONS = [
+  {id:'S1', title:'What is a databook?',
+   starters:['What exactly is a databook and why does it matter?','Is the databook the same as the FDD report?','How big is a typical databook?','Who reads the databook?'],
+   render: function(){
+     return '<div class="btext"><p>The databook is the analytical engine behind every financial due diligence engagement. It is a structured Excel workbook that takes raw financial data from a target company and transforms it into clean, analysed, categorised output. Every number in the FDD report traces back to the databook.</p><p>Think of the databook as the engine room. The FDD report is what the client reads. The databook is what makes the report possible. If the databook is wrong, the report is wrong. If the databook is incomplete, the report has holes.</p><p>The term is consistent across the UK and US markets, though some firms call it the data pack, analytical workbook, or factbook. Whatever the name, the concept is the same: a single structured workbook that houses all the financial analysis for an engagement. A typical mid-market databook runs to 15-30 Excel tabs and covers three full financial years of monthly data.</p></div>'+
+     '<div class="co co-blue"><div class="co-lbl">&#9432; Key distinction</div>The databook is your working document. The FDD report is what you deliver to the client. The databook supports every finding in the report but is rarely shared with the buyer directly. It stays with the deal team as the working file and evidence base.</div>'+
+     renderExample('tabs');
+   }
+  },
+  {id:'S2', title:'What a databook contains',
+   starters:['What is the most important section of the databook?','How does the EBITDA bridge work in the databook?','What does the revenue analysis tab look like?','How many tabs does a typical databook have?'],
+   render: function(){
+     return '<div class="btext"><p>A well-built databook covers six core analytical areas. Each maps directly to a section of the FDD report. The tabs build on each other in sequence, starting with the income statement and working through to net debt.</p><p>The income statement is always first. It contains 36 months of management accounts, reorganised into a consistent format. Revenue and cost lines are normalised and reclassified to match the reporting structure. This foundation feeds every other tab.</p><p>The quality of earnings analysis comes next. This is the EBITDA bridge from reported to adjusted, showing each addback and deduction with a source reference and rationale. Then comes revenue analysis, cost analysis, working capital, and net debt. Each tab is interconnected so a change in one flows through to the others.</p></div>'+
+     renderExample('pl');
+   }
+  },
+  {id:'S3', title:'The EBITDA bridge in detail',
+   starters:['How do I build an EBITDA bridge in a databook?','What counts as a valid addback in FDD?','How does the bridge in the databook differ from the bridge in the report?','Show me what the FieldForce EBITDA bridge looks like'],
+   render: function(){
+     return '<div class="btext"><p>The EBITDA bridge is the most important tab in any databook. It is the analytical output that drives the deal price. It shows the path from reported EBITDA to adjusted EBITDA by applying normalisation adjustments, each of which must be evidenced and defensible.</p><p>Adjustments fall into two categories. Addbacks increase EBITDA and are proposed by the seller or identified by the FDD team. They cover non-recurring costs, above-market items, or one-off events that will not repeat. Deductions reduce EBITDA and represent costs that are understated, missing, or that should be included in a normalised run-rate. Both types require source references.</p><p>The bridge below uses the FieldForce deal as an example. FieldForce reported EBITDA of £636k for 2023. The FDD team applied four adjustments to arrive at an adjusted EBITDA of £740k.</p></div>'+
+     renderExample('bridge');
+   }
+  },
+  {id:'S4', title:'How a databook is built',
+   starters:['How long does it take to build a databook from scratch?','What does data cleaning actually involve?','Why does it take so long to get a first cut of the EBITDA bridge?','What is the hardest part of building a databook?'],
+   render: function(){
+     return '<div class="btext"><p>Building the databook is the most time-intensive part of any FDD engagement. It starts the moment data room access opens and runs until the report is finalised. The process has five distinct steps.</p><p>Step one is data extraction. Trial balance and management accounts are downloaded from the data room, usually as Excel exports from Xero, Sage, QuickBooks, or NetSuite. This raw data is almost always unclean — inconsistent formatting, merged cells, varying column structures, and account codes that differ across periods.</p><p>Step two is data cleaning. Raw data is reformatted into a consistent structure. Revenue lines are standardised across all 36 months. Cost categories are mapped to a common chart of accounts. Any gaps are flagged in the IRL tracker.</p><p>Step three is populating the analysis tabs. The cleaned data feeds the individual sections. Step four is applying the normalisation layer — addbacks, deductions, reclassifications, each with a source. Step five is review and reconciliation. The databook output is reconciled to statutory accounts before any number goes into the report.</p></div>'+
+     '<div class="co co-amber"><div class="co-lbl">&#9888; Where most time is lost</div>Steps one and two — extraction and cleaning — consume 30 to 50 percent of total engagement hours on a typical deal. This is pure processing time with zero analytical value. On a 20-deal-per-year practice, that is 40 to 60 days of analyst and manager time per year spent on formatting spreadsheets.</div>';
+   }
+  },
+  {id:'S5', title:'Who builds it and when',
+   starters:['Who is responsible for the databook on a typical engagement?','What does a typical 18-day FDD timeline look like?','How does a two-week exclusivity window affect the build?','When does the director get involved in the databook?'],
+   render: function(){
+     return '<div class="btext"><p>The databook is primarily built by the Manager or Senior Manager on the engagement, with Analysts responsible for initial data processing. The Director reviews the key outputs — particularly the QoE bridge and working capital — before anything goes into the report.</p><p>The build starts on day one of data room access and runs in parallel with report drafting. The typical timeline on a standard mid-market FDD engagement: days one to three for extraction and cleaning; days three to seven for analytical work on the EBITDA bridge, revenue, and costs; days seven to ten for working capital, net debt, and normalisation finalisation; days ten to fourteen for director review and reconciliation; days fourteen to eighteen for report drafting from the finalised databook.</p><p>That timeline assumes the data arrives on time and in good shape. It rarely does. A missing month of management accounts or an accounting system that cannot export a trial balance can add two to three days to the build before any analysis starts.</p></div>'+
+     '<div class="co co-blue"><div class="co-lbl">&#9432; The time pressure</div>A two-week exclusivity window is common in UK mid-market deals. That gives the FDD team 14 days from data room access to report delivery. If days one to four are spent chasing data and cleaning files, there are 10 days left for analysis and report writing on a full QoE engagement.</div>';
+   }
+  },
+  {id:'S6', title:'Databook automation — the market',
+   starters:['What tools exist for automating the databook build?','How does Crunchafi work and what does it actually do?','What is the difference between Crunchafi and PinpointAI?','Why do most large firms still build databooks manually?'],
+   render: function(){
+     return '<div class="btext"><p>The FDD software market has grown significantly since 2020 as firms recognised that building databooks manually was the single biggest drag on engagement profitability. Several tools now exist that address different parts of the problem. Understanding this landscape matters because your prospects will often already use one of these tools, or will mention them in conversation.</p><p>The key distinction in the market is between tools that automate data extraction from accounting systems, tools that accelerate Excel-based analysis, and platforms that handle the full workflow from extraction through to report. These are different products solving different parts of the same problem.</p></div>'+
+     renderCompetitors();
+   }
+  },
+  {id:'S7', title:'Common databook mistakes',
+   starters:['What is the most common mistake people make building a databook?','Why does working capital need to come from the trial balance?','What happens if an addback has no supporting evidence?','How do I avoid errors creeping in when multiple people work on the same databook?'],
+   render: function(){
+     return '<div class="btext"><p>These are the mistakes that experienced directors see most often when reviewing databooks from junior or mid-level staff. Knowing them in advance will save you time, credibility, and director review cycles.</p><p>Hardcoded numbers without source references. Every figure in a databook should be either a formula or clearly labelled with its source. Hardcoded values with no audit trail cannot be reviewed, challenged, or updated when the data changes. This is the single most common issue.</p><p>Inconsistent time periods. Revenue analysed on a calendar year basis when the business has a March year end creates comparison problems that cascade through every subsequent analysis. Always match the period structure to the business from the start.</p><p>No reconciliation to statutory accounts. The databook P&L should reconcile to the filed accounts within a clear tolerance. If it does not, there is either a data quality issue or an accounting policy difference that needs explaining before the report is drafted.</p><p>Normalisation adjustments without evidence. Every addback in the EBITDA bridge needs a source document. An adjustment with no supporting reference will not survive director review and will be challenged aggressively by any buyer-side advisor worth their fee.</p><p>Working capital calculated from the wrong source. Working capital should come from the trial balance, not from the management accounts balance sheet. The two will often differ due to timing differences.</p></div>'+
+     '<div class="co co-red"><div class="co-lbl">&#9888; The cardinal rule</div>Never put a number in the databook that you cannot explain, evidence, and defend. If you cannot answer where it came from and why it is right, it should not be in the databook and it certainly should not be in the report.</div>';
+   }
+  }
+];
+
+function renderExample(type){
+  if(type === 'tabs'){
+    return '<div class="db-example">'+
+      '<div class="db-example-hdr"><div class="db-example-title">Databook — FieldForce Ltd</div><div class="db-example-sub">Typical tab structure</div></div>'+
+      '<div style="background:var(--dark);padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.06)">'+
+        '<div style="font-size:10px;font-family:var(--mono);color:rgba(255,255,255,.35);margin-bottom:8px;letter-spacing:1px">EXCEL TABS</div>'+
+        '<div style="display:flex;flex-wrap:wrap;gap:6px">'+
+          ['Cover','Data Input','P&L - Reported','QoE Bridge','Revenue Analysis','Cost Analysis','Headcount','Working Capital','Net Debt','Debt Schedule','WC Sensitivity','Reconciliations'].map(function(t,i){
+            var active = i<3;
+            return '<div style="font-size:10px;font-family:var(--mono);padding:4px 10px;border-radius:4px;background:'+(active?'var(--royal)':'rgba(255,255,255,.08)')+';color:'+(active?'#fff':'rgba(255,255,255,.5)')+'">'+t+'</div>';
+          }).join('')+
+        '</div>'+
+      '</div>'+
+      '<div class="db-note">A typical mid-market databook runs 12-18 tabs. The first three (Cover, Data Input, P&L Reported) are always built before any analysis starts.</div>'+
+    '</div>';
+  }
+  if(type === 'pl'){
+    return '<div class="db-example">'+
+      '<div class="db-example-hdr"><div class="db-example-title">P&L — Reported</div><div class="db-example-sub">FieldForce Ltd, FY2021-FY2023</div></div>'+
+      '<div style="overflow-x:auto"><table class="db-table">'+
+        '<thead><tr><th>Line item</th><th class="num">FY2021</th><th class="num">FY2022</th><th class="num">FY2023</th><th class="num">Growth</th></tr></thead>'+
+        '<tbody>'+
+          '<tr><td class="head" colspan="5">Revenue</td></tr>'+
+          '<tr><td>SaaS licence fees</td><td class="num">£1,640k</td><td class="num">£1,920k</td><td class="num">£2,160k</td><td class="pos">+12.5%</td></tr>'+
+          '<tr><td>Professional services</td><td class="num">£280k</td><td class="num">£340k</td><td class="num">£380k</td><td class="pos">+11.8%</td></tr>'+
+          '<tr><td>Other income</td><td class="num">£80k</td><td class="num">£220k</td><td class="num">£300k</td><td class="pos">+36.4%</td></tr>'+
+          '<tr><td class="total">Total Revenue</td><td class="total">£2,000k</td><td class="total">£2,480k</td><td class="total">£2,840k</td><td class="total cyan">+14.5%</td></tr>'+
+          '<tr><td class="head" colspan="5">Costs</td></tr>'+
+          '<tr><td>Cost of sales</td><td class="num">(£480k)</td><td class="num">(£594k)</td><td class="num">(£683k)</td><td class="neg">+15.1%</td></tr>'+
+          '<tr><td>Staff costs</td><td class="num">(£680k)</td><td class="num">(£742k)</td><td class="num">(£748k)</td><td class="neg">+0.8%</td></tr>'+
+          '<tr><td>Director remuneration</td><td class="num">(£150k)</td><td class="num">(£168k)</td><td class="num">(£180k)</td><td class="neg">+7.1%</td></tr>'+
+          '<tr><td>IT & software</td><td class="num">(£72k)</td><td class="num">(£88k)</td><td class="num">(£96k)</td><td class="neg">+9.1%</td></tr>'+
+          '<tr><td>Sales & marketing</td><td class="num">(£84k)</td><td class="num">(£96k)</td><td class="num">(£120k)</td><td class="neg">+25.0%</td></tr>'+
+          '<tr><td>Other overheads</td><td class="num">(£194k)</td><td class="num">(£196k)</td><td class="num">(£377k)</td><td class="neg">+92.3%</td></tr>'+
+          '<tr><td class="total">Reported EBITDA</td><td class="total">£340k</td><td class="total">£596k</td><td class="total cyan">£636k</td><td class="total">+6.7%</td></tr>'+
+        '</tbody>'+
+      '</table></div>'+
+      '<div class="db-note">Note: Other overheads spike in FY2023 includes £120k rebrand cost and £45k legal costs — both flagged as normalisation candidates</div>'+
+    '</div>';
+  }
+  if(type === 'bridge'){
+    return '<div class="db-example">'+
+      '<div class="db-example-hdr"><div class="db-example-title">QoE Bridge — EBITDA Normalisation</div><div class="db-example-sub">FieldForce Ltd, FY2023</div></div>'+
+      '<div style="overflow-x:auto"><table class="db-table">'+
+        '<thead><tr><th>Adjustment</th><th>Category</th><th class="num">Amount</th><th>Evidence</th><th>Status</th></tr></thead>'+
+        '<tbody>'+
+          '<tr><td class="total">Reported EBITDA</td><td></td><td class="total cyan">£636k</td><td></td><td></td></tr>'+
+          '<tr><td class="head" colspan="5">Addbacks (increases EBITDA)</td></tr>'+
+          '<tr><td>Above-market director salary</td><td style="color:var(--green);font-size:11px">Non-recurring</td><td class="pos">+£80k</td><td style="font-size:11px;color:var(--muted)">Payroll + market data</td><td><span style="font-size:9px;font-family:var(--mono);background:var(--green-bg);color:var(--green);border:1px solid var(--green-bdr);padding:2px 7px;border-radius:10px">AGREED</span></td></tr>'+
+          '<tr><td>IP litigation costs</td><td style="color:var(--green);font-size:11px">One-off legal</td><td class="pos">+£45k</td><td style="font-size:11px;color:var(--muted)">Legal invoices</td><td><span style="font-size:9px;font-family:var(--mono);background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bdr);padding:2px 7px;border-radius:10px">CONDITIONAL</span></td></tr>'+
+          '<tr><td>Website rebrand cost</td><td style="color:var(--green);font-size:11px">One-off marketing</td><td class="pos">+£54k</td><td style="font-size:11px;color:var(--muted)">Agency invoice</td><td><span style="font-size:9px;font-family:var(--mono);background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bdr);padding:2px 7px;border-radius:10px">CONDITIONAL</span></td></tr>'+
+          '<tr><td class="head" colspan="5">Deductions (reduces EBITDA)</td></tr>'+
+          '<tr><td>Sales vacancy — structural gap</td><td style="color:var(--red);font-size:11px">Missing cost</td><td class="neg">(£75k)</td><td style="font-size:11px;color:var(--muted)">Org chart + market rates</td><td><span style="font-size:9px;font-family:var(--mono);background:var(--red-bg);color:var(--red);border:1px solid var(--red-bdr);padding:2px 7px;border-radius:10px">OUR DEDUCTION</span></td></tr>'+
+          '<tr><td class="total">Adjusted EBITDA</td><td></td><td class="total cyan">£740k</td><td></td><td></td></tr>'+
+        '</tbody>'+
+      '</table></div>'+
+      '<div class="db-note">Each adjustment requires a source reference before it enters the report. CONDITIONAL items are agreed subject to receipt of supporting documentation.</div>'+
+    '</div>';
+  }
+  return '';
+}
+
+function renderCompetitors(){
+  var comps = [
+    {
+      name:'Crunchafi Data Extraction',
+      formerly:'Formerly Strongbox',
+      type:'Data extraction — connects to accounting systems',
+      badge:'EXTRACTION ONLY',
+      badgeColor:'rgba(61,80,244,.1)',badgeBdr:'rgba(61,80,244,.2)',badgeText:'var(--royal)',
+      what:'Connects directly to target accounting systems (QuickBooks, NetSuite, Xero, Sage Intacct) and pulls the full general ledger in minutes, outputting a structured Excel workbook. Eliminates the wait for data room uploads and manual export requests.',
+      how:'The seller grants read-only API access to their accounting system. Crunchafi pulls transaction-level data and outputs a structured Excel file with data validation checks and account mapping. The FDD team then builds their databook from that structured extract.',
+      vs:'Crunchafi solves the data extraction problem. It gives you clean data fast. It does not build the databook, run the QoE analysis, or produce the EBITDA bridge. Your team still does all of that in Excel. PinpointAI picks up where Crunchafi stops, taking the extracted data and running the full analytical layer on top of it.',
+      vsColor:'var(--rb)',vsBdr:'var(--rbb)',vsText:'#1A2880'
+    },
+    {
+      name:'Accelerate Excel',
+      formerly:'Excel add-in for FDD/TAS teams',
+      type:'Excel productivity — speeds up manual databook work',
+      badge:'EXCEL TOOL',
+      badgeColor:'rgba(200,130,0,.08)',badgeBdr:'rgba(200,130,0,.25)',badgeText:'var(--amber)',
+      what:'An Excel add-in with a dedicated ribbon tab for FDD and transaction advisory work. Provides formatting tools, data manipulation shortcuts, and analytical templates designed specifically for how FDD teams work. Claims teams can perform Excel work at least twice as fast within six months.',
+      how:'Installed as an Excel add-in. The team still builds the databook manually but uses the Accelerate ribbon to speed up common tasks — reformatting, cross-referencing, building templates, and checking consistency. No direct accounting system integration.',
+      vs:'Accelerate Excel makes manual databook building faster. It is still a manual process, just with better tooling. PinpointAI replaces the manual build entirely by taking the raw data and producing the analytical output automatically. The two are complementary rather than directly competitive.',
+      vsColor:'rgba(200,130,0,.06)',vsBdr:'rgba(200,130,0,.2)',vsText:'var(--amber)'
+    },
+    {
+      name:'Finsider.ai',
+      formerly:'Launched September 2025',
+      type:'Full QoE automation platform',
+      badge:'DIRECT COMPETITOR',
+      badgeColor:'var(--red-bg)',badgeBdr:'var(--red-bdr)',badgeText:'var(--red)',
+      what:'An AI platform that connects directly to accounting and banking systems to automate QoE analysis. Claims to reduce FDD delivery time by up to 60 percent. Targets the same mid-market FDD boutique and advisory firm audience as PinpointAI.',
+      how:'Direct API connections to source systems. AI-driven transaction analysis to identify normalisation candidates. Automated report generation from the underlying analysis. Newer to market than PinpointAI — launched September 2025.',
+      vs:'The most directly competitive product in the market. When a prospect mentions Finsider, acknowledge it, ask what they thought of it, and focus the conversation on PinpointAI\'s data security, accuracy, and the depth of UK and European mid-market deal context built into the model.',
+      vsColor:'var(--red-bg)',vsBdr:'var(--red-bdr)',vsText:'var(--red)'
+    },
+    {
+      name:'Alteryx / Power BI',
+      formerly:'General-purpose data tools used by large firms',
+      type:'Broad data analytics — used as workarounds',
+      badge:'NOT FDD-SPECIFIC',
+      badgeColor:'rgba(255,255,255,.06)',badgeBdr:'rgba(255,255,255,.1)',badgeText:'var(--muted)',
+      what:'General-purpose data analytics platforms used by large firms to build data workflows for FDD. Not designed for FDD — used because they were already available inside the firm. Require significant configuration and technical skill to apply to a databook workflow.',
+      how:'FDD teams build custom workflows that pull data, reformat it, and output structured tables. Each engagement requires the workflow to be adapted. Produces inconsistent outputs and requires technical expertise that most FDD professionals do not have.',
+      vs:'When a prospect says their Big 4 firm has an internal automation initiative using Alteryx or Power BI, this is not a reason to disengage. These tools require months of implementation and ongoing technical maintenance. PinpointAI works on day one with no configuration.',
+      vsColor:'rgba(255,255,255,.04)',vsBdr:'rgba(255,255,255,.1)',vsText:'var(--muted)'
+    }
+  ];
+
+  return '<div class="comp-grid">'+comps.map(function(c){
+    return '<div class="comp-card">'+
+      '<div class="comp-top">'+
+        '<div><div class="comp-name">'+c.name+'</div><div class="comp-type">'+c.formerly+' &mdash; '+c.type+'</div></div>'+
+        '<span class="comp-badge" style="background:'+c.badgeColor+';border-color:'+c.badgeBdr+';color:'+c.badgeText+'">'+c.badge+'</span>'+
+      '</div>'+
+      '<div class="comp-body">'+
+        '<div><div class="comp-col-lbl">What it does</div><div class="comp-text">'+c.what+'</div></div>'+
+        '<div><div class="comp-col-lbl">How it works</div><div class="comp-text">'+c.how+'</div></div>'+
+      '</div>'+
+      '<div class="comp-vs" style="background:'+c.vsColor+';border:1px solid '+c.vsBdr+';color:'+c.vsText+'">'+
+        '<span style="font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;opacity:.7;font-weight:700;display:block;margin-bottom:5px">vs PinpointAI</span>'+
+        c.vs+
+      '</div>'+
+    '</div>';
+  }).join('')+'</div>';
+}
+
+const FINN_SYS = 'You are Finn, a senior FDD practitioner with 15 years of experience building and reviewing databooks at Big 4 and boutique transaction services firms. You are teaching a new starter everything they need to know about FDD databooks.\n\nExplain things clearly and practically. Use real examples where possible. Reference the FieldForce deal where relevant (Revenue 2.84m, reported EBITDA 636k, adjusted EBITDA 740k, asking price 4.2m EV, net debt 219k).\n\nOn the competitor section: know that Crunchafi (formerly Strongbox) does data extraction only, Accelerate Excel speeds up manual Excel work, Finsider.ai is a newer direct competitor, and Alteryx/Power BI are general tools used as workarounds at large firms. PinpointAI does the full workflow from extraction through to analytical output.\n\nKeep answers to 150-220 words. No em dashes. Plain prose, not bullet lists. Be direct.';
+
+var aS=0, done={}, chats={}, sbOpen=true;
+
+function renderCO(c){
+  if(!c) return '';
+  var icons={blue:'&#9432;',green:'&#10003;',amber:'&#9888;',red:'&#9888;'};
+  return '<div class="co co-'+c.type+'"><div class="co-lbl">'+(icons[c.type]||'')+' '+(c.label||'')+'</div>'+c.text.replace(/\n/g,'<br>')+'</div>';
+}
+
+async function finnSend(q){
+  if(!chats[aS]) chats[aS]=[];
+  chats[aS].push({role:'user',content:q});
+  var msgs=document.getElementById('fmsgs');
+  if(msgs){msgs.classList.add('vis');finnRender();}
+  var st=document.getElementById('fst');if(st)st.style.display='none';
+  var ld=document.createElement('div');ld.id='fld';ld.className='mr fu';
+  ld.innerHTML='<div class="mav f">F</div><div class="mb f"><div class="tdots"><div class="tdot" style="animation-delay:0s"></div><div class="tdot" style="animation-delay:.2s"></div><div class="tdot" style="animation-delay:.4s"></div></div></div>';
+  if(msgs){msgs.appendChild(ld);msgs.scrollTop=msgs.scrollHeight;}
+  try{
+    var res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,
+        system:FINN_SYS+'\n\nCurrent section: '+SECTIONS[aS].title+'.',
+        messages:chats[aS]})});
+    var data=await res.json();
+    var reply=(data.content&&data.content.find(function(b){return b.type==='text'}))||{text:'Something went wrong.'};
+    chats[aS].push({role:'assistant',content:reply.text});
+  }catch(e){chats[aS].push({role:'assistant',content:'Network error - please try again.'});}
+  var ld2=document.getElementById('fld');if(ld2)ld2.remove();
+  finnRender();
+}
+
+function finnRender(){
+  var div=document.getElementById('fmsgs');if(!div)return;
+  div.innerHTML=(chats[aS]||[]).map(function(m){
+    var cls='mr '+(m.role==='user'?'u':'')+' fu';
+    return '<div class="'+cls+'">'+
+      (m.role==='assistant'?'<div class="mav f">F</div>':'')+
+      '<div class="mb '+(m.role==='assistant'?'f':'u')+'">'+m.content.replace(/\n/g,'<br>')+'</div>'+
+      (m.role==='user'?'<div class="mav y">M</div>':'')+
+    '</div>';
+  }).join('');
+  div.scrollTop=div.scrollHeight;
+}
+
+function finnKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();finnSubmit();}var ta=document.getElementById('fta');if(ta){ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,100)+'px';}}
+function finnSubmit(){var ta=document.getElementById('fta');var q=ta?ta.value.trim():'';if(!q)return;ta.value='';ta.style.height='auto';finnSend(q);}
+function doneSec(){return Object.keys(done).filter(function(k){return done[k]}).length}
+function markDone(){done[aS]=true;if(aS<SECTIONS.length-1)aS++;render();document.getElementById('ct').scrollTop=0;}
+function goBack(){if(aS>0)aS--;render();document.getElementById('ct').scrollTop=0;}
+function goTo(si){aS=si;render();document.getElementById('ct').scrollTop=0;}
+function toggleSidebar(){sbOpen=!sbOpen;document.getElementById('sb').classList.toggle('closed',!sbOpen);}
+
+function render(){
+  var sec=SECTIONS[aS];
+  var ds=doneSec(), ts=SECTIONS.length;
+  var pct=Math.round(ds/ts*100);
+  var rem=Math.round(((ts-aS)/ts)*35);
+
+  document.getElementById('tb-sec').textContent='📒 '+sec.title;
+  document.getElementById('pg-lbl').textContent=ds+' / '+ts;
+  document.getElementById('rng-n').textContent=pct+'%';
+  document.getElementById('rng').style.strokeDashoffset=75.4-(75.4*pct/100);
+  document.getElementById('sb-done').textContent=ds;
+  document.getElementById('sb-left').textContent=rem;
+
+  document.getElementById('sb-nav').innerHTML=SECTIONS.map(function(s,si){
+    var isOn=si===aS, isDone=!!done[si];
+    return '<div class="si'+(isOn?' on':'')+(isDone?' done':'')+'" onclick="goTo('+si+')">'+
+      '<div class="si-dot'+(isDone?' ok':isOn?' cur':'')+'">'+((isDone)?'&#10003;':'')+'</div>'+
+      '<span class="si-lbl">'+s.title+'</span>'+
+    '</div>';
+  }).join('');
+
+  var secPct=Math.round((aS+1)/ts*100);
+  var isDone=!!done[aS];
+  var isFirst=aS===0, isLast=aS===SECTIONS.length-1;
+  var hasHist=chats[aS]&&chats[aS].length>0;
+
+  document.getElementById('cti').innerHTML=
+    '<div class="lhdr">'+
+      '<div class="lcrumb">'+
+        '<div class="lcrumb-ico">📒</div>'+
+        '<span style="color:var(--royal);font-weight:600;font-family:var(--mono);font-size:11px">FDD Databook</span>'+
+        '<span style="color:var(--muted)">&#8250;</span>'+
+        '<span style="font-size:11px;font-family:var(--mono);color:var(--muted)">Section '+(aS+1)+' of '+ts+'</span>'+
+        '<span class="badge-db">FDD</span>'+
+      '</div>'+
+      '<div class="ltitle">'+sec.title+'</div>'+
+      '<div class="lmeta">'+
+        '<div class="lmi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~5 min</div>'+
+        (isDone?'<div class="lmi" style="color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Completed</div>':'')+
+      '</div>'+
+      '<div class="lpbar"><div class="lpfill" style="width:'+secPct+'%"></div></div>'+
+    '</div>'+
+    sec.render()+
+    '<div class="fw">'+
+      '<div class="fh">'+
+        '<div class="fav-wrap"><div class="fav">&#127891;</div><div class="fon"></div></div>'+
+        '<div class="finfo"><div class="fname">Ask Finn</div><div class="fsub">FDD Databook Specialist</div></div>'+
+        '<div class="fai">AI TUTOR</div>'+
+      '</div>'+
+      '<div id="fmsgs" class="fmsgs'+(hasHist?' vis':'')+'"></div>'+
+      (!hasHist?'<div id="fst" class="fst"><div class="fst-lbl">Questions for this section</div><div class="fst-g">'+
+        sec.starters.map(function(q){return '<button class="fsbtn" onclick="finnSend(this.textContent)">'+q+'</button>'}).join('')+
+      '</div></div>':'')+
+      '<div class="fin">'+
+        '<textarea id="fta" class="fta" placeholder="Ask Finn anything about databooks..." rows="1" onkeydown="finnKey(event)"></textarea>'+
+        '<button class="fsnd" onclick="finnSubmit()"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>'+
+      '</div>'+
+    '</div>'+
+    '<div class="lnav">'+
+      '<button class="nbk" onclick="goBack()"'+(isFirst?' disabled':'')+'>'+
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg> Back'+
+      '</button>'+
+      '<button class="nnx'+(isDone?' done':'')+'" onclick="markDone()">'+
+        (isDone?'Done - Next':'Mark done')+
+        ' <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>'+
+      '</button>'+
+    '</div>';
+
+  if(hasHist){finnRender();document.getElementById('fmsgs').classList.add('vis');}
+}
+
+render();
+</script>
+</body>
+</html>
