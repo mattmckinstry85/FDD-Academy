@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Databook Features - PinpointAI Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#211847;--dark:#0F0D2A;--royal:#3D50F4;--royal2:#2E3FD0;
+  --cyan:#35FFE9;--green:#00C87A;--red:#C8144A;--amber:#F59E0B;
+  --bg:#F4F5FA;--surface:#FFFFFF;--card:#F8F9FF;--border:#E8EAF2;
+  --text:#1A1B2E;--text2:#4A4B6A;--muted:#8A8BA8;
+  --font:'Rubik',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:8px;--rl:12px;--sh:0 2px 12px rgba(33,24,71,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-weight:300;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+/* TOPBAR */
+#tb{height:56px;display:flex;align-items:center;padding:0 18px;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;gap:0;z-index:200;position:sticky;top:0}
+.tb-logo{display:flex;align-items:center;gap:10px;margin-right:18px}
+.tb-logo-dot{width:8px;height:8px;border-radius:50%;background:var(--cyan)}
+.tb-logo-text{font-size:13px;font-weight:700;color:#fff;letter-spacing:.3px}
+.tb-sep{width:1px;height:20px;background:rgba(255,255,255,.1);margin:0 14px}
+.tb-course{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);white-space:nowrap}
+.tb-spacer{flex:1}
+.tb-prog-val{font-size:11px;font-family:var(--mono);color:rgba(255,255,255,.5);font-weight:600;margin-right:10px}
+.tb-ring{position:relative;display:flex;align-items:center;justify-content:center;margin-right:14px}
+.tb-ring-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-family:var(--mono);color:var(--cyan);font-weight:600}
+.tb-menu-btn{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.5);padding:4px;display:none}
+.tb-back{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:var(--dark);text-decoration:none;letter-spacing:.5px;transition:all .15s;padding:6px 14px;border-radius:6px;border:none;background:#35FFE9;font-weight:700;cursor:pointer}
+.tb-back:hover{background:#fff}
+.tb-glossary{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:rgba(255,255,255,.7);text-decoration:none;letter-spacing:.5px;padding:6px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.15);margin-right:8px;transition:all .15s}
+.tb-glossary:hover{background:rgba(255,255,255,.08)}
+
+/* LAYOUT */
+#main{display:flex;height:calc(100vh - 56px);overflow:hidden}
+#sb{width:260px;min-width:260px;background:var(--navy);overflow-y:auto;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.06)}
+#ct{flex:1;overflow-y:auto;padding:32px 36px}
+#cti{max-width:820px;margin:0 auto}
+
+/* SIDEBAR */
+.sb-top{padding:16px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-top-lbl{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:12px}
+.sb-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sb-card{background:rgba(255,255,255,.04);border-radius:var(--r);padding:10px 12px;text-align:center}
+.sb-card-n{font-size:22px;font-weight:700;font-family:var(--mono);color:#fff;line-height:1}
+.sb-card-n.c{color:var(--cyan)}
+.sb-card-l{font-size:9px;font-family:var(--mono);color:rgba(255,255,255,.35);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.sb-mods{flex:1;padding:8px 0}
+.sb-grp{padding:12px 16px 4px;font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.mod-item{padding:10px 16px;cursor:pointer;border-left:3px solid transparent;transition:all .15s;display:flex;align-items:center;gap:10px}
+.mod-item:hover{background:rgba(255,255,255,.04);border-left-color:rgba(61,80,244,.4)}
+.mod-item.active{background:rgba(61,80,244,.15);border-left-color:var(--royal)}
+.mi-icon{font-size:16px;width:20px;text-align:center}
+.mi-body{flex:1;min-width:0}
+.mi-title{font-size:12px;font-weight:500;color:rgba(255,255,255,.85);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi-id{font-size:9px;font-family:var(--mono);color:rgba(255,255,255,.3)}
+.mi-done{font-size:10px;color:var(--cyan)}
+
+/* CONTENT HEADER */
+.ch{margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.ch-eyebrow{font-size:9px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:var(--royal);margin-bottom:8px;font-weight:700}
+.ch-title{font-size:26px;font-weight:600;color:var(--text);line-height:1.25;margin-bottom:8px}
+.ch-sub{font-size:14px;color:var(--text2);line-height:1.6}
+.ch-meta{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+.ch-meta-item{display:flex;align-items:center;gap:5px;font-size:11px;font-family:var(--mono);color:var(--muted)}
+
+/* PROGRESS BAR */
+.sec-progress{height:3px;background:var(--border);border-radius:2px;margin-bottom:24px;overflow:hidden}
+.sec-progress-fill{height:100%;background:linear-gradient(90deg,var(--royal),var(--cyan));border-radius:2px;transition:width .4s}
+
+/* CALLOUT */
+.callout{border-radius:var(--r);padding:14px 16px;margin:16px 0;border-left:4px solid}
+.callout.blue{background:rgba(61,80,244,.06);border-color:var(--royal)}
+.callout.green{background:rgba(0,200,122,.06);border-color:var(--green)}
+.callout.amber{background:rgba(245,158,11,.06);border-color:var(--amber)}
+.callout.red{background:rgba(200,20,74,.06);border-color:var(--red)}
+.callout-label{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;margin-bottom:6px}
+.callout.blue .callout-label{color:var(--royal)}
+.callout.green .callout-label{color:var(--green)}
+.callout.amber .callout-label{color:var(--amber)}
+.callout.red .callout-label{color:var(--red)}
+.callout-text{font-size:13px;line-height:1.7;color:var(--text2);white-space:pre-wrap}
+
+/* CONTENT TEXT */
+.sec-body{font-size:14px;line-height:1.8;color:var(--text2);margin-bottom:18px;white-space:pre-wrap}
+.sec-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:12px}
+
+/* FEATURE CARDS */
+.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+@media(max-width:700px){.feature-grid{grid-template-columns:1fr}}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:20px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:0}
+.feature-card.highlight{border-color:rgba(61,80,244,.25);background:linear-gradient(135deg,rgba(61,80,244,.03) 0%,#fff 100%)}
+.fc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+.fc-icon{font-size:22px;flex-shrink:0}
+.fc-phase{font-size:9px;font-family:var(--mono);letter-spacing:.5px;font-weight:700;padding:3px 8px;border-radius:20px;border:1px solid}
+.fc-phase.p2{background:rgba(0,200,122,.08);color:var(--green);border-color:rgba(0,200,122,.2)}
+.fc-phase.p3{background:rgba(61,80,244,.08);color:var(--royal);border-color:rgba(61,80,244,.2)}
+.fc-phase.p4{background:rgba(245,158,11,.08);color:var(--amber);border-color:rgba(245,158,11,.2)}
+.fc-phase.p5{background:rgba(200,20,74,.08);color:var(--red);border-color:rgba(200,20,74,.2)}
+.fc-phase.p6{background:rgba(139,92,246,.08);color:#7C3AED;border-color:rgba(139,92,246,.2)}
+.fc-phase.tbc{background:rgba(138,139,168,.08);color:var(--muted);border-color:rgba(138,139,168,.2)}
+.fc-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
+.fc-what{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:10px}
+.fc-why-lbl{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:var(--royal);font-weight:700;margin-bottom:5px}
+.fc-why{font-size:12px;color:var(--text2);line-height:1.6;font-style:italic}
+.fc-divider{height:1px;background:var(--border);margin:10px 0}
+.fc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.fc-tag{font-size:10px;font-family:var(--mono);background:var(--card);border:1px solid var(--border);color:var(--muted);padding:2px 8px;border-radius:10px}
+
+/* PHASE LEGEND */
+.phase-legend{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 24px}
+.pl-item{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:var(--text2)}
+.pl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pl-dot.p2{background:var(--green)}
+.pl-dot.p3{background:var(--royal)}
+.pl-dot.p4{background:var(--amber)}
+.pl-dot.p5{background:var(--red)}
+.pl-dot.p6{background:#7C3AED}
+.pl-dot.tbc{background:var(--muted)}
+
+/* NAV FOOTER */
+.nav-footer{display:flex;align-items:center;justify-content:space-between;margin-top:36px;padding-top:20px;border-top:1px solid var(--border)}
+.nf-btn{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid;transition:all .15s;font-family:var(--font)}
+.nf-prev{background:var(--surface);border-color:var(--border);color:var(--text2)}
+.nf-prev:hover{border-color:var(--royal);color:var(--royal)}
+.nf-next{background:var(--royal);border-color:var(--royal);color:#fff}
+.nf-next:hover{background:var(--royal2);border-color:var(--royal2)}
+.nf-done{background:var(--green);border-color:var(--green);color:#fff}
+.nf-done:hover{background:#00A864}
+
+/* FINN CHAT */
+.finn-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);margin-top:32px;box-shadow:var(--sh);overflow:hidden}
+.finn-hdr{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.06)}
+.finn-avatar{width:34px;height:34px;border-radius:50%;background:var(--royal);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.finn-name{font-size:13px;font-weight:600;color:#fff}
+.finn-role{font-size:10px;font-family:var(--mono);color:rgba(255,255,255,.4);margin-top:1px}
+.finn-badge{margin-left:auto;font-size:9px;font-family:var(--mono);letter-spacing:.5px;background:rgba(53,255,233,.12);color:var(--cyan);padding:3px 8px;border-radius:10px;border:1px solid rgba(53,255,233,.2);font-weight:700}
+.finn-msgs{min-height:180px;max-height:320px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#FAFBFF}
+.finn-msg{max-width:82%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65}
+.finn-msg.finn{background:#fff;border:1px solid var(--border);color:var(--text2);align-self:flex-start;border-radius:4px 12px 12px 12px}
+.finn-msg.user{background:var(--royal);color:#fff;align-self:flex-end;border-radius:12px 4px 12px 12px}
+.finn-msg.thinking{color:var(--muted);font-style:italic;font-size:12px}
+.finn-starters{padding:12px 16px;background:var(--card);border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:6px}
+.finn-starter-lbl{font-size:9px;font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);width:100%;margin-bottom:4px;font-weight:700}
+.finn-q{font-size:11px;background:#fff;border:1px solid var(--border);color:var(--text2);padding:6px 10px;border-radius:6px;cursor:pointer;transition:all .12s;font-family:var(--font)}
+.finn-q:hover{border-color:var(--royal);color:var(--royal)}
+.finn-input-row{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);background:#fff}
+.finn-input{flex:1;border:1.5px solid var(--border);border-radius:var(--r);padding:9px 14px;font-size:13px;font-family:var(--font);outline:none;color:var(--text);transition:border .15s}
+.finn-input:focus{border-color:var(--royal)}
+.finn-send{background:var(--royal);border:none;border-radius:var(--r);padding:9px 16px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.finn-send:hover{background:var(--royal2)}
+.finn-send svg{width:14px;height:14px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:760px){
+  #sb{display:none}
+  #sb.open{display:flex;position:fixed;inset:56px 0 0 0;z-index:100;width:100%}
+  .tb-menu-btn{display:block}
+  #ct{padding:20px 16px}
+  .feature-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="tb">
+    <div class="tb-logo">
+      <div class="tb-logo-dot"></div>
+      <div class="tb-logo-text">PinpointAI</div>
+    </div>
+    <div class="tb-sep"></div>
+    <div class="tb-course">Databook Features</div>
+    <div class="tb-spacer"></div>
+    <div class="tb-prog-val" id="prog-val">0%</div>
+    <div class="tb-ring">
+      <svg width="32" height="32" viewBox="0 0 32 32">
+        <circle cx="16" cy="16" r="12" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="2.5"/>
+        <circle id="rng" cx="16" cy="16" r="12" fill="none" stroke="#35FFE9" stroke-width="2.5" stroke-dasharray="75.4" stroke-dashoffset="75.4" stroke-linecap="round" style="transition:stroke-dashoffset .4s"/>
+      </svg>
+      <div class="tb-ring-n" id="rng-n">0%</div>
+    </div>
+    <button class="tb-menu-btn" onclick="toggleSidebar()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="tb-glossary" href="glossary.html">Glossary</a>
+    <a class="tb-back" href="index.html">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Dashboard
+    </a>
+  </div>
+  <div id="main">
+    <div id="sb">
+      <div class="sb-top">
+        <div class="sb-top-lbl">Your progress</div>
+        <div class="sb-cards">
+          <div class="sb-card"><div class="sb-card-n c" id="sb-done">0</div><div class="sb-card-l">Completed</div></div>
+          <div class="sb-card"><div class="sb-card-n" id="sb-left">45</div><div class="sb-card-l">Min left</div></div>
+        </div>
+      </div>
+      <div class="sb-mods"><div class="sb-grp">Sections</div><div id="sb-nav"></div></div>
+    </div>
+    <div id="ct"><div id="cti"></div></div>
+  </div>
+</div>
+<script>
+var FINN_SYS = "You are Finn, a PinpointAI product specialist and FDD tutor. You are explaining the PinpointAI databook product features to a new team member with NO accounting or finance background.\n\nRules:\n- Always assume zero prior knowledge. Define every acronym on first use. Examples: NWC (Net Working Capital - the difference between what a business is owed and what it owes in the short term), EBITDA (Earnings Before Interest, Tax, Depreciation and Amortisation - a measure of operating profit), AR (Accounts Receivable - money customers owe the business), AP (Accounts Payable - money the business owes suppliers), QoE (Quality of Earnings - an analysis of how reliable and sustainable the profits are).\n- Explain why each feature matters in a real deal context. Use plain English analogies where helpful.\n- Keep responses 100-180 words. Short and clear.\n- Do not use em dashes. Use hyphens instead.\n- Never use consultant or marketing cliches.";
+
+var MODULES = [
+  {
+    id:"M1", icon:"📊", title:"P&L and Financial Statement Features", time:10,
+    starters:[
+      "What is a P&L chart and why does a buyer want to see one?",
+      "What is an EBITDA bridge in plain English?",
+      "What is a gross profit bridge and how is it different from an EBITDA bridge?",
+      "What does 'seasonality' mean in the context of a business being bought?"
+    ],
+    sections:[
+      {id:"M1S1", title:"What these features are about",
+       content:"The P&L (Profit and Loss statement) is the most important document in any FDD (Financial Due Diligence) engagement. It tells you whether the business makes money, how consistently it makes it, and whether the profits are real.\n\nThis group of PinpointAI features all relate to presenting, analysing, and stress-testing the P&L. Each one answers a specific question a buyer's advisor would need to answer before recommending a deal.\n\nYou do not need to be an accountant to understand what each feature does. Think of each one as a different lens on the same data - each lens reveals something different about the business.",
+       callout:{type:"blue",label:"Remember - plain English first",text:"P&L = Profit and Loss. It is a summary of revenue (money in) minus costs (money out) over a period of time. The bottom line is profit (or loss).\n\nEBITDA = Earnings Before Interest, Tax, Depreciation and Amortisation. It is the most commonly used measure of operating profit in M&A (Mergers and Acquisitions - the world of buying and selling companies). It strips out financing costs and accounting adjustments to show the underlying cash-generating ability of the business."}
+      },
+      {id:"M1S2", title:"P&L and balance sheet features", type:"features", group:"pl"}
+    ]
+  },
+  {
+    id:"M2", icon:"💰", title:"Working Capital and Net Debt Features", time:10,
+    starters:[
+      "What is working capital and why does it affect the price a buyer pays?",
+      "What is the difference between Net Working Capital v1 and v2?",
+      "What are AR and AP and why do they matter in a deal?",
+      "What is 'net debt' and how does it reduce the price paid?"
+    ],
+    sections:[
+      {id:"M2S1", title:"What working capital and net debt mean",
+       content:"Working capital and net debt are two of the most important - and most argued over - numbers in any deal. They directly affect the final price the buyer pays.\n\nWorking Capital (also called NWC - Net Working Capital) is essentially: what the business is owed by customers minus what it owes to suppliers and other short-term obligations. A healthy business needs a certain level of working capital to function day to day.\n\nNet Debt is the total debt the business carries (loans, overdrafts, finance leases, director loans) minus the cash it has in the bank.\n\nBoth of these adjust the 'equity price' - the actual amount the buyer pays after starting from the agreed enterprise value (the headline price for the whole business).",
+       callout:{type:"amber",label:"Why this is so important in deals",text:"Imagine a business is sold for £10m enterprise value (headline price). But it turns out the business has £1m of net debt and a working capital shortfall of £500k. The buyer actually pays £10m minus £1m minus £500k = £8.5m.\n\nThis is why these numbers get argued over at the end of every deal. PinpointAI helps the FDD advisor calculate and present these adjustments accurately and quickly."}
+      },
+      {id:"M2S2", title:"NWC and net debt features", type:"features", group:"nwc"}
+    ]
+  },
+  {
+    id:"M3", icon:"📈", title:"Revenue Analysis Features", time:10,
+    starters:[
+      "What does 'revenue by class or location' mean?",
+      "What is customer concentration and why does it matter to a buyer?",
+      "What is price volume analysis in plain English?",
+      "Why would a buyer care about revenue by geography or division?"
+    ],
+    sections:[
+      {id:"M3S1", title:"Why revenue analysis matters so much",
+       content:"In any acquisition, the buyer is essentially buying a stream of future revenue. So the quality, stability, and composition of that revenue is one of the most important things the FDD (Financial Due Diligence) team needs to understand.\n\nRevenue analysis features in PinpointAI answer questions like:\n\n- Is revenue growing or declining, and why?\n- How concentrated is the revenue in a small number of customers (high concentration = high risk)?\n- Is revenue from one-off projects or recurring contracts (recurring = more valuable)?\n- Is there revenue from different products, regions, or customer types that behave differently?\n- Is growth coming from winning new customers, selling more to existing ones, or raising prices?\n\nEach of these answers affects the valuation and the risk assessment.",
+       callout:{type:"blue",label:"Recurring vs one-off revenue",text:"Recurring revenue (e.g. a monthly subscription that renews automatically) is much more valuable than project revenue (e.g. a one-off consultancy engagement). A business with 80% recurring revenue gets a higher valuation multiple than one with 80% project revenue. PinpointAI's revenue analysis features help identify and present this split clearly."}
+      },
+      {id:"M3S2", title:"Revenue analysis features", type:"features", group:"revenue"}
+    ]
+  },
+  {
+    id:"M4", icon:"🏭", title:"Costs, Suppliers and Payroll Features", time:8,
+    starters:[
+      "What is a suppliers and costs analysis in FDD?",
+      "Why would a buyer want to see a payroll or employee breakdown?",
+      "What are fixed assets and why do they matter in a deal?",
+      "What is inventory and when does it become relevant?"
+    ],
+    sections:[
+      {id:"M4S1", title:"Understanding the cost base",
+       content:"Understanding what a business spends money on - and whether those costs are well-managed, sustainable, and accurately reported - is a core part of FDD.\n\nCost analysis in FDD looks at:\n\n- Who are the main suppliers? What is the business paying them? Are there concentration risks (relying heavily on one supplier)?\n- What does the payroll look like? Are there any unusual payments, directors being paid above market, or vacancies that understate the true run-rate cost?\n- What physical assets does the business own (equipment, vehicles, machinery)? What condition are they in? Are they properly valued on the balance sheet?\n- Does the business hold stock (inventory)? Is it valued correctly? Is there any obsolete stock sitting on the books?\n\nAll of these can materially affect EBITDA (profitability) and the working capital calculation.",
+       callout:{type:"green",label:"Run-rate costs",text:"'Run-rate' means the ongoing, normalised cost the business will carry forward. If the business had a one-off cost (e.g. a redundancy payment) that inflated costs last year, the run-rate strips that out. PinpointAI helps identify which costs are truly ongoing versus one-off, which feeds directly into the Quality of Earnings (QoE) analysis."}
+      },
+      {id:"M4S2", title:"Costs, suppliers and payroll features", type:"features", group:"costs"}
+    ]
+  },
+  {
+    id:"M5", icon:"🔍", title:"Data Quality and Automated Checks", time:8,
+    starters:[
+      "What does 'automated QA' mean in the context of PinpointAI?",
+      "What is a source data check and what does it catch?",
+      "What is an anomaly and why does PinpointAI flag them?",
+      "What is the QoE Adjustments Databook?"
+    ],
+    sections:[
+      {id:"M5S1", title:"Why data quality checks matter",
+       content:"Everything PinpointAI produces is only as good as the data it receives. But data from a target company's accounting system often has problems - gaps, inconsistencies, errors, and sometimes deliberate manipulation.\n\nData quality and automated checks are PinpointAI's built-in safety net. They run automatically in the background and flag potential issues before the advisor builds their conclusions on bad foundations.\n\nThink of it like a spell-checker for financial data. It does not catch everything, but it catches the most common and most damaging errors very quickly - errors that a manual review might miss or take days to find.\n\nFor a new team member, understanding these checks is important because you may need to explain to a client why PinpointAI has flagged something, or what the platform found that needs investigating.",
+       callout:{type:"red",label:"Why this is a commercial differentiator",text:"Traditional FDD takes weeks partly because advisors spend so much time just checking whether the data is reliable before they can start the actual analysis. PinpointAI automates this step. The ability to tell a client 'here is the data quality report' on day one of an engagement - before any human review - is a significant time saving and a compelling sales point."}
+      },
+      {id:"M5S2", title:"Quality and integrity features", type:"features", group:"qa"}
+    ]
+  },
+  {
+    id:"M6", icon:"🧩", title:"Additional and Future Offerings", time:7,
+    starters:[
+      "What is a consolidated financial statement and when would we need one?",
+      "What is multi-currency analysis and what problems does it solve?",
+      "What is intra-month cash analysis?",
+      "What is the EV to equity bridge?"
+    ],
+    sections:[
+      {id:"M6S1", title:"Beyond the core databook",
+       content:"The features in this section sit outside the core databook product but are either planned for future development or are additional standalone offerings that PinpointAI provides or is building.\n\nSome of these are in response to specific client requests. Some address complexity that the core product does not yet handle (like multi-currency businesses or businesses with multiple legal entities). Some are entirely new products built on top of the core platform.\n\nAs a new team member, it is worth being aware of these so you can have informed conversations with clients about the product roadmap - and so you understand what 'TBC' means on the feature list (it means the feature is planned but timing and scope are still being worked out).",
+       callout:{type:"blue",label:"What TBC means",text:"TBC = To Be Confirmed. These are features that have been identified as valuable but where the requirements, build complexity, or commercial priority have not yet been fully confirmed. They are not live and should not be promised to clients as committed delivery dates."}
+      },
+      {id:"M6S2", title:"Additional and future features", type:"features", group:"additional"}
+    ]
+  }
+];
+
+var FEATURES = {
+  pl:[
+    {name:"P&L Charts v1",phase:"p2",icon:"📊",
+     what:"Visual charts built from the Profit and Loss data - things like monthly revenue over time, gross profit margin trend, EBITDA over the analysis period. These are the standard charts that appear in any FDD report.",
+     why:"Instead of presenting a page of numbers, a chart makes trends instantly visible. A buyer's advisor can see at a glance whether revenue is growing, whether margins are compressing, or whether there was a bad quarter two years ago. PinpointAI builds these automatically from the uploaded data.",
+     tags:["P&L","Charts","Phase 2"]},
+    {name:"BS Charts v1",phase:"p2",icon:"📉",
+     what:"Balance sheet charts - visual representations of how assets, liabilities and equity have changed over the 3-year period. The balance sheet (BS) is the snapshot of what the business owns and owes at a point in time.",
+     why:"Changes in the balance sheet over time reveal things that the P&L does not - like whether the business has been building up debt, whether debtors (money owed to it) are growing faster than revenue (a warning sign), or whether tangible assets are being maintained.",
+     tags:["Balance Sheet","Charts","Phase 2"]},
+    {name:"Financial Ratios v1 & v2",phase:"p4",icon:"➗",
+     what:"Automated calculation of standard financial ratios - things like gross margin (gross profit as a % of revenue), EBITDA margin (EBITDA as a % of revenue), debtor days (how long it takes customers to pay), and creditor days (how long the business takes to pay suppliers).",
+     why:"Ratios let you compare a business against industry benchmarks and its own history. A gross margin that was 45% two years ago and is now 38% is a red flag that needs explaining. PinpointAI calculates these automatically rather than requiring a manual spreadsheet.",
+     tags:["Ratios","KPIs","Phase 4"]},
+    {name:"EBITDA Bridge",phase:"p4",icon:"🌉",
+     what:"A visual 'bridge' chart showing how EBITDA has moved from one year to the next - broken down by the individual factors that drove the change (e.g. revenue growth contributed +£200k, cost increases reduced it by -£80k, leaving a net improvement of +£120k).\n\nEBITDA = Earnings Before Interest, Tax, Depreciation and Amortisation. It is the headline profit measure used in most deals.",
+     why:"The EBITDA bridge is one of the most commonly used charts in any FDD report. It makes the story of profit growth or decline clear and explainable. PinpointAI builds it automatically from the financial data.",
+     tags:["EBITDA","Bridge","Phase 4"]},
+    {name:"Gross Profit Bridge",phase:"p4",icon:"🌉",
+     what:"Similar to the EBITDA bridge but focused specifically on gross profit - the profit after direct costs (cost of sales) but before overheads. The bridge shows what drove the change in gross profit year on year.",
+     why:"Gross profit analysis is important because it shows whether the core business model is getting more or less profitable - before management decisions about overhead spending are factored in. A business can show growing EBITDA by cutting overheads even as its gross margin deteriorates - the gross profit bridge makes this visible.",
+     tags:["Gross Profit","Bridge","Phase 4"]},
+    {name:"Seasonality",phase:"p5",icon:"🌦️",
+     what:"Analysis of whether the business has predictable seasonal patterns - for example, a retail business that makes 40% of its annual revenue in December, or a construction business that slows significantly in winter.",
+     why:"Seasonality matters in deals because the working capital peg (the normalised level of working capital used to set the price) and the LTM (Last Twelve Months) EBITDA can both be distorted if the deal closes at a seasonal peak or trough. PinpointAI identifies and quantifies seasonality patterns automatically.",
+     tags:["Seasonality","Working Capital","Phase 5"]},
+    {name:"P&L Metrics and BS Metrics (Enhancements)",phase:"p5",icon:"📐",
+     what:"Additional analytical metrics and derived calculations built on top of the core P&L and balance sheet data. These go beyond the standard ratios to include deal-specific metrics commonly used in FDD reports.",
+     why:"Different sectors use different metrics. A SaaS (Software as a Service) business is assessed on ARR (Annual Recurring Revenue), churn rate and gross margin. A manufacturing business is assessed on inventory days and capacity utilisation. These enhancements let PinpointAI produce more sector-appropriate analysis.",
+     tags:["Metrics","KPIs","Phase 5"]}
+  ],
+  nwc:[
+    {name:"NWC / Net Debt v1 (as reported)",phase:"p2",icon:"⚖️",
+     what:"The first version of working capital and net debt analysis. 'As reported' means it takes the numbers directly from the management accounts and balance sheet as provided by the target, without any manual tagging or adjustment.\n\nNWC = Net Working Capital = Current Assets (what the business is owed and holds as cash) minus Current Liabilities (what it owes in the short term).\n\nNet Debt = Total debt (loans, overdrafts, finance leases) minus cash at bank.",
+     why:"This gives the FDD advisor a starting point - a quick read of the working capital and net debt position before any detailed analysis. Even at this stage, PinpointAI can flag if the numbers look unusual compared to the prior year or industry norms.",
+     tags:["NWC","Net Debt","Phase 2"]},
+    {name:"NWC / Net Debt v2 (tagging)",phase:"p3",icon:"🏷️",
+     what:"The enhanced version where specific balance sheet line items can be 'tagged' - meaning the advisor can categorise each item as working capital, net debt, or excluded. This matters because not every item on the balance sheet is automatically working capital - some are deal-specific adjustments.",
+     why:"In practice, the definition of working capital is negotiated between buyer and seller. By allowing line items to be tagged, PinpointAI can produce a working capital analysis that matches the specific definition agreed for the deal, rather than a one-size-fits-all calculation.",
+     tags:["NWC","Net Debt","Tagging","Phase 3"]},
+    {name:"NWC / Net Debt v3",phase:"p4",icon:"📋",
+     what:"Further enhancements to the NWC and net debt analysis - likely to include more granular categorisation, additional debt-like item identification, and improved presentation of the equity bridge (the calculation that takes you from enterprise value to the actual price paid).",
+     why:"As the platform matures, the NWC and net debt analysis becomes more precise and more closely matches what experienced FDD advisors produce manually. Each version reduces the gap between the automated output and what would be produced in a full manual engagement.",
+     tags:["NWC","Net Debt","Phase 4"]},
+    {name:"Multi Period AR / AP v1 & v2",phase:"p2",icon:"📅",
+     what:"AR = Accounts Receivable = money customers owe the business (debtors). AP = Accounts Payable = money the business owes suppliers (creditors).\n\nMulti period analysis means looking at these balances over time - not just at one point in time - to identify trends and patterns. For example, are debtor days (how long customers take to pay) getting longer? Are creditor days getting shorter (suggesting cash flow stress)?",
+     why:"A single month's aged debtor schedule can look healthy even if the underlying trend is deteriorating. Looking across multiple periods reveals whether debtor quality is improving or worsening over time, which feeds into the working capital peg calculation and the overall credit quality assessment.",
+     tags:["AR","AP","Working Capital","Phase 2/3"]},
+    {name:"NWC Adjustments Scanner",phase:"tbc",icon:"🔬",
+     what:"A specialised tool that automatically scans the working capital analysis for items that should be adjusted - things like seasonal distortions, one-off items sitting in working capital, or provisions (money set aside for expected future costs) that affect the peg.",
+     why:"Working capital adjustments are one of the most contested areas in any deal. Having an automated scanner that identifies potential adjustment items saves hours of manual review and helps the advisor make sure they have not missed anything that could affect the price.",
+     tags:["NWC","Adjustments","TBC"]},
+    {name:"Net Debt Adjustment Scanner",phase:"tbc",icon:"🔭",
+     what:"Similar to the NWC scanner but focused on net debt - automatically identifying items that should be classified as debt or debt-like in the deal context, even if they do not appear in the company's formal borrowing schedule.",
+     why:"Debt-like items (director loans, deferred revenue, unfunded pension liabilities, lease obligations) are commonly missed or disputed in deals. An automated scanner reduces the risk of a material item being overlooked and ensures the net debt figure is comprehensive.",
+     tags:["Net Debt","Adjustments","TBC"]}
+  ],
+  revenue:[
+    {name:"Revenue by Class / Location v1 & v2",phase:"p3",icon:"🗂️",
+     what:"Analysis that breaks revenue down by class (type of product or service - e.g. software licences vs professional services vs support contracts) and by location (e.g. UK vs US vs EU). This uses data from the accounting system where revenue is coded differently for different types or regions.",
+     why:"Understanding the composition of revenue is critical for assessing quality and sustainability. Licence revenue is more valuable than project revenue. UK revenue carries different risk to overseas revenue. A business that reports £5m revenue but where £3m of it is one-off project work is worth significantly less than one with £5m of recurring licence revenue.",
+     tags:["Revenue","Class","Location","Phase 3/4"]},
+    {name:"Revenue Stream / Account Sub-Type by Customer",phase:"p4",icon:"👥",
+     what:"A granular revenue analysis that breaks down revenue by customer and by type of revenue within each customer relationship. For example, customer A pays £200k of licence fees and £50k of support - these are different 'streams' with different risk profiles.",
+     why:"This level of granularity helps identify which customers are truly strategic versus transactional, whether the most valuable customers are growing or declining, and whether revenue quality differs significantly across the customer base.",
+     tags:["Revenue","Customer","Phase 4"]},
+    {name:"Price Volume",phase:"tbc",icon:"📐",
+     what:"An analysis that breaks down revenue growth (or decline) into two components: how much was driven by selling more units/volume versus how much was driven by changing prices. For example, revenue grew 15% - was that because the business sold 15% more units at the same price, or sold the same number at 15% higher prices, or some combination?",
+     why:"Price and volume tell very different stories about a business. Volume growth suggests demand is increasing. Price growth might suggest either pricing power or that the business is relying on price increases to mask volume decline. This decomposition is a standard part of any detailed revenue QoE analysis.",
+     tags:["Revenue","Price","Volume","TBC"]},
+    {name:"Revenue by Geography / Division",phase:"tbc",icon:"🌍",
+     what:"A breakdown of revenue by geographic region (UK, US, Europe, Asia etc.) or internal division (e.g. Commercial vs Consumer, or Division A vs Division B).",
+     why:"Businesses with revenue in multiple geographies or divisions often have very different risk profiles in each. A US division growing at 40% and a UK division declining at 10% average out to a headline growth rate that masks what is actually happening. Separating these gives a more accurate picture.",
+     tags:["Revenue","Geography","Division","TBC"]},
+    {name:"Q View of P&L and Balance Sheet",phase:"tbc",icon:"📅",
+     what:"A quarterly (Q) view of the P&L and balance sheet alongside the standard monthly view. Quarters are the standard reporting period used in many businesses and are how most management teams think about performance.",
+     why:"Some patterns are clearer at a quarterly level than monthly - particularly for businesses with uneven monthly trading. A quarterly view also makes comparison to prior year easier and is the format most familiar to PE (Private Equity) investors.",
+     tags:["Revenue","Quarterly","TBC"]}
+  ],
+  costs:[
+    {name:"Suppliers and Costs v1, v2, v3",phase:"p2",icon:"🏭",
+     what:"A progressive series of cost analysis features. v1 gives a headline view of the main supplier and cost categories. v2 adds more granular analysis (likely by supplier or cost type). v3 adds further depth - potentially including supplier concentration analysis, contract terms, and trend analysis.\n\nThis analysis uses the general ledger data to identify exactly what the business spends money on and with whom.",
+     why:"Understanding the cost base tells the buyer whether costs are well-managed, whether there are hidden risks (e.g. a single key supplier that could walk away), and whether the EBITDA margin is sustainable. It also identifies cost-saving opportunities post-acquisition.",
+     tags:["Costs","Suppliers","Phase 2/3/4"]},
+    {name:"Employee / Payroll v1",phase:"tbc",icon:"👤",
+     what:"Analysis of the payroll - the total cost of employing staff. This would include headcount by department, average salary levels, director remuneration, any one-off payments (bonuses, redundancies), and comparison of payroll to prior periods.\n\nPayroll is typically the largest single cost in a service or technology business.",
+     why:"Payroll analysis is important for several reasons: identifying if directors are paid above or below market (which affects the normalised cost base), spotting if there are vacancies that understate the true run-rate cost, and understanding whether the headcount is appropriate for the business size and growth plans.",
+     tags:["Payroll","People","TBC"]},
+    {name:"Fixed Assets",phase:"p6",icon:"🏗️",
+     what:"Analysis of the fixed assets on the balance sheet - the physical and intangible assets the business owns for long-term use (equipment, vehicles, computers, leasehold improvements, software licences, patents).\n\nFixed assets are depreciated over their useful life - meaning their book value on the balance sheet reduces each year even if they remain in use.",
+     why:"Fixed asset analysis matters in deals for several reasons: are assets fully depreciated but still in use (meaning replacement capex is needed soon)? Are there assets that have been written off or impaired? Does the depreciation policy match reality? These all affect the true profitability and future cash requirements of the business.",
+     tags:["Fixed Assets","Capex","Phase 6"]},
+    {name:"Inventory v1",phase:"tbc",icon:"📦",
+     what:"Analysis of the inventory (stock) held by the business - the goods the business has purchased or manufactured that have not yet been sold. Relevant for businesses that sell physical products rather than services.\n\nInventory is valued on the balance sheet at cost (or net realisable value if lower).",
+     why:"Inventory analysis checks whether stock is valued appropriately and whether any of it is obsolete (old, unsaleable goods still sitting on the books at full value). Overstated inventory inflates the balance sheet and working capital, which would overstate the price the buyer pays.",
+     tags:["Inventory","Stock","TBC"]}
+  ],
+  qa:[
+    {name:"Automated QA 1, 2, 3",phase:"p2",icon:"✅",
+     what:"A progressive series of automated quality assurance checks that run on the uploaded data. QA = Quality Assurance - checks designed to catch errors, inconsistencies, and anomalies before they affect the analysis.\n\nQA 1 (Phase 2) likely covers the basics: do the numbers add up? Do the management accounts reconcile to the trial balance? Are there missing months?\n\nQA 2 and QA 3 (Phases 3 and 4) add increasingly sophisticated checks as the platform matures.",
+     why:"Garbage in, garbage out. If the data has errors that go undetected, all of PinpointAI's analysis is built on a faulty foundation. Automated QA catches the most common data quality issues instantly - saving days of manual checking and reducing the risk of the final report containing errors that stem from bad input data.",
+     tags:["QA","Data Quality","Phase 2/3/4"]},
+    {name:"Source Data Checks v1, v2, v3",phase:"p2",icon:"🔎",
+     what:"Checks that verify the integrity of the source data files themselves - before any analysis is run. These are different to the QA checks (which check the output) in that they check the input.\n\nExamples: does the trial balance balance (debits equal credits)? Does the chart of accounts match the codes in the trial balance? Are there duplicate rows? Are the date formats consistent across files?",
+     why:"Source data problems are the most common cause of analysis errors in FDD. A trial balance that does not balance, or a chart of accounts that is missing 20% of the codes used in the TB, will produce wrong outputs. These checks catch those issues at upload stage before any work is done.",
+     tags:["Data Integrity","Source","Phase 2/3/4"]},
+    {name:"Anomaly Databook",phase:"tbc",icon:"🚨",
+     what:"A standalone databook specifically designed to identify and present financial anomalies - unusual items, outliers, and patterns that deviate from what would normally be expected. These might include: a single month with a very different cost profile, a GL code used only once, a payment to an unusual counterparty, or a reversal entry posted in a later period.",
+     why:"Anomalies are often where the most important findings in FDD live. A one-off marketing cost of £56k in an otherwise £8k/month line is an anomaly - and it might be a legitimate rebrand, or it might be something that needs deeper investigation. The Anomaly Databook surfaces these automatically rather than relying on the advisor to find them manually.",
+     tags:["Anomalies","QoE","TBC"]},
+    {name:"Q of E Adjustments Databook",phase:"tbc",icon:"🗒️",
+     what:"A dedicated databook for Quality of Earnings (QoE) adjustments - the items that are added back to or deducted from reported EBITDA to arrive at 'normalised' or 'adjusted' EBITDA.\n\nQoE = Quality of Earnings. It is the analysis of whether reported profits are real, sustainable, and representative of the ongoing earnings power of the business.",
+     why:"The QoE adjustment schedule is the centrepiece of every FDD report. It is the document that determines what the 'true' EBITDA is for valuation purposes. Having a dedicated databook that automatically identifies and documents potential adjustments is a significant time saving and ensures nothing is missed.",
+     tags:["QoE","EBITDA","Adjustments","TBC"]},
+    {name:"Adjusted EBITDA / QoE",phase:"tbc",icon:"🎯",
+     what:"The end output of the QoE adjustment process - the 'adjusted' or 'normalised' EBITDA figure that represents the sustainable ongoing earnings of the business after removing one-off, non-recurring, or owner-specific items.\n\nThis is the number that gets multiplied by the valuation multiple to arrive at the enterprise value (headline price) of the business.",
+     why:"The adjusted EBITDA is arguably the most important single number in any M&A deal. If reported EBITDA is £2m but adjusted EBITDA (after removing one-off costs and owner perks) is £2.4m, and the deal is being done at a 6x multiple, that difference is worth £2.4m in deal price. PinpointAI automates the process of arriving at this number.",
+     tags:["EBITDA","QoE","Valuation","TBC"]}
+  ],
+  additional:[
+    {name:"Gross Margin / Profit Analysis",phase:"tbc",icon:"📊",
+     what:"Detailed analysis of the gross margin - the profit the business makes after deducting the direct costs of delivering its product or service, but before overheads like salaries and rent.\n\nGross margin = (Revenue minus Cost of Sales) divided by Revenue, expressed as a percentage.",
+     why:"Gross margin is a fundamental indicator of the health of the core business model. A deteriorating gross margin (even if EBITDA is holding up due to overhead cuts) suggests the underlying economics are weakening. This analysis would show margin by product, customer type, or period.",
+     tags:["Gross Margin","TBC"]},
+    {name:"Consolidated Financials",phase:"tbc",icon:"🏢",
+     what:"The ability to analyse businesses with multiple legal entities (subsidiary companies) by combining their financials into a single consolidated view - eliminating intercompany transactions (sales between entities within the same group) to show the group as a whole.",
+     why:"Many businesses being acquired are structured as groups with multiple companies. The core PinpointAI product works on a single entity. Consolidated financials would extend this to group structures, which is important for mid-market and larger deals.",
+     tags:["Consolidation","Group","TBC"]},
+    {name:"Reserves Reconciliation",phase:"tbc",icon:"🔄",
+     what:"A reconciliation of the equity reserves on the balance sheet - explaining how retained profit has moved from one year to the next, taking into account profits earned, dividends paid, and any other adjustments.\n\nReserves = the accumulated retained profits of the business that have not been paid out to shareholders.",
+     why:"A reserves reconciliation is a standard part of a full FDD report and helps verify that the equity section of the balance sheet is consistent with the reported profits over the analysis period.",
+     tags:["Balance Sheet","Reserves","TBC"]},
+    {name:"Cashflow v1",phase:"tbc",icon:"💧",
+     what:"Analysis of the cash flow statement - the third financial statement alongside the P&L and balance sheet. The cash flow statement shows how cash has actually moved in and out of the business during the period, reconciling from profit to actual cash generated.\n\nThe three sections of a cash flow statement are: operating activities (cash from the business), investing activities (cash spent on assets), and financing activities (cash from or repaid to lenders and shareholders).",
+     why:"A business can be profitable on paper (P&L) but still run out of cash - which is why the cash flow statement is so important. In FDD, cash flow analysis validates whether reported profits are converting into real cash, identifies capital expenditure requirements, and assesses the true cash-generating ability of the business.",
+     tags:["Cashflow","TBC"]},
+    {name:"Multi Currency",phase:"tbc",icon:"💱",
+     what:"Support for businesses that operate in more than one currency - for example, a UK business with a US subsidiary that reports in US dollars. Multi-currency analysis converts all financials to a single base currency for comparison, while also showing the impact of exchange rate movements.",
+     why:"Currency translation can significantly distort reported results. If the pound strengthened against the dollar, a US subsidiary's revenue in sterling terms would fall even if the underlying dollar revenue grew. Multi-currency analysis separates the trading performance from the currency effect.",
+     tags:["Currency","International","TBC"]},
+    {name:"EV to Equity Bridge (Template)",phase:"tbc",icon:"🌉",
+     what:"A structured template showing the calculation from Enterprise Value (EV - the headline price for the business as a whole) down to Equity Value (the actual cash the seller receives).\n\nThe bridge typically shows: EV minus Net Debt minus Working Capital Adjustment minus other deal-specific items = Equity Value paid to seller.",
+     why:"The EV to equity bridge is the document that translates the agreed headline price into what actually changes hands. It is where net debt and working capital adjustments are applied. Having a standardised template in PinpointAI ensures consistency across deals.",
+     tags:["EV","Equity","Bridge","TBC"]},
+    {name:"Intra Month Cash Analysis",phase:"tbc",icon:"📅",
+     what:"Analysis of how cash moves within a single month - looking at the timing of cash inflows (customer payments) and outflows (supplier payments, salaries) to understand the intra-month cash position and peak funding requirements.",
+     why:"Some businesses have a significant mismatch in the timing of cash in and cash out within a month. A business might pay its suppliers on the 1st but not collect from customers until the 28th - meaning it needs significant working capital to bridge the gap. Intra-month analysis quantifies this.",
+     tags:["Cashflow","Intra-Month","TBC"]},
+    {name:"Supporting Templates",phase:"tbc",icon:"📄",
+     what:"A library of standardised templates for common FDD analyses that complement the core databook - for example, working capital bridges, debt schedules, or management representation letters.",
+     why:"Standardised templates save time and ensure consistency across engagements. Rather than building each analysis from scratch in Excel, advisors can use pre-built PinpointAI templates as a starting point.",
+     tags:["Templates","TBC"]},
+    {name:"Customer Branding",phase:"p4",icon:"🎨",
+     what:"The ability to apply the FDD firm's own branding (logo, colours, fonts) to the PinpointAI databook output, so it is presented as a branded deliverable from the advisory firm rather than as generic PinpointAI output.",
+     why:"This is important for commercial adoption. Advisory firms want their deliverables to carry their brand - not a third-party platform's branding. Custom branding makes the databook feel like the firm's own work product, which removes a common objection to using the platform.",
+     tags:["Branding","Commercial","Phase 4"]},
+    {name:"Stat Rec Template",phase:"tbc",icon:"📋",
+     what:"A statutory reconciliation template - a structured document that reconciles the management accounts (internal monthly reporting) to the statutory accounts (the formal accounts filed at Companies House in the UK, or equivalent in other jurisdictions).\n\nThe differences between management accounts and statutory accounts are usually items like year-end audit adjustments, tax provisions, and timing differences.",
+     why:"Understanding the reconciliation between management and statutory accounts is important in FDD because it shows whether there are material differences between what management reports internally and what is formally filed. Large or unexplained differences can indicate a quality of earnings issue.",
+     tags:["Statutory","Reconciliation","TBC"]},
+    {name:"Glossary",phase:"tbc",icon:"📖",
+     what:"An in-platform glossary of financial and deal terms that can be embedded in the databook output - providing plain English definitions of terms used throughout the report for the benefit of non-specialist readers (e.g. the buyer's board or management team).",
+     why:"FDD reports are full of technical terms that the buyer's management team may not understand. An embedded glossary improves accessibility and reduces the number of questions the advisor receives about terminology.",
+     tags:["Glossary","Accessibility","TBC"]}
+  ]
+};
+
+var done={};
+var TOTAL_SECS = MODULES.reduce(function(a,m){return a+m.sections.length},0);
+var currentMod=0, currentSec=0;
+var chats={};
+
+function allSecs(){
+  var r=[];
+  MODULES.forEach(function(m){m.sections.forEach(function(s){r.push({mod:m,sec:s})})});
+  return r;
+}
+
+function flatIdx(mi,si){
+  var n=0;
+  for(var i=0;i<mi;i++) n+=MODULES[i].sections.length;
+  return n+si;
+}
+
+function updateProgress(){
+  var d=Object.keys(done).length;
+  var pct=TOTAL_SECS>0?Math.round(d/TOTAL_SECS*100):0;
+  var offset=75.4*(1-pct/100);
+  var rng=document.getElementById("rng");
+  if(rng) rng.style.strokeDashoffset=offset;
+  var rngN=document.getElementById("rng-n");
+  if(rngN) rngN.textContent=pct+"%";
+  var pv=document.getElementById("prog-val");
+  if(pv) pv.textContent=pct+"%";
+  var sd=document.getElementById("sb-done");
+  if(sd) sd.textContent=d;
+  var totalMins=MODULES.reduce(function(a,m){return a+m.time},0);
+  var doneRatio=TOTAL_SECS>0?d/TOTAL_SECS:0;
+  var minsLeft=Math.round(totalMins*(1-doneRatio));
+  var sl=document.getElementById("sb-left");
+  if(sl) sl.textContent=minsLeft;
+}
+
+function buildSidebar(){
+  var nav=document.getElementById("sb-nav");
+  if(!nav) return;
+  nav.innerHTML=MODULES.map(function(m,mi){
+    var doneCount=m.sections.filter(function(s){return done[s.id]}).length;
+    return "<div class=\"mod-item"+(mi===currentMod?" active":"")+"\" id=\"mi-"+mi+"\" onclick=\"goToMod("+mi+")\">"+
+      "<div class=\"mi-icon\">"+m.icon+"</div>"+
+      "<div class=\"mi-body\">"+
+        "<div class=\"mi-title\">"+m.title+"</div>"+
+        "<div class=\"mi-id\">"+doneCount+"/"+m.sections.length+" done</div>"+
+      "</div>"+
+      (doneCount===m.sections.length?"<div class=\"mi-done\">✓</div>":"")+
+    "</div>"
+  }).join("");
+}
+
+function goToMod(mi){
+  currentMod=mi;
+  currentSec=0;
+  render();
+}
+
+function goTo(mi,si){
+  currentMod=mi;
+  currentSec=si;
+  render();
+}
+
+function markDone(){
+  var sec=MODULES[currentMod].sections[currentSec];
+  done[sec.id]=true;
+  var nextSi=currentSec+1;
+  if(nextSi<MODULES[currentMod].sections.length){
+    currentSec=nextSi;
+  } else if(currentMod+1<MODULES.length){
+    currentMod++;
+    currentSec=0;
+  }
+  render();
+}
+
+function toggleSidebar(){
+  document.getElementById("sb").classList.toggle("open");
+}
+
+function phaseCls(p){
+  if(p==="p2") return "p2";
+  if(p==="p3") return "p3";
+  if(p==="p4") return "p4";
+  if(p==="p5") return "p5";
+  if(p==="p6") return "p6";
+  return "tbc";
+}
+
+function phaseLabel(p){
+  if(p==="p2") return "Phase 2";
+  if(p==="p3") return "Phase 3";
+  if(p==="p4") return "Phase 4";
+  if(p==="p5") return "Phase 5";
+  if(p==="p6") return "Phase 6";
+  return "TBC";
+}
+
+function renderFeatures(group){
+  var feats=FEATURES[group]||[];
+  return "<div class=\"phase-legend\">"+
+    "<div class=\"pl-item\"><div class=\"pl-dot p2\"></div>Phase 2 - Coming soon</div>"+
+    "<div class=\"pl-item\"><div class=\"pl-dot p3\"></div>Phase 3</div>"+
+    "<div class=\"pl-item\"><div class=\"pl-dot p4\"></div>Phase 4</div>"+
+    "<div class=\"pl-item\"><div class=\"pl-dot p5\"></div>Phase 5</div>"+
+    "<div class=\"pl-item\"><div class=\"pl-dot p6\"></div>Phase 6</div>"+
+    "<div class=\"pl-item\"><div class=\"pl-dot tbc\"></div>TBC - Planned, timing not confirmed</div>"+
+  "</div>"+
+  "<div class=\"feature-grid\">"+
+  feats.map(function(f){
+    return "<div class=\"feature-card\">"+
+      "<div class=\"fc-top\">"+
+        "<div class=\"fc-icon\">"+f.icon+"</div>"+
+        "<span class=\"fc-phase "+phaseCls(f.phase)+"\">"+phaseLabel(f.phase)+"</span>"+
+      "</div>"+
+      "<div class=\"fc-name\">"+f.name+"</div>"+
+      "<div class=\"fc-what\">"+f.what.replace(/\n/g,"<br>")+"</div>"+
+      "<div class=\"fc-divider\"></div>"+
+      "<div class=\"fc-why-lbl\">Why it matters in a deal</div>"+
+      "<div class=\"fc-why\">"+f.why+"</div>"+
+      "<div class=\"fc-tags\">"+f.tags.map(function(t){return "<span class=\"fc-tag\">"+t+"</span>"}).join("")+"</div>"+
+    "</div>"
+  }).join("")+
+  "</div>"
+}
+
+function renderCallout(c){
+  if(!c) return "";
+  return "<div class=\"callout "+c.type+"\"><div class=\"callout-label\">"+c.label+"</div><div class=\"callout-text\">"+c.text+"</div></div>"
+}
+
+function renderSection(mod, sec, mi, si){
+  var isFirst=si===0;
+  var isDone=!!done[sec.id];
+  var totalSecs=mod.sections.length;
+  var pct=Math.round((si/totalSecs)*100);
+  var key=sec.id;
+  if(!chats[key]) chats[key]=[{role:"assistant",content:"Hi - I'm Finn. Ask me anything about this feature area. Not sure where to start? Use one of the suggested questions below."}];
+
+  var body="";
+
+  if(sec.content){
+    body+="<div class=\"sec-body\">"+sec.content.replace(/\n/g,"<br>")+"</div>";
+  }
+  if(sec.callout){
+    body+=renderCallout(sec.callout);
+  }
+  if(sec.type==="features" && sec.group){
+    body+=renderFeatures(sec.group);
+  }
+
+  // FINN CHAT
+  var starterBtns=mod.starters.map(function(q){
+    return "<button class=\"finn-q\" onclick=\"askFinn(this,'"+key+"')\">"+q+"</button>"
+  }).join("");
+
+  var msgs=chats[key].map(function(m){
+    return "<div class=\"finn-msg "+m.role+"\">"+m.content+"</div>"
+  }).join("");
+
+  body+="<div class=\"finn-wrap\">"+
+    "<div class=\"finn-hdr\">"+
+      "<div class=\"finn-avatar\">🎓</div>"+
+      "<div><div class=\"finn-name\">Ask Finn</div><div class=\"finn-role\">Platform & FDD Specialist</div></div>"+
+      "<div class=\"finn-badge\">AI TUTOR</div>"+
+    "</div>"+
+    "<div class=\"finn-msgs\" id=\"msgs-"+key+"\">"+msgs+"</div>"+
+    "<div class=\"finn-starters\">"+
+      "<div class=\"finn-starter-lbl\">Suggested questions</div>"+
+      starterBtns+
+    "</div>"+
+    "<div class=\"finn-input-row\">"+
+      "<input class=\"finn-input\" id=\"inp-"+key+"\" placeholder=\"Ask Finn anything about this feature...\" onkeydown=\"if(event.key==='Enter')sendFinn('"+key+"')\"/>"+
+      "<button class=\"finn-send\" onclick=\"sendFinn('"+key+"')\"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round'><line x1='22' y1='2' x2='11' y2='13'/><polygon points='22 2 15 22 11 13 2 9 22 2'/></svg></button>"+
+    "</div>"+
+  "</div>";
+
+  var prevBtn="";
+  if(si>0){
+    prevBtn="<button class=\"nf-btn nf-prev\" onclick=\"goTo("+mi+","+(si-1)+")\">"+
+      "<svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round'><polyline points='15 18 9 12 15 6'/></svg> Previous</button>";
+  } else if(mi>0){
+    var pm=MODULES[mi-1];
+    prevBtn="<button class=\"nf-btn nf-prev\" onclick=\"goTo("+(mi-1)+","+(pm.sections.length-1)+")\">"+
+      "<svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round'><polyline points='15 18 9 12 15 6'/></svg> Previous</button>";
+  }
+
+  var nextCls=isDone?"nf-next":"nf-done";
+  var nextLabel=isDone?"Next section":"Mark done and continue";
+  var nextBtn="<button class=\"nf-btn "+nextCls+"\" onclick=\"markDone()\">"+nextLabel+
+    "<svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' style='margin-left:6px'><polyline points='9 18 15 12 9 6'/></svg></button>";
+
+  return "<div class=\"sec-progress\"><div class=\"sec-progress-fill\" style=\"width:"+pct+"%\"></div></div>"+
+    "<div class=\"ch\">"+
+      "<div class=\"ch-eyebrow\">"+mod.id+" - "+mod.title+"</div>"+
+      "<div class=\"ch-title\">"+sec.title+"</div>"+
+      "<div class=\"ch-meta\">"+
+        "<div class=\"ch-meta-item\"><span>⏱</span> "+mod.time+" min</div>"+
+        "<div class=\"ch-meta-item\"><span>📍</span> Section "+(si+1)+" of "+totalSecs+"</div>"+
+        (isDone?"<div class=\"ch-meta-item\" style=\"color:var(--green)\"><span>✓</span> Completed</div>":"")+
+      "</div>"+
+    "</div>"+
+    body+
+    "<div class=\"nav-footer\">"+prevBtn+nextBtn+"</div>"
+}
+
+function render(){
+  var mod=MODULES[currentMod];
+  var sec=mod.sections[currentSec];
+  var ct=document.getElementById("cti");
+  if(ct){
+    ct.innerHTML=renderSection(mod,sec,currentMod,currentSec);
+    ct.style.animation="none";
+    setTimeout(function(){ct.style.animation="fadeUp .25s ease-out"},10);
+    document.getElementById("ct").scrollTop=0;
+  }
+  buildSidebar();
+  updateProgress();
+}
+
+function askFinn(btn,key){
+  var q=btn.textContent;
+  sendFinnMsg(key,q);
+}
+
+function sendFinn(key){
+  var inp=document.getElementById("inp-"+key);
+  if(!inp||!inp.value.trim()) return;
+  var q=inp.value.trim();
+  inp.value="";
+  sendFinnMsg(key,q);
+}
+
+function sendFinnMsg(key,q){
+  if(!chats[key]) chats[key]=[];
+  chats[key].push({role:"user",content:q});
+  appendMsg(key,"user",q);
+  appendMsg(key,"thinking","Finn is thinking...");
+  var mod=MODULES[currentMod];
+  var sec=mod.sections[currentSec];
+  var context="Current module: "+mod.title+". Current section: "+sec.title+". Feature group: "+(sec.group||"general")+".";
+  var msgs=chats[key].filter(function(m){return m.role!=="assistant"||m.content!=="Finn is thinking..."});
+  fetch("/.netlify/functions/claude",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({system:FINN_SYS+"\n\nContext: "+context,messages:msgs})
+  }).then(function(r){return r.json()}).then(function(d){
+    var reply="";
+    if(d&&d.content&&d.content[0]&&d.content[0].text) reply=d.content[0].text;
+    else if(d&&d.error) reply="Finn is not available right now - please try again in a moment.";
+    else reply="Finn is not available right now.";
+    removeThinking(key);
+    chats[key].push({role:"assistant",content:reply});
+    appendMsg(key,"finn",reply);
+  }).catch(function(){
+    removeThinking(key);
+    appendMsg(key,"finn","Connection issue - please try again.");
+  });
+}
+
+function appendMsg(key,role,text){
+  var el=document.getElementById("msgs-"+key);
+  if(!el) return;
+  var div=document.createElement("div");
+  div.className="finn-msg "+(role==="user"?"user":role==="thinking"?"finn thinking":"finn");
+  div.textContent=text;
+  el.appendChild(div);
+  el.scrollTop=el.scrollHeight;
+}
+
+function removeThinking(key){
+  var el=document.getElementById("msgs-"+key);
+  if(!el) return;
+  var th=el.querySelector(".thinking");
+  if(th) th.remove();
+}
+
+window.onload=function(){render();};
+</script>
+</body>
+</html>
